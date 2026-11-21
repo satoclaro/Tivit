@@ -13,9 +13,9 @@ Ferramenta web em arquivo único (`index.html`) voltada para técnicos de teleco
    - Ao clicar em qualquer um desses campos, o sistema lê a área de transferência (`navigator.clipboard.readText()`) e cola o conteúdo automaticamente.
    - Caso o navegador bloqueie a leitura direta da área de transferência, o campo recebe foco para colagem manual (`Ctrl+V` ou toque em **Colar**).
 
-3. **Formatação visual de WO e Contrato**
-   - **WO:** formatado como `xxx. xxx.xxx.xxxx`.
-   - **Contrato:** formatado como `xxx.xxx.xxx`.
+3. **Formatação e destaque visual de WO e Contrato**
+   - **WO:** formatado como `xxx.xxx.xxx` com fonte ampliada.
+   - **Contrato:** formatado como `xxx.xxx.xxx` com fonte ampliada.
 
 4. **Formatação e envio para WhatsApp**
    - **Formatar para WhatsApp:** monta a mensagem com os dados fixos do atendimento e variáveis na sequência configurada.
@@ -39,6 +39,7 @@ Ferramenta web em arquivo único (`index.html`) voltada para técnicos de teleco
 
 ## Histórico de versões
 
+- **Versão 1.5 - 21.11.26 - 02:01:** Formatação do campo WO no padrão `xxx.xxx.xxx`, aumento do tamanho da fonte dos números de WO e de Contrato (campos, roteiro e chamadas arquivadas) e atualização do `README.md`.
 - **Versão 1.4 - 21.11.26 - 01:55:** Adição do botão no topo para ligar para Tivit (`+558007690800`), máscaras de exibição para Contrato (`xxx.xxx.xxx`) e WO (`xxx. xxx.xxx.xxxx`), remoção do bloco `4. Dados fixos` na interface e atualização do `README.md`.
 - **Versão 1.3 - 21.11.26 - 01:34:** Inclusão do botão **Arquivar dados da chamada**, histórico com carregar/copiar/excluir/exportar `.txt` e inclusão do `README.md` no pacote `.zip`.
 - **Versão 1.2 - 21.11.26 - 01:32:** Cola automática da área de transferência ao clicar nos campos variáveis e inclusão dos dados fixos do sistema Tivit / Coop.
@@ -47,4 +48,4 @@ Ferramenta web em arquivo único (`index.html`) voltada para técnicos de teleco
 
 ---
 
-Criado por Fernando Sato - Versão 1.4 - 21.11.26 - 01:55
+Criado por Fernando Sato - Versão 1.5 - 21.11.26 - 02:01

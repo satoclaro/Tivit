@@ -186,6 +186,14 @@
       outline: none;
     }
 
+    input[type="text"].num-destaque {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      padding: 12px 14px;
+    }
+
     input[type="text"]:focus,
     textarea:focus {
       border-color: var(--accent);
@@ -231,6 +239,13 @@
       color: var(--accent);
       font-weight: 600;
       text-align: right;
+    }
+
+    .script-val.num-destaque-txt {
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
 
     .actions {
@@ -428,6 +443,13 @@
       color: var(--accent);
     }
 
+    .archive-num {
+      font-size: 1.08rem;
+      font-weight: 700;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      color: var(--ok);
+    }
+
     .archive-item-btns {
       display: flex;
       flex-wrap: wrap;
@@ -465,7 +487,7 @@
       <div class="panel-title">1. Campos para colar da área de transferência (ao clicar)</div>
       <div class="panel-subtitle">
         Copie o dado desejado e clique no campo correspondente para colar o conteúdo da área de transferência automaticamente.
-        O campo <strong>WO</strong> exibe no formato <code>xxx. xxx.xxx.xxxx</code> e <strong>Contrato</strong> no formato <code>xxx.xxx.xxx</code>.
+        Os campos <strong>WO</strong> e <strong>Contrato</strong> exibem no formato <code>xxx.xxx.xxx</code> com fonte ampliada.
       </div>
 
       <div class="grid">
@@ -498,14 +520,15 @@
         <div class="grid two-col">
           <div class="field-group">
             <div class="field-header">
-              <label for="woNumero">WO (xxx. xxx.xxx.xxxx)</label>
+              <label for="woNumero">WO (xxx.xxx.xxx)</label>
               <span class="paste-tag">Clique = Colar</span>
             </div>
             <input
               type="text"
               id="woNumero"
+              class="num-destaque"
               inputmode="numeric"
-              placeholder="xxx. xxx.xxx.xxxx"
+              placeholder="xxx.xxx.xxx"
               autocomplete="off"
             />
           </div>
@@ -518,6 +541,7 @@
             <input
               type="text"
               id="contratoNumero"
+              class="num-destaque"
               inputmode="numeric"
               placeholder="xxx.xxx.xxx"
               autocomplete="off"
@@ -571,11 +595,11 @@
   </div>
 
   <footer>
-    Criado por Fernando Sato - Versão 1.4 - 21.11.26 - 01:55
+    Criado por Fernando Sato - Versão 1.5 - 21.11.26 - 02:01
   </footer>
 
   <script>
-    const STORAGE_KEY = "tivit_coop_chamadas_arquivadas_v1_4";
+    const STORAGE_KEY = "tivit_coop_chamadas_arquivadas_v1_5";
 
     const DADOS_FIXOS = {
       opcaoServico: "239",
@@ -622,17 +646,8 @@
         .replace(/"/g, "&quot;");
     }
 
-    // Máscara WO: xxx. xxx.xxx.xxxx (até 10 dígitos)
-    function formatarWO(valor) {
-      const digitos = String(valor || "").replace(/\D/g, "").slice(0, 10);
-      if (!digitos) return "";
-      if (digitos.length <= 3) return digitos;
-      if (digitos.length <= 6) return `${digitos.slice(0, 3)}. ${digitos.slice(3)}`;
-      return `${digitos.slice(0, 3)}. ${digitos.slice(3, 6)}.${digitos.slice(6)}`;
-    }
-
-    // Máscara Contrato: xxx.xxx.xxx (até 9 dígitos)
-    function formatarContrato(valor) {
+    // Formatação xxx.xxx.xxx (até 9 dígitos) para WO e Contrato
+    function formatarBlocoTres(valor) {
       const digitos = String(valor || "").replace(/\D/g, "").slice(0, 9);
       if (!digitos) return "";
       if (digitos.length <= 3) return digitos;
@@ -643,42 +658,40 @@
     function obterLinhasOrdenadas(overrideData = null) {
       const nome = (overrideData ? overrideData.nomeCliente : inputs.nomeCliente.value).trim();
       const endereco = (overrideData ? overrideData.enderecoCliente : inputs.enderecoCliente.value).trim();
-      const wo = formatarWO(overrideData ? overrideData.woNumero : inputs.woNumero.value);
-      const contrato = formatarContrato(overrideData ? overrideData.contratoNumero : inputs.contratoNumero.value);
+      const wo = formatarBlocoTres(overrideData ? overrideData.woNumero : inputs.woNumero.value);
+      const contrato = formatarBlocoTres(overrideData ? overrideData.contratoNumero : inputs.contratoNumero.value);
 
       return [
-        { label: "Opção do serviço", valor: DADOS_FIXOS.opcaoServico, display: DADOS_FIXOS.opcaoServico },
-        { label: "Cidade", valor: DADOS_FIXOS.cidade, display: DADOS_FIXOS.cidade },
-        { label: "Código da empresa", valor: DADOS_FIXOS.codigoEmpresa, display: DADOS_FIXOS.codigoEmpresa },
-        { label: "Nome do Funcionário", valor: DADOS_FIXOS.nomeFuncionario, display: DADOS_FIXOS.nomeFuncionario },
-        { label: "Código Funcionário", valor: DADOS_FIXOS.codigoFuncionario, display: DADOS_FIXOS.codigoFuncionario },
-        { label: "Nome da Conveniada", valor: DADOS_FIXOS.nomeConveniada, display: DADOS_FIXOS.nomeConveniada },
-        { label: "PDA", valor: DADOS_FIXOS.pda, display: DADOS_FIXOS.pda },
-        { label: "Código da Baixa", valor: DADOS_FIXOS.codigoBaixa, display: DADOS_FIXOS.codigoBaixa },
-        { label: "Tipo de wo", valor: DADOS_FIXOS.tipoWo, display: "Instalação/ Mudança de Pacote" },
-        { label: "Hora de Início", valor: DADOS_FIXOS.horaInicio, display: DADOS_FIXOS.horaInicio },
-        { label: "Nome do cliente", valor: nome || "-", display: nome || "[Colar nome]" },
-        { label: "Endereço", valor: endereco || "-", display: endereco || "[Colar endereço]" },
-        { label: "WO", valor: wo || "-", display: wo || "[Colar WO]" },
-        { label: "Contrato", valor: contrato || "-", display: contrato || "[Colar Contrato]" }
+        { label: "Opção do serviço", valor: DADOS_FIXOS.opcaoServico, display: DADOS_FIXOS.opcaoServico, destaque: false },
+        { label: "Cidade", valor: DADOS_FIXOS.cidade, display: DADOS_FIXOS.cidade, destaque: false },
+        { label: "Código da empresa", valor: DADOS_FIXOS.codigoEmpresa, display: DADOS_FIXOS.codigoEmpresa, destaque: false },
+        { label: "Nome do Funcionário", valor: DADOS_FIXOS.nomeFuncionario, display: DADOS_FIXOS.nomeFuncionario, destaque: false },
+        { label: "Código Funcionário", valor: DADOS_FIXOS.codigoFuncionario, display: DADOS_FIXOS.codigoFuncionario, destaque: false },
+        { label: "Nome da Conveniada", valor: DADOS_FIXOS.nomeConveniada, display: DADOS_FIXOS.nomeConveniada, destaque: false },
+        { label: "PDA", valor: DADOS_FIXOS.pda, display: DADOS_FIXOS.pda, destaque: false },
+        { label: "Código da Baixa", valor: DADOS_FIXOS.codigoBaixa, display: DADOS_FIXOS.codigoBaixa, destaque: false },
+        { label: "Tipo de wo", valor: DADOS_FIXOS.tipoWo, display: "Instalação/ Mudança de Pacote", destaque: false },
+        { label: "Hora de Início", valor: DADOS_FIXOS.horaInicio, display: DADOS_FIXOS.horaInicio, destaque: false },
+        { label: "Nome do cliente", valor: nome || "-", display: nome || "[Colar nome]", destaque: false },
+        { label: "Endereço", valor: endereco || "-", display: endereco || "[Colar endereço]", destaque: false },
+        { label: "WO", valor: wo || "-", display: wo || "[Colar WO]", destaque: true },
+        { label: "Contrato", valor: contrato || "-", display: contrato || "[Colar Contrato]", destaque: true }
       ];
     }
 
     function atualizarRoteiro() {
       const itens = obterLinhasOrdenadas();
       roteiroLigacao.innerHTML = itens
-        .map(
-          (item) =>
-            `<div class="script-row"><span class="script-label">${escapeHtml(item.label)}:</span><span class="script-val">${escapeHtml(item.display)}</span></div>`
-        )
+        .map((item) => {
+          const valClass = item.destaque ? "script-val num-destaque-txt" : "script-val";
+          return `<div class="script-row"><span class="script-label">${escapeHtml(item.label)}:</span><span class="${valClass}">${escapeHtml(item.display)}</span></div>`;
+        })
         .join("");
     }
 
     function aplicarFormatacaoCampo(key) {
-      if (key === "woNumero") {
-        inputs.woNumero.value = formatarWO(inputs.woNumero.value);
-      } else if (key === "contratoNumero") {
-        inputs.contratoNumero.value = formatarContrato(inputs.contratoNumero.value);
+      if (key === "woNumero" || key === "contratoNumero") {
+        inputs[key].value = formatarBlocoTres(inputs[key].value);
       }
     }
 
@@ -763,8 +776,8 @@
     function arquivarDadosChamada() {
       const nome = inputs.nomeCliente.value.trim();
       const endereco = inputs.enderecoCliente.value.trim();
-      const wo = formatarWO(inputs.woNumero.value);
-      const contrato = formatarContrato(inputs.contratoNumero.value);
+      const wo = formatarBlocoTres(inputs.woNumero.value);
+      const contrato = formatarBlocoTres(inputs.contratoNumero.value);
 
       if (!nome && !endereco && !wo && !contrato) {
         setStatus("Preencha ou cole ao menos um campo da chamada antes de arquivar.", true);
@@ -800,8 +813,8 @@
 
       inputs.nomeCliente.value = item.nomeCliente || "";
       inputs.enderecoCliente.value = item.enderecoCliente || "";
-      inputs.woNumero.value = formatarWO(item.woNumero || "");
-      inputs.contratoNumero.value = formatarContrato(item.contratoNumero || "");
+      inputs.woNumero.value = formatarBlocoTres(item.woNumero || "");
+      inputs.contratoNumero.value = formatarBlocoTres(item.contratoNumero || "");
       msgPreview.value = item.mensagemFormatada || formatarTextoChamada();
       atualizarRoteiro();
       setStatus(`Dados da chamada de ${item.arquivadoEm} carregados nos campos.`);
@@ -835,8 +848,8 @@
             </div>
             <div class="archive-summary">
               <strong>Cliente:</strong> ${escapeHtml(r.nomeCliente || "-")} |
-              <strong>WO:</strong> ${escapeHtml(r.woNumero || "-")} |
-              <strong>Contrato:</strong> ${escapeHtml(r.contratoNumero || "-")}<br />
+              <strong>WO:</strong> <span class="archive-num">${escapeHtml(r.woNumero || "-")}</span> |
+              <strong>Contrato:</strong> <span class="archive-num">${escapeHtml(r.contratoNumero || "-")}</span><br />
               <strong>Endereço:</strong> ${escapeHtml(r.enderecoCliente || "-")}
             </div>
           </div>
