@@ -1,36 +1,25 @@
-# Roteiro de Chamada — Sistema Tivit / Coop
+# Automação de Ligação e WhatsApp — Sistema Tivit / Coop
 
-Aplicação web local (`index.html`) desenvolvida para agilizar o atendimento e o registro de chamadas técnicas no sistema **Tivit / Coop**.
+Aplicação web em arquivo único (`index.html`) baseada no layout escuro (`Versão 1.2`) com as funcionalidades de atendimento e registro de chamadas.
 
-## Funcionalidades
+## Comparação com o Arquivo Enviado (`Versão 1.2`)
 
-- **Tema Escuro:** Interface otimizada para ambientes com pouca luz ou uso contínuo em campo.
-- **Botão de Ligação Rápida no Topo:** Discagem direta para `+558007690800` via link `tel:+558007690800`.
-- **Colagem ao Clicar / Colar Nativo:** Clicar nos campos **Nome do Cliente**, **Endereço**, **WO / O.S.** ou **Contrato** tenta ler a área de transferência automaticamente via `navigator.clipboard.readText()` (com verificação de permissão e formatação automática no evento `paste` / `Ctrl+V` caso o navegador bloqueie leitura direta em páginas locais `file://`).
-- **Máscaras de Formatação:**
-  - **Contrato:** `xxx.xxx.xxx`
-  - **WO / O.S.:** `xxx.xxx.xxx.xxxx`
-- **Botão Limpar Campo Opção:** Localizado logo abaixo do campo **Opção / Observação Adicional** para limpar rapidamente caso haja cópia ou digitação incorreta.
-- **Ordem Fixa de Parâmetros:** Mantém na sequência definida:
-  - `Opção do serviço: 239`
-  - `Cidade: 003`
-  - `Código da empresa: 68804663#`
-  - `Nome do Funcionário: Fernando Sato`
-  - `Código Funcionário: Z688632`
-  - `Nome da Conveniada: CSR Engenharia Ltda`
-  - `PDA: 91520-6585`
-  - `Código da Baixa: 409`
-  - `Tipo de wo: Instalação/ Mudança de Pacote`
-  - `Hora de Início : 12:00`
-- **Formatação para WhatsApp:** Gera a mensagem formatada com negrito e marcadores pronta para envio no WhatsApp.
-- **Arquivamento e Portabilidade de Dados:**
-  - Arquiva chamadas localmente no navegador (`localStorage`).
-  - Exporta e importa dados em **JSON** e **CSV**.
-  - Gera download em **PDF**.
+- **Base visual e estrutural mantida:** Mesmo esquema de cores escuras (`#0f172a`, `#1e293b`, `#0b1220`, `#38bdf8`, `#22c55e`), cards e fluxo de colagem ao clicar.
+- **No arquivo enviado (`Versão 1.2`):**
+  - Não havia botão de ligação para `+558007690800` no topo.
+  - Não havia campo/botão para limpar **Opção** separadamente.
+  - **WO** e **Contrato** não aplicavam máscaras (`xxx.xxx.xxx.xxxx` e `xxx.xxx.xxx`).
+  - Não havia arquivamento de chamadas, importação/exportação **JSON** e **CSV**, nem exportação **PDF**.
+  - O rodapé marcava `Versão 1.2 - 21.11.26 - 01:32`.
+- **Adicionado nesta versão (`Versão 1.3 - 21.11.26 - 03:57`):**
+  - Botão de ligação no topo para `+558007690800` (`tel:+558007690800`).
+  - Campo **Opção / Observação** com botão **Limpar campo opção** logo abaixo.
+  - Máscaras automáticas em **WO / O.S.** (`xxx.xxx.xxx.xxxx`) e **Contrato** (`xxx.xxx.xxx`).
+  - Arquivamento local de chamadas, importação/exportação **JSON** e **CSV**, e geração de **PDF**.
+  - Rodapé e documentação atualizados para `Versão 1.3 - 21.11.26 - 03:57`.
 
-## Histórico de Versões
+## Por que a leitura automática da área de transferência pode falhar no navegador
 
-- **Versão 1.1 - 21.11.26 - 03:51** — Adicionado tema escuro completo, ajuste no disparador de leitura da área de transferência no clique (`pointerdown` + verificação de permissão) e tratamento imediato de colagem (`paste` / `Ctrl+V`) com formatação automática.
-- **Versão 1.0 - 21.11.26 - 03:43** — Versão inicial com colagem por clique, máscaras de Contrato e O.S., botão de limpeza de opção, formatação WhatsApp, arquivo local, importação/exportação JSON e CSV, exportação PDF e atalho de chamada para Tivit.
+Mesmo com o clique no campo, navegadores modernos bloqueiam `navigator.clipboard.readText()` quando o arquivo HTML é aberto diretamente por `file://` (duplo clique no arquivo) ou sem permissão/HTTPS. Quando isso ocorre, o campo recebe foco e exibe o aviso para usar `Ctrl+V` / **Colar**, e o evento `paste` formata o texto automaticamente.
 
-Criado por Fernando Sato - Versão 1.1 - 21.11.26 - 03:51
+Criado por Fernando Sato - Versão 1.3 - 21.11.26 - 03:57
