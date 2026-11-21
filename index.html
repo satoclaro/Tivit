@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Automação de Ligação e WhatsApp — Sistema Tivit / Coop</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     :root {
       --bg: #0f172a;
@@ -15,8 +14,6 @@
       --muted: #94a3b8;
       --accent: #38bdf8;
       --accent-hover: #0ea5e9;
-      --call: #16a34a;
-      --call-hover: #15803d;
       --whatsapp: #22c55e;
       --whatsapp-hover: #16a34a;
       --danger: #f87171;
@@ -41,7 +38,7 @@
 
     .container {
       width: 100%;
-      max-width: 820px;
+      max-width: 780px;
       margin: 0 auto;
       flex: 1;
     }
@@ -56,7 +53,7 @@
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
     }
 
     header h1 {
@@ -69,32 +66,6 @@
       font-size: 0.85rem;
       color: var(--muted);
       margin-top: 2px;
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .btn-call-top {
-      background: var(--call);
-      color: #ffffff;
-      text-decoration: none;
-      font-size: 0.88rem;
-      font-weight: 700;
-      padding: 9px 14px;
-      border-radius: 10px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: background-color 0.15s ease, transform 0.08s ease;
-    }
-
-    .btn-call-top:hover {
-      background: var(--call-hover);
-      transform: translateY(-1px);
     }
 
     .badge {
@@ -116,18 +87,10 @@
       margin-bottom: 16px;
     }
 
-    .panel-header-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 4px;
-    }
-
     .panel-title {
       font-size: 0.98rem;
       font-weight: 700;
+      margin-bottom: 4px;
     }
 
     .panel-subtitle {
@@ -201,11 +164,39 @@
       box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.24);
     }
 
-    .below-option-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 2px;
+    .fixed-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      font-size: 0.86rem;
+    }
+
+    .fixed-table tr {
+      border-bottom: 1px solid rgba(51, 65, 85, 0.65);
+    }
+
+    .fixed-table tr:last-child {
+      border-bottom: none;
+    }
+
+    .fixed-table td {
+      padding: 9px 12px;
+      vertical-align: top;
+    }
+
+    .fixed-table td.k {
+      color: var(--muted);
+      font-weight: 600;
+      width: 42%;
+    }
+
+    .fixed-table td.v {
+      color: var(--text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      word-break: break-word;
     }
 
     .script-list {
@@ -242,22 +233,20 @@
       color: var(--accent);
       font-weight: 600;
       text-align: right;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
 
     .actions {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-top: 16px;
+      margin-top: 18px;
     }
 
-    button,
-    label.btn-file {
+    button {
       border: none;
       border-radius: 10px;
-      padding: 10px 14px;
-      font-size: 0.88rem;
+      padding: 11px 16px;
+      font-size: 0.9rem;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
@@ -267,14 +256,14 @@
       transition: transform 0.08s ease, background-color 0.15s ease, opacity 0.15s ease;
     }
 
-    button:active,
-    label.btn-file:active {
+    button:active {
       transform: scale(0.98);
     }
 
     .btn-primary {
       background: var(--accent);
       color: #061322;
+      flex: 1 1 200px;
     }
 
     .btn-primary:hover {
@@ -284,6 +273,7 @@
     .btn-whatsapp {
       background: var(--whatsapp);
       color: #052010;
+      flex: 1 1 200px;
     }
 
     .btn-whatsapp:hover {
@@ -298,22 +288,6 @@
 
     .btn-secondary:hover {
       background: rgba(255, 255, 255, 0.05);
-    }
-
-    .btn-danger {
-      background: rgba(248, 113, 113, 0.12);
-      color: var(--danger);
-      border: 1px solid rgba(248, 113, 113, 0.35);
-    }
-
-    .btn-danger:hover {
-      background: rgba(248, 113, 113, 0.22);
-    }
-
-    .btn-sm {
-      padding: 6px 10px;
-      font-size: 0.78rem;
-      border-radius: 8px;
     }
 
     .btn-mini {
@@ -369,42 +343,9 @@
       color: var(--danger);
     }
 
-    .table-wrap {
-      overflow-x: auto;
-      background: var(--card-2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-    }
-
-    table.archive-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.83rem;
-    }
-
-    table.archive-table th,
-    table.archive-table td {
-      padding: 9px 10px;
-      border-bottom: 1px solid rgba(51, 65, 85, 0.65);
-      text-align: left;
-      white-space: nowrap;
-    }
-
-    table.archive-table th {
-      color: var(--muted);
-      font-weight: 600;
-      background: rgba(15, 23, 42, 0.7);
-    }
-
-    .empty-row {
-      text-align: center;
-      color: var(--muted);
-      padding: 16px;
-    }
-
     footer {
       width: 100%;
-      max-width: 820px;
+      max-width: 780px;
       margin: 12px auto 0;
       text-align: center;
       font-size: 0.8rem;
@@ -421,20 +362,14 @@
         <h1>Automação de Ligação e WhatsApp — Sistema Tivit / Coop</h1>
         <p>Clique em Nome, Endereço, WO ou Contrato para colar automaticamente o conteúdo da área de transferência.</p>
       </div>
-      <div class="header-right">
-        <a class="btn-call-top" href="tel:+558007690800" title="Ligar para Tivit">
-          Ligar Tivit: +558007690800
-        </a>
-        <span class="badge">Telecom • Tivit / Coop</span>
-      </div>
+      <span class="badge">Telecom • Tivit / Coop</span>
     </header>
 
     <section class="panel" aria-label="Campos variáveis com cola automática da área de transferência">
       <div class="panel-title">1. Campos para colar da área de transferência (ao clicar)</div>
       <div class="panel-subtitle">
         Copie o dado desejado e clique no campo correspondente para colar o conteúdo da área de transferência automaticamente.
-        <strong>WO</strong> formata como <code>xxx.xxx.xxx.xxxx</code> e <strong>Contrato</strong> formata como <code>xxx.xxx.xxx</code>.
-        Caso o navegador bloqueie leitura direta (ex.: <code>file://</code>), use <kbd>Ctrl+V</kbd> / Colar — a formatação acontece na hora.
+        Caso o navegador peça permissão ou bloqueie leitura direta, o campo foca e você pode usar <kbd>Ctrl+V</kbd> / colar normalmente.
       </div>
 
       <div class="grid">
@@ -467,47 +402,30 @@
         <div class="grid two-col">
           <div class="field-group">
             <div class="field-header">
-              <label for="woNumero">WO (xxx.xxx.xxx.xxxx)</label>
+              <label for="woNumero">WO</label>
               <span class="paste-tag">Clique = Colar</span>
             </div>
             <input
               type="text"
               id="woNumero"
               inputmode="numeric"
-              placeholder="xxx.xxx.xxx.xxxx"
+              placeholder="Clique para colar o WO..."
               autocomplete="off"
             />
           </div>
 
           <div class="field-group">
             <div class="field-header">
-              <label for="contratoNumero">Contrato (xxx.xxx.xxx)</label>
+              <label for="contratoNumero">Contrato</label>
               <span class="paste-tag">Clique = Colar</span>
             </div>
             <input
               type="text"
               id="contratoNumero"
               inputmode="numeric"
-              placeholder="xxx.xxx.xxx"
+              placeholder="Clique para colar o Contrato..."
               autocomplete="off"
             />
-          </div>
-        </div>
-
-        <div class="field-group">
-          <div class="field-header">
-            <label for="opcaoCampo">Opção / Observação</label>
-            <span class="paste-tag">Opcional</span>
-          </div>
-          <input
-            type="text"
-            id="opcaoCampo"
-            placeholder="Digite ou cole uma opção caso copie/digite errado..."
-            autocomplete="off"
-          />
-          <div class="below-option-bar">
-            <button type="button" class="btn-danger btn-sm" id="btnLimparOpcao">Limpar campo opção</button>
-            <button type="button" class="btn-secondary btn-sm" id="btnLimpar">Limpar campos da chamada</button>
           </div>
         </div>
       </div>
@@ -515,18 +433,7 @@
       <div class="actions">
         <button type="button" class="btn-primary" id="btnFormatarWpp">Formatar para WhatsApp</button>
         <button type="button" class="btn-whatsapp" id="btnAbrirWpp">Formatar e abrir WhatsApp</button>
-        <button type="button" class="btn-primary" id="btnArquivar">Arquivar chamada</button>
-        <button type="button" class="btn-secondary" id="btnExportJson">Exportar JSON</button>
-        <label class="btn-secondary btn-file">
-          Importar JSON
-          <input type="file" id="importJsonFile" accept=".json,application/json" style="display:none;" />
-        </label>
-        <button type="button" class="btn-secondary" id="btnExportCsv">Exportar CSV</button>
-        <label class="btn-secondary btn-file">
-          Importar CSV
-          <input type="file" id="importCsvFile" accept=".csv,text/csv" style="display:none;" />
-        </label>
-        <button type="button" class="btn-secondary" id="btnBaixarPdf">Baixar em PDF</button>
+        <button type="button" class="btn-secondary" id="btnLimpar">Limpar campos</button>
       </div>
 
       <div id="statusMsg" class="status-msg" role="status" aria-live="polite"></div>
@@ -545,41 +452,32 @@
 
     <section class="panel" aria-label="Roteiro de fala na ordem solicitada">
       <div class="panel-title">2. Roteiro para falar com a atendente (ordem do sistema)</div>
-      <div class="panel-subtitle">Atualiza em tempo real conforme você cola Nome, Endereço, WO (<code>xxx.xxx.xxx.xxxx</code>) e Contrato (<code>xxx.xxx.xxx</code>).</div>
+      <div class="panel-subtitle">Atualiza em tempo real conforme você cola Nome, Endereço, WO e Contrato.</div>
       <div class="script-list" id="roteiroLigacao"></div>
     </section>
 
-    <section class="panel" aria-label="Chamadas arquivadas">
-      <div class="panel-header-row">
-        <div class="panel-title">3. Chamadas arquivadas (<span id="archiveCount">0</span>)</div>
-        <button type="button" class="btn-danger btn-sm" id="btnLimparArquivo">Limpar arquivo</button>
-      </div>
-      <div class="panel-subtitle">Salvas localmente no navegador; você pode carregar de volta, excluir ou exportar em JSON/CSV.</div>
-      <div class="table-wrap">
-        <table class="archive-table">
-          <thead>
-            <tr>
-              <th>Data/Hora</th>
-              <th>Nome</th>
-              <th>Endereço</th>
-              <th>WO</th>
-              <th>Contrato</th>
-              <th>Opção</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody id="archiveBody">
-            <tr>
-              <td colspan="7" class="empty-row">Nenhuma chamada arquivada ainda.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <section class="panel" aria-label="Dados fixos configurados">
+      <div class="panel-title">3. Dados fixos mantidos na formatação</div>
+      <div class="panel-subtitle">Incluídos automaticamente na ordem solicitada para o atendimento Tivit / Coop.</div>
+      <table class="fixed-table">
+        <tbody>
+          <tr><td class="k">Opção do serviço</td><td class="v">239</td></tr>
+          <tr><td class="k">Cidade</td><td class="v">003</td></tr>
+          <tr><td class="k">Código da empresa</td><td class="v">68804663#</td></tr>
+          <tr><td class="k">Nome do Funcionário</td><td class="v">Fernando Sato</td></tr>
+          <tr><td class="k">Código Funcionário</td><td class="v">Z688632</td></tr>
+          <tr><td class="k">Nome da Conveniada</td><td class="v">CSR Engenharia Ltda</td></tr>
+          <tr><td class="k">PDA</td><td class="v">91520-6585</td></tr>
+          <tr><td class="k">Código da Baixa</td><td class="v">409</td></tr>
+          <tr><td class="k">Tipo de wo</td><td class="v">Instalação/ Mudança de Pacote</td></tr>
+          <tr><td class="k">Hora de Início</td><td class="v">12:00</td></tr>
+        </tbody>
+      </table>
     </section>
   </div>
 
   <footer>
-    Criado por Fernando Sato - Versão 1.4 - 21.11.26 - 04:06
+    Criado por Fernando Sato - Versão 1.2 - 21.11.26 - 01:32
   </footer>
 
   <script>
@@ -592,27 +490,20 @@
       nomeConveniada: "CSR Engenharia Ltda",
       pda: "91520-6585",
       codigoBaixa: "409",
-      tipoWo: "Instalação/\tMudança de Pacote",
+      tipoWo: "Instalação/	Mudança de Pacote",
       horaInicio: "12:00"
     };
-
-    const STORAGE_KEY = "tivit_coop_chamadas_v1_4";
 
     const inputs = {
       nomeCliente: document.getElementById("nomeCliente"),
       enderecoCliente: document.getElementById("enderecoCliente"),
       woNumero: document.getElementById("woNumero"),
-      contratoNumero: document.getElementById("contratoNumero"),
-      opcaoCampo: document.getElementById("opcaoCampo")
+      contratoNumero: document.getElementById("contratoNumero")
     };
 
     const msgPreview = document.getElementById("msgPreview");
     const statusMsg = document.getElementById("statusMsg");
     const roteiroLigacao = document.getElementById("roteiroLigacao");
-    const archiveBody = document.getElementById("archiveBody");
-    const archiveCount = document.getElementById("archiveCount");
-
-    let archivedCalls = loadArchive();
 
     function setStatus(texto, isWarn = false) {
       statusMsg.textContent = texto;
@@ -634,43 +525,13 @@
         .replace(/"/g, "&quot;");
     }
 
-    // Formatação Contrato: xxx.xxx.xxx (9 dígitos)
-    function formatarContrato(valor) {
-      const digits = String(valor || "").replace(/\D/g, "").slice(0, 9);
-      const grupos = [];
-      if (digits.length > 0) grupos.push(digits.slice(0, 3));
-      if (digits.length > 3) grupos.push(digits.slice(3, 6));
-      if (digits.length > 6) grupos.push(digits.slice(6, 9));
-      return grupos.join(".");
-    }
-
-    // Formatação WO: xxx.xxx.xxx.xxxx (13 dígitos)
-    function formatarWO(valor) {
-      const digits = String(valor || "").replace(/\D/g, "").slice(0, 13);
-      const grupos = [];
-      if (digits.length > 0) grupos.push(digits.slice(0, 3));
-      if (digits.length > 3) grupos.push(digits.slice(3, 6));
-      if (digits.length > 6) grupos.push(digits.slice(6, 9));
-      if (digits.length > 9) grupos.push(digits.slice(9, 13));
-      return grupos.join(".");
-    }
-
-    function formatarCampoPorTipo(key, valor) {
-      const limpo = String(valor || "").replace(/?
-/g, " ").trim();
-      if (key === "woNumero") return formatarWO(limpo);
-      if (key === "contratoNumero") return formatarContrato(limpo);
-      return limpo;
-    }
-
     function obterLinhasOrdenadas() {
       const nome = inputs.nomeCliente.value.trim();
       const endereco = inputs.enderecoCliente.value.trim();
-      const wo = formatarWO(inputs.woNumero.value);
-      const contrato = formatarContrato(inputs.contratoNumero.value);
-      const opcao = inputs.opcaoCampo.value.trim();
+      const wo = inputs.woNumero.value.trim();
+      const contrato = inputs.contratoNumero.value.trim();
 
-      const linhas = [
+      return [
         { label: "Opção do serviço", valor: DADOS_FIXOS.opcaoServico, display: DADOS_FIXOS.opcaoServico },
         { label: "Cidade", valor: DADOS_FIXOS.cidade, display: DADOS_FIXOS.cidade },
         { label: "Código da empresa", valor: DADOS_FIXOS.codigoEmpresa, display: DADOS_FIXOS.codigoEmpresa },
@@ -686,11 +547,6 @@
         { label: "WO", valor: wo || "-", display: wo || "[Colar WO]" },
         { label: "Contrato", valor: contrato || "-", display: contrato || "[Colar Contrato]" }
       ];
-
-      if (opcao) {
-        linhas.push({ label: "Opção", valor: opcao, display: opcao });
-      }
-      return linhas;
     }
 
     function atualizarRoteiro() {
@@ -711,19 +567,18 @@
       if (navigator.clipboard && typeof navigator.clipboard.readText === "function") {
         try {
           const textoClipboard = await navigator.clipboard.readText();
-          const formatado = formatarCampoPorTipo(key, textoClipboard);
-          if (formatado !== "") {
-            el.value = formatado;
+          if (textoClipboard && textoClipboard.trim() !== "") {
+            el.value = textoClipboard.trim();
             flashInput(el);
             atualizarRoteiro();
-            setStatus(`Conteúdo colado e formatado em "${el.labels?.[0]?.textContent || key}".`);
+            setStatus(`Conteúdo colado em "${el.labels?.[0]?.textContent || key}".`);
             return;
           } else {
             setStatus("A área de transferência está vazia.", true);
             return;
           }
         } catch (err) {
-          setStatus("Leitura automática bloqueada pelo navegador neste contexto. Use Ctrl+V ou toque em Colar.", true);
+          setStatus("Permissão de leitura da área de transferência bloqueada pelo navegador. Use Ctrl+V ou toque em Colar.", true);
           return;
         }
       }
@@ -731,54 +586,10 @@
       setStatus("Seu navegador não suporta leitura automática ao clicar. Use Ctrl+V ou toque em Colar.", true);
     }
 
-    const clickPasteKeys = ["nomeCliente", "enderecoCliente", "woNumero", "contratoNumero"];
-
-    clickPasteKeys.forEach((key) => {
+    Object.keys(inputs).forEach((key) => {
       const el = inputs[key];
       el.addEventListener("click", () => colarDaAreaTransferencia(key));
-      el.addEventListener("paste", (e) => {
-        const cd = e.clipboardData || window.clipboardData;
-        if (cd && typeof cd.getData === "function") {
-          const pasted = cd.getData("text");
-          if (pasted) {
-            e.preventDefault();
-            el.value = formatarCampoPorTipo(key, pasted);
-            flashInput(el);
-            atualizarRoteiro();
-            setStatus(`Conteúdo colado e formatado em "${el.labels?.[0]?.textContent || key}".`);
-          }
-        }
-      });
-    });
-
-    inputs.woNumero.addEventListener("input", () => {
-      inputs.woNumero.value = formatarWO(inputs.woNumero.value);
-      atualizarRoteiro();
-    });
-
-    inputs.contratoNumero.addEventListener("input", () => {
-      inputs.contratoNumero.value = formatarContrato(inputs.contratoNumero.value);
-      atualizarRoteiro();
-    });
-
-    [inputs.nomeCliente, inputs.enderecoCliente, inputs.opcaoCampo].forEach((el) => {
       el.addEventListener("input", atualizarRoteiro);
-    });
-
-    document.getElementById("btnLimparOpcao").addEventListener("click", () => {
-      inputs.opcaoCampo.value = "";
-      inputs.opcaoCampo.focus();
-      atualizarRoteiro();
-      setStatus("Campo Opção limpo.");
-    });
-
-    document.getElementById("btnLimpar").addEventListener("click", () => {
-      Object.values(inputs).forEach((el) => {
-        el.value = "";
-      });
-      msgPreview.value = "";
-      atualizarRoteiro();
-      setStatus("Campos da chamada limpos. Dados fixos mantidos.");
     });
 
     function montarMensagemWhatsApp() {
@@ -814,274 +625,16 @@
       }
     });
 
-    // Arquivamento
-    function loadArchive() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        return raw ? JSON.parse(raw) : [];
-      } catch {
-        return [];
-      }
-    }
-
-    function saveArchive() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(archivedCalls));
-      renderArchive();
-    }
-
-    function renderArchive() {
-      archiveCount.textContent = archivedCalls.length;
-      if (!archivedCalls.length) {
-        archiveBody.innerHTML = `<tr><td colspan="7" class="empty-row">Nenhuma chamada arquivada ainda.</td></tr>`;
-        return;
-      }
-
-      archiveBody.innerHTML = archivedCalls
-        .map(
-          (item, idx) => `
-          <tr>
-            <td>${escapeHtml(item.registradoEm || "")}</td>
-            <td>${escapeHtml(item.nome || "-")}</td>
-            <td>${escapeHtml(item.endereco || "-")}</td>
-            <td>${escapeHtml(item.wo || "-")}</td>
-            <td>${escapeHtml(item.contrato || "-")}</td>
-            <td>${escapeHtml(item.opcao || "-")}</td>
-            <td>
-              <button type="button" class="btn-secondary btn-sm" onclick="carregarChamada(${idx})">Carregar</button>
-              <button type="button" class="btn-danger btn-sm" onclick="excluirChamada(${idx})">Excluir</button>
-            </td>
-          </tr>
-        `
-        )
-        .join("");
-    }
-
-    window.carregarChamada = function (idx) {
-      const item = archivedCalls[idx];
-      if (!item) return;
-      inputs.nomeCliente.value = item.nome || "";
-      inputs.enderecoCliente.value = item.endereco || "";
-      inputs.woNumero.value = formatarWO(item.wo || "");
-      inputs.contratoNumero.value = formatarContrato(item.contrato || "");
-      inputs.opcaoCampo.value = item.opcao || "";
+    document.getElementById("btnLimpar").addEventListener("click", () => {
+      Object.values(inputs).forEach((el) => {
+        el.value = "";
+      });
+      msgPreview.value = "";
       atualizarRoteiro();
-      montarMensagemWhatsApp();
-      setStatus("Chamada carregada do arquivo.");
-    };
-
-    window.excluirChamada = function (idx) {
-      archivedCalls.splice(idx, 1);
-      saveArchive();
-      setStatus("Chamada removida do arquivo.");
-    };
-
-    function getSnapshot() {
-      return {
-        registradoEm: new Date().toLocaleString("pt-BR"),
-        ...DADOS_FIXOS,
-        nome: inputs.nomeCliente.value.trim(),
-        endereco: inputs.enderecoCliente.value.trim(),
-        wo: formatarWO(inputs.woNumero.value),
-        contrato: formatarContrato(inputs.contratoNumero.value),
-        opcao: inputs.opcaoCampo.value.trim()
-      };
-    }
-
-    document.getElementById("btnArquivar").addEventListener("click", () => {
-      const snap = getSnapshot();
-      if (!snap.nome && !snap.endereco && !snap.wo && !snap.contrato && !snap.opcao) {
-        setStatus("Preencha ao menos um campo antes de arquivar.", true);
-        return;
-      }
-      archivedCalls.unshift(snap);
-      saveArchive();
-      setStatus("Chamada arquivada com sucesso.");
-    });
-
-    document.getElementById("btnLimparArquivo").addEventListener("click", () => {
-      if (!archivedCalls.length) return;
-      archivedCalls = [];
-      saveArchive();
-      setStatus("Arquivo de chamadas limpo.");
-    });
-
-    function downloadFile(content, filename, mimeType) {
-      const blob = new Blob([content], { type: mimeType });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
-
-    function slugNow() {
-      const d = new Date();
-      const p = (n) => String(n).padStart(2, "0");
-      return `${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}`;
-    }
-
-    document.getElementById("btnExportJson").addEventListener("click", () => {
-      const payload = {
-        exportadoEm: new Date().toISOString(),
-        chamadaAtual: getSnapshot(),
-        chamadasArquivadas: archivedCalls
-      };
-      downloadFile(JSON.stringify(payload, null, 2), `tivit-coop-${slugNow()}.json`, "application/json");
-      setStatus("Arquivo JSON exportado.");
-    });
-
-    document.getElementById("importJsonFile").addEventListener("change", (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        try {
-          const data = JSON.parse(reader.result);
-          if (data.chamadaAtual) {
-            inputs.nomeCliente.value = data.chamadaAtual.nome || "";
-            inputs.enderecoCliente.value = data.chamadaAtual.endereco || "";
-            inputs.woNumero.value = formatarWO(data.chamadaAtual.wo || "");
-            inputs.contratoNumero.value = formatarContrato(data.chamadaAtual.contrato || "");
-            inputs.opcaoCampo.value = data.chamadaAtual.opcao || "";
-          }
-          if (Array.isArray(data.chamadasArquivadas)) {
-            archivedCalls = [...data.chamadasArquivadas, ...archivedCalls];
-            saveArchive();
-          }
-          atualizarRoteiro();
-          setStatus("JSON importado com sucesso.");
-        } catch {
-          setStatus("Arquivo JSON inválido.", true);
-        }
-        e.target.value = "";
-      };
-      reader.readAsText(file);
-    });
-
-    function csvEscape(v) {
-      const s = String(v ?? "");
-      return `"${s.replace(/"/g, '""')}"`;
-    }
-
-    document.getElementById("btnExportCsv").addEventListener("click", () => {
-      const cols = [
-        "registradoEm", "nome", "endereco", "wo", "contrato", "opcao",
-        "opcaoServico", "cidade", "codigoEmpresa", "nomeFuncionario",
-        "codigoFuncionario", "nomeConveniada", "pda", "codigoBaixa",
-        "tipoWo", "horaInicio"
-      ];
-      const rows = archivedCalls.length ? archivedCalls : [getSnapshot()];
-      const lines = [
-        cols.map(csvEscape).join(";"),
-        ...rows.map((r) => cols.map((c) => csvEscape(r[c])).join(";"))
-      ];
-      downloadFile("\uFEFF" + lines.join("\n"), `tivit-coop-${slugNow()}.csv`, "text/csv;charset=utf-8;");
-      setStatus("Arquivo CSV exportado.");
-    });
-
-    function parseCsvLine(line, sep) {
-      const out = [];
-      let cur = "";
-      let q = false;
-      for (let i = 0; i < line.length; i++) {
-        const ch = line[i];
-        if (q) {
-          if (ch === '"' && line[i + 1] === '"') {
-            cur += '"';
-            i++;
-          } else if (ch === '"') {
-            q = false;
-          } else {
-            cur += ch;
-          }
-        } else if (ch === '"') {
-          q = true;
-        } else if (ch === sep) {
-          out.push(cur);
-          cur = "";
-        } else {
-          cur += ch;
-        }
-      }
-      out.push(cur);
-      return out;
-    }
-
-    document.getElementById("importCsvFile").addEventListener("change", (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        try {
-          const txt = reader.result.replace(/^\uFEFF/, "");
-          const lines = txt.split(/\r?\n/).filter((l) => l.trim().length > 0);
-          if (lines.length < 2) {
-            setStatus("CSV sem linhas de dados.", true);
-            return;
-          }
-          const sep = lines[0].includes(";") ? ";" : ",";
-          const headers = parseCsvLine(lines[0], sep).map((h) => h.trim());
-          const imported = [];
-          for (let i = 1; i < lines.length; i++) {
-            const vals = parseCsvLine(lines[i], sep);
-            const obj = { ...DADOS_FIXOS };
-            headers.forEach((h, idx) => {
-              obj[h] = vals[idx] ?? "";
-            });
-            obj.wo = formatarWO(obj.wo);
-            obj.contrato = formatarContrato(obj.contrato);
-            imported.push(obj);
-          }
-          if (imported.length) {
-            const first = imported[0];
-            inputs.nomeCliente.value = first.nome || "";
-            inputs.enderecoCliente.value = first.endereco || "";
-            inputs.woNumero.value = first.wo || "";
-            inputs.contratoNumero.value = first.contrato || "";
-            inputs.opcaoCampo.value = first.opcao || "";
-            archivedCalls = [...imported, ...archivedCalls];
-            saveArchive();
-            atualizarRoteiro();
-            setStatus(`${imported.length} registro(s) importado(s) do CSV.`);
-          }
-        } catch {
-          setStatus("Erro ao importar CSV.", true);
-        }
-        e.target.value = "";
-      };
-      reader.readAsText(file);
-    });
-
-    document.getElementById("btnBaixarPdf").addEventListener("click", () => {
-      if (!window.jspdf || !window.jspdf.jsPDF) {
-        setStatus("Biblioteca jsPDF não carregada. Verifique a conexão com a internet.", true);
-        return;
-      }
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ unit: "mm", format: "a4" });
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(13);
-      doc.text("Roteiro de Chamada — Sistema Tivit / Coop", 14, 18);
-
-      const content = msgPreview.value.trim() || montarMensagemWhatsApp();
-      doc.setFont("courier", "normal");
-      doc.setFontSize(10);
-      const lines = doc.splitTextToSize(content, 182);
-      doc.text(lines, 14, 28);
-
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(8.5);
-      doc.text("Criado por Fernando Sato - Versão 1.4 - 21.11.26 - 04:06", 14, 285);
-
-      doc.save(`roteiro-tivit-coop-${slugNow()}.pdf`);
-      setStatus("PDF baixado com sucesso.");
+      setStatus("Campos variáveis limpos. Dados fixos mantidos.");
     });
 
     atualizarRoteiro();
-    renderArchive();
   </script>
 </body>
 </html>
