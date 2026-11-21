@@ -10,8 +10,8 @@ Ferramenta web em arquivo único (`index.html`) voltada para técnicos de teleco
    - Link direto `tel:+558007690800` no cabeçalho (`Ligar para Tivit (+558007690800)`).
 
 2. **Cola automática ao clicar (`Nome do cliente`, `Endereço`, `O.S`, `Contrato`)**
-   - Ao clicar em qualquer um desses campos, o sistema lê a área de transferência (`navigator.clipboard.readText()`) e cola o conteúdo automaticamente no evento `click` padrão.
-   - Caso o navegador bloqueie a leitura direta da área de transferência, o campo mantém o foco para colagem manual (`Ctrl+V` ou toque em **Colar**).
+   - Restaura a função de colar nos campos no padrão da versão `1.2` (`colarNaCampo` ao clicar no campo usando `navigator.clipboard.readText()`).
+   - Caso o navegador bloqueie a leitura automática, o campo mantém o foco para colagem manual (`Ctrl+V` ou toque em **Colar**).
    - Abaixo de cada um dos 4 campos (`Nome do cliente`, `Endereço`, `O.S`, `Contrato`), há um botão pequeno **Limpar campo** para apagar rapidamente caso alguma informação incorreta seja colada.
 
 3. **Formatação e destaque visual de Nome, Endereço, O.S e Contrato**
@@ -45,6 +45,7 @@ Ferramenta web em arquivo único (`index.html`) voltada para técnicos de teleco
 
 ## Histórico de versões
 
+- **Versão 1.13 - 21.11.26 - 03:15:** Restauração da função de colar nos campos no padrão da versão `1.2` (`colarNaCampo`) e atualização do `README.md`.
 - **Versão 1.12 - 21.11.26 - 03:04:** Restauração do fluxo direto de clique (`click`) para colar da área de transferência nos campos **Nome do cliente**, **Endereço**, **O.S** e **Contrato**, e atualização do `README.md`.
 - **Versão 1.11 - 21.11.26 - 02:48:** Reforço na leitura da área de transferência no toque/clique (`pointerdown`), tratamento do evento `paste` para formatação imediata e atualização do `README.md`.
 - **Versão 1.10 - 21.11.26 - 02:39:** Adição de **Exportar JSON**, **Importar JSON**, **Exportar CSV**, **Importar CSV** e **Baixar PDF** na seção de chamadas arquivadas, além da atualização do `README.md`.
@@ -61,4 +62,4 @@ Ferramenta web em arquivo único (`index.html`) voltada para técnicos de teleco
 
 ---
 
-Criado por Fernando Sato - Versão 1.12 - 21.11.26 - 03:04
+Criado por Fernando Sato - Versão 1.13 - 21.11.26 - 03:15

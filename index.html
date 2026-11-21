@@ -648,12 +648,13 @@
   </div>
 
   <footer>
-    Criado por Fernando Sato - Versão 1.12 - 21.11.26 - 03:04
+    Criado por Fernando Sato - Versão 1.13 - 21.11.26 - 03:15
   </footer>
 
   <script>
-    const STORAGE_KEY = "tivit_coop_chamadas_arquivadas_v1_12";
+    const STORAGE_KEY = "tivit_coop_chamadas_arquivadas_v1_13";
     const LEGACY_KEYS = [
+      "tivit_coop_chamadas_arquivadas_v1_12",
       "tivit_coop_chamadas_arquivadas_v1_11",
       "tivit_coop_chamadas_arquivadas_v1_10",
       "tivit_coop_chamadas_arquivadas_v1_9",
@@ -670,7 +671,7 @@
       nomeConveniada: "CSR Engenharia Ltda",
       pda: "91520-6585",
       codigoBaixa: "409",
-      tipoWo: "Instalação/\tMudança de Pacote",
+      tipoWo: "Instalação/	Mudança de Pacote",
       horaInicio: "12:00"
     };
 
@@ -780,38 +781,31 @@
       }
     }
 
-    // Listener de clique direto no input (padrão das versões iniciais)
-    async function colarDaAreaTransferencia(key) {
-      const el = inputs[key];
+    // Função de colar restaurada no padrão exato da versão 1.2
+    async function colarNaCampo(campoKey) {
+      const el = inputs[campoKey];
       if (!el) return;
       el.focus();
 
-      if (navigator.clipboard && typeof navigator.clipboard.readText === "function") {
-        try {
-          const textoClipboard = await navigator.clipboard.readText();
-          if (textoClipboard && textoClipboard.trim() !== "") {
-            el.value = textoClipboard.trim();
-            aplicarFormatacaoCampo(key);
-            flashInput(el);
-            atualizarRoteiro();
-            setStatus(`Conteúdo colado em "${nomesCampos[key] || key}".`);
-            return;
-          } else {
-            setStatus("A área de transferência está vazia.", true);
-            return;
-          }
-        } catch (err) {
-          setStatus("Permissão de leitura da área de transferência bloqueada pelo navegador. Use Ctrl+V ou toque em Colar.", true);
-          return;
+      try {
+        const texto = await navigator.clipboard.readText();
+        if (texto && texto.trim() !== "") {
+          el.value = texto.trim();
+          aplicarFormatacaoCampo(campoKey);
+          flashInput(el);
+          atualizarRoteiro();
+          setStatus(`Conteúdo da área de transferência colado em "${nomesCampos[campoKey] || campoKey}".`);
+        } else {
+          setStatus("A área de transferência está vazia.", true);
         }
+      } catch (err) {
+        setStatus("Não foi possível ler a área de transferência automaticamente. Cole com Ctrl+V ou toque em Colar.", true);
       }
-
-      setStatus("Seu navegador não suporta leitura automática ao clicar. Use Ctrl+V ou toque em Colar.", true);
     }
 
     Object.keys(inputs).forEach((key) => {
       const el = inputs[key];
-      el.addEventListener("click", () => colarDaAreaTransferencia(key));
+      el.addEventListener("click", () => colarNaCampo(key));
       el.addEventListener("input", () => {
         aplicarFormatacaoCampo(key);
         atualizarRoteiro();
@@ -982,7 +976,7 @@
       }
       const payload = {
         sistema: "Tivit / Coop",
-        versao: "1.12",
+        versao: "1.13",
         exportadoEm: formatarDataHoraAgora(),
         totalRegistros: registros.length,
         chamadas: registros
