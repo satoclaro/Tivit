@@ -24,8 +24,12 @@ Ferramenta web em arquivo único (`index.html`) voltada para técnicos de teleco
    - **Formatar e abrir WhatsApp:** gera a mensagem e abre o link `https://wa.me/?text=...`.
    - **Copiar mensagem:** copia o texto formatado para a área de transferência.
 
-5. **Arquivamento de dados da chamada**
-   - **Arquivar dados da chamada:** salva o registro com data e hora no armazenamento local do navegador (`localStorage`), permitindo **Carregar** novamente nos campos, **Copiar Wpp**, **Excluir**, **Baixar arquivo (.txt)** ou **Limpar arquivo**.
+5. **Arquivamento, Importação, Exportação (JSON / CSV) e Download em PDF**
+   - **Arquivar dados da chamada:** salva o registro com data e hora no armazenamento local do navegador (`localStorage`), permitindo **Carregar** novamente nos campos, **Copiar Wpp** ou **Excluir**.
+   - **Exportar JSON / Importar JSON:** salva e restaura o histórico em arquivo `.json` (`chamadas-arquivadas-tivit-coop.json`).
+   - **Exportar CSV / Importar CSV:** salva em planilha compatível com Excel (`chamadas-arquivadas-tivit-coop.csv`) e importa registros de arquivos `.csv`.
+   - **Baixar PDF:** gera e baixa diretamente um relatório em PDF (`chamadas-arquivadas-tivit-coop.pdf`) com os registros arquivados.
+   - **Baixar (.txt) / Limpar arquivo:** exporta o histórico em texto simples ou limpa os registros salvos.
 
 ---
 
@@ -35,12 +39,13 @@ Ferramenta web em arquivo único (`index.html`) voltada para técnicos de teleco
 2. Abra o arquivo `index.html` diretamente no navegador (Chrome, Edge, Safari etc.).
 3. Use o botão do topo para ligar para a Tivit (`+558007690800`), se necessário.
 4. Copie cada informação necessária e clique no campo correspondente para colar (ou use **Limpar campo** abaixo do campo se precisar corrigir).
-5. Use o roteiro na ligação, formate para WhatsApp e clique em **Arquivar dados da chamada** ao finalizar.
+5. Use o roteiro na ligação, formate para WhatsApp, arquive a chamada e utilize os botões de **JSON**, **CSV**, **PDF** ou **.txt** conforme necessário.
 
 ---
 
 ## Histórico de versões
 
+- **Versão 1.10 - 21.11.26 - 02:39:** Adição de **Exportar JSON**, **Importar JSON**, **Exportar CSV**, **Importar CSV** e **Baixar PDF** na seção de chamadas arquivadas, além da atualização do `README.md`.
 - **Versão 1.9 - 21.11.26 - 02:26:** Formatação do campo `O.S` no padrão `xxx.xxx.xxxx`, aumento do tamanho da fonte de `Nome do cliente`, `Endereço`, `O.S` e `Contrato`, e atualização do `README.md`.
 - **Versão 1.8 - 21.11.26 - 02:18:** Remoção do prefixo `O.S` do valor formatado e alteração do rótulo `WO` para `O.S` (formato `xxx.xxx.xxx` com fonte ampliada), e atualização do `README.md`.
 - **Versão 1.7 - 21.11.26 - 02:14:** Formatação do campo WO no padrão `O.S xxx.xxx.xxxx` (mantendo fonte ampliada), ajuste no roteiro, mensagem do WhatsApp e chamadas arquivadas, e atualização do `README.md`.
@@ -54,4 +59,4 @@ Ferramenta web em arquivo único (`index.html`) voltada para técnicos de teleco
 
 ---
 
-Criado por Fernando Sato - Versão 1.9 - 21.11.26 - 02:26
+Criado por Fernando Sato - Versão 1.10 - 21.11.26 - 02:39

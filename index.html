@@ -346,8 +346,8 @@
     }
 
     .btn-mini {
-      padding: 4px 9px;
-      font-size: 0.74rem;
+      padding: 5px 10px;
+      font-size: 0.75rem;
       border-radius: 7px;
       background: rgba(56, 189, 248, 0.12);
       color: var(--accent);
@@ -411,7 +411,7 @@
     .archive-header {
       display: flex;
       flex-wrap: wrap;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
       gap: 10px;
       margin-bottom: 12px;
@@ -420,7 +420,7 @@
     .archive-actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 7px;
     }
 
     .archive-list {
@@ -622,14 +622,21 @@
         <div>
           <div class="panel-title">2. Chamadas arquivadas</div>
           <div class="panel-subtitle" style="margin-bottom: 0;">
-            Histórico salvo localmente no navegador para consulta, recarregamento ou exportação.
+            Histórico salvo localmente no navegador para consulta, recarregamento, importação/exportação JSON e CSV ou PDF.
           </div>
         </div>
         <div class="archive-actions">
-          <button type="button" class="btn-mini" id="btnExportarArquivo">Baixar arquivo (.txt)</button>
+          <button type="button" class="btn-mini" id="btnExportarJson">Exportar JSON</button>
+          <button type="button" class="btn-mini" id="btnImportarJson">Importar JSON</button>
+          <button type="button" class="btn-mini" id="btnExportarCsv">Exportar CSV</button>
+          <button type="button" class="btn-mini" id="btnImportarCsv">Importar CSV</button>
+          <button type="button" class="btn-mini" id="btnBaixarPdf">Baixar PDF</button>
+          <button type="button" class="btn-mini" id="btnExportarArquivo">Baixar (.txt)</button>
           <button type="button" class="btn-mini danger" id="btnLimparArquivo">Limpar arquivo</button>
         </div>
       </div>
+      <input type="file" id="inputImportJson" accept=".json,application/json" style="display:none" />
+      <input type="file" id="inputImportCsv" accept=".csv,text/csv" style="display:none" />
       <div class="archive-list" id="listaArquivadas"></div>
     </section>
 
@@ -641,11 +648,16 @@
   </div>
 
   <footer>
-    Criado por Fernando Sato - Versão 1.9 - 21.11.26 - 02:26
+    Criado por Fernando Sato - Versão 1.10 - 21.11.26 - 02:39
   </footer>
 
   <script>
-    const STORAGE_KEY = "tivit_coop_chamadas_arquivadas_v1_9";
+    const STORAGE_KEY = "tivit_coop_chamadas_arquivadas_v1_10";
+    const LEGACY_KEYS = [
+      "tivit_coop_chamadas_arquivadas_v1_9",
+      "tivit_coop_chamadas_arquivadas_v1_8",
+      "tivit_coop_chamadas_arquivadas_v1_7"
+    ];
 
     const DADOS_FIXOS = {
       opcaoServico: "239",
@@ -678,6 +690,8 @@
     const statusMsg = document.getElementById("statusMsg");
     const roteiroLigacao = document.getElementById("roteiroLigacao");
     const listaArquivadas = document.getElementById("listaArquivadas");
+    const inputImportJson = document.getElementById("inputImportJson");
+    const inputImportCsv = document.getElementById("inputImportCsv");
 
     function setStatus(texto, isWarn = false) {
       statusMsg.textContent = texto;
@@ -824,11 +838,55 @@
       return texto;
     }
 
+    function normalizarRegistro(rawItem) {
+      if (!rawItem || typeof rawItem !== "object") return null;
+      const nomeCliente = String(rawItem.nomeCliente ?? rawItem.nome ?? rawItem.cliente ?? "").trim();
+      const enderecoCliente = String(rawItem.enderecoCliente ?? rawItem.endereco ?? "").trim();
+      const osRaw = String(rawItem.woNumero ?? rawItem.os ?? rawItem.wo ?? "").trim();
+      const contratoRaw = String(rawItem.contratoNumero ?? rawItem.contrato ?? "").trim();
+      const woNumero = formatarOsDez(osRaw) || osRaw;
+      const contratoNumero = formatarBlocoTres(contratoRaw) || contratoRaw;
+      const arquivadoEm = String(rawItem.arquivadoEm ?? rawItem.dataHora ?? formatarDataHoraAgora()).trim();
+
+      if (!nomeCliente && !enderecoCliente && !woNumero && !contratoNumero) {
+        return null;
+      }
+
+      const msg =
+        typeof rawItem.mensagemFormatada === "string" && rawItem.mensagemFormatada.trim()
+          ? rawItem.mensagemFormatada
+          : formatarTextoChamada({ nomeCliente, enderecoCliente, woNumero, contratoNumero });
+
+      return {
+        id:
+          typeof rawItem.id === "string" && rawItem.id.trim()
+            ? rawItem.id.trim()
+            : String(Date.now()) + "-" + Math.random().toString(36).slice(2, 7),
+        arquivadoEm,
+        nomeCliente,
+        enderecoCliente,
+        woNumero,
+        contratoNumero,
+        mensagemFormatada: msg
+      };
+    }
+
     function lerArquivo() {
       try {
-        const raw = localStorage.getItem(STORAGE_KEY);
+        let raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+          for (const legacyKey of LEGACY_KEYS) {
+            const legacyRaw = localStorage.getItem(legacyKey);
+            if (legacyRaw) {
+              raw = legacyRaw;
+              localStorage.setItem(STORAGE_KEY, legacyRaw);
+              break;
+            }
+          }
+        }
         const parsed = raw ? JSON.parse(raw) : [];
-        return Array.isArray(parsed) ? parsed : [];
+        if (!Array.isArray(parsed)) return [];
+        return parsed.map(normalizarRegistro).filter(Boolean);
       } catch {
         return [];
       }
@@ -864,20 +922,14 @@
         return;
       }
 
-      const registro = {
+      const registro = normalizarRegistro({
         id: String(Date.now()) + "-" + Math.random().toString(36).slice(2, 6),
         arquivadoEm: formatarDataHoraAgora(),
         nomeCliente: nome,
         enderecoCliente: endereco,
         woNumero: os,
-        contratoNumero: contrato,
-        mensagemFormatada: formatarTextoChamada({
-          nomeCliente: nome,
-          enderecoCliente: endereco,
-          woNumero: os,
-          contratoNumero: contrato
-        })
-      };
+        contratoNumero: contrato
+      });
 
       const registros = lerArquivo();
       registros.unshift(registro);
@@ -907,10 +959,363 @@
       setStatus("Registro removido do arquivo.");
     }
 
+    function baixarBlob(conteudo, mimeType, nomeArquivo) {
+      const blob = new Blob([conteudo], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = nomeArquivo;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    function exportarJson() {
+      const registros = lerArquivo();
+      if (!registros.length) {
+        setStatus("Não há chamadas arquivadas para exportar em JSON.", true);
+        return;
+      }
+      const payload = {
+        sistema: "Tivit / Coop",
+        versao: "1.10",
+        exportadoEm: formatarDataHoraAgora(),
+        totalRegistros: registros.length,
+        chamadas: registros
+      };
+      baixarBlob(JSON.stringify(payload, null, 2), "application/json;charset=utf-8", "chamadas-arquivadas-tivit-coop.json");
+      setStatus(`Exportados ${registros.length} registro(s) em JSON.`);
+    }
+
+    function escaparCsvCampo(valor) {
+      const str = String(valor ?? "");
+      const seguro = /^[=+\-@]/.test(str) ? "'" + str : str;
+      return `"${seguro.replace(/"/g, '""')}"`;
+    }
+
+    function exportarCsv() {
+      const registros = lerArquivo();
+      if (!registros.length) {
+        setStatus("Não há chamadas arquivadas para exportar em CSV.", true);
+        return;
+      }
+      const cabecalho = [
+        "ID",
+        "Arquivado em",
+        "Nome do cliente",
+        "Endereço",
+        "O.S",
+        "Contrato",
+        "Mensagem WhatsApp"
+      ].map(escaparCsvCampo).join(";");
+
+      const linhas = registros.map((r) =>
+        [
+          r.id,
+          r.arquivadoEm,
+          r.nomeCliente,
+          r.enderecoCliente,
+          r.woNumero,
+          r.contratoNumero,
+          r.mensagemFormatada
+        ]
+          .map(escaparCsvCampo)
+          .join(";")
+      );
+
+      const csvContent = "﻿" + [cabecalho, ...linhas].join("\r\n");
+      baixarBlob(csvContent, "text/csv;charset=utf-8", "chamadas-arquivadas-tivit-coop.csv");
+      setStatus(`Exportados ${registros.length} registro(s) em CSV.`);
+    }
+
+    // Parser de CSV compatível com aspas duplas e separadores ; ou ,
+    function parseCsvLinhas(texto) {
+      const linhas = [];
+      let atual = [];
+      let campo = "";
+      let emAspas = false;
+      const sep = texto.indexOf(";") !== -1 ? ";" : ",";
+
+      for (let i = 0; i < texto.length; i++) {
+        const ch = texto[i];
+        const prox = texto[i + 1];
+
+        if (ch === '"') {
+          if (emAspas && prox === '"') {
+            campo += '"';
+            i++;
+          } else {
+            emAspas = !emAspas;
+          }
+        } else if (ch === sep && !emAspas) {
+          atual.push(campo);
+          campo = "";
+        } else if ((ch === "\n" || ch === "\r") && !emAspas) {
+          if (ch === "\r" && prox === "\n") i++;
+          atual.push(campo);
+          if (atual.some((c) => c.trim() !== "")) {
+            linhas.push(atual);
+          }
+          atual = [];
+          campo = "";
+        } else {
+          campo += ch;
+        }
+      }
+
+      if (campo.length > 0 || atual.length > 0) {
+        atual.push(campo);
+        if (atual.some((c) => c.trim() !== "")) {
+          linhas.push(atual);
+        }
+      }
+      return linhas;
+    }
+
+    function mesclarRegistrosImportados(novosItens, origemRotulo) {
+      const validos = novosItens.map(normalizarRegistro).filter(Boolean);
+      if (!validos.length) {
+        setStatus(`Nenhum registro válido encontrado no arquivo ${origemRotulo}.`, true);
+        return;
+      }
+
+      const atuais = lerArquivo();
+      const idsExistentes = new Set(atuais.map((r) => r.id));
+      let adicionados = 0;
+
+      for (const item of validos) {
+        let candidato = { ...item };
+        if (idsExistentes.has(candidato.id)) {
+          candidato.id = String(Date.now()) + "-" + Math.random().toString(36).slice(2, 7);
+        }
+        idsExistentes.add(candidato.id);
+        atuais.push(candidato);
+        adicionados++;
+      }
+
+      salvarArquivo(atuais);
+      renderizarArquivo();
+      setStatus(`Importados ${adicionados} registro(s) de ${origemRotulo}.`);
+    }
+
+    function processarImportacaoJson(texto) {
+      const parsed = JSON.parse(texto);
+      const lista = Array.isArray(parsed)
+        ? parsed
+        : Array.isArray(parsed?.chamadas)
+          ? parsed.chamadas
+          : Array.isArray(parsed?.registros)
+            ? parsed.registros
+            : [];
+      mesclarRegistrosImportados(lista, "JSON");
+    }
+
+    function processarImportacaoCsv(texto) {
+      const limpo = texto.replace(/^﻿/, "");
+      const linhas = parseCsvLinhas(limpo);
+      if (!linhas.length) {
+        setStatus("Arquivo CSV vazio.", true);
+        return;
+      }
+
+      const headerNormalizado = linhas[0].map((h) => h.trim().toLowerCase());
+      const temCabecalho = headerNormalizado.some((h) =>
+        ["nome", "nome do cliente", "o.s", "os", "wo", "contrato", "endereço", "endereco", "arquivado em"].includes(h)
+      );
+
+      const startIdx = temCabecalho ? 1 : 0;
+      const items = [];
+
+      for (let i = startIdx; i < linhas.length; i++) {
+        const cols = linhas[i];
+        if (temCabecalho) {
+          const obj = {};
+          headerNormalizado.forEach((h, idx) => {
+            obj[h] = cols[idx] ?? "";
+          });
+          items.push({
+            id: obj["id"] || "",
+            arquivadoEm: obj["arquivado em"] || obj["arquivadoem"] || obj["datahora"] || "",
+            nomeCliente: obj["nome do cliente"] || obj["nome"] || obj["cliente"] || "",
+            enderecoCliente: obj["endereço"] || obj["endereco"] || "",
+            woNumero: obj["o.s"] || obj["os"] || obj["wo"] || "",
+            contratoNumero: obj["contrato"] || "",
+            mensagemFormatada: obj["mensagem whatsapp"] || obj["mensagemformatada"] || ""
+          });
+        } else {
+          items.push({
+            arquivadoEm: cols[0] || "",
+            nomeCliente: cols[1] || "",
+            enderecoCliente: cols[2] || "",
+            woNumero: cols[3] || "",
+            contratoNumero: cols[4] || ""
+          });
+        }
+      }
+
+      mesclarRegistrosImportados(items, "CSV");
+    }
+
+    // Geração de PDF real (PDF 1.4 válido com tabela e detalhes das chamadas arquivadas)
+    function gerarPdfBytes(registros) {
+      const sanitizePdfText = (s) =>
+        String(s || "")
+          .normalize("NFD")
+          .replace(/[̀-ͯ]/g, "")
+          .replace(/[^ -~]/g, " ")
+          .replace(/\/g, "\\")
+          .replace(/\(/g, "\(")
+          .replace(/\)/g, "\)");
+
+      const wrapText = (text, maxChars) => {
+        const words = String(text || "-").split(/\s+/);
+        const lines = [];
+        let cur = "";
+        for (const w of words) {
+          if (!cur) {
+            cur = w;
+          } else if ((cur + " " + w).length <= maxChars) {
+            cur += " " + w;
+          } else {
+            lines.push(cur);
+            cur = w;
+          }
+        }
+        if (cur) lines.push(cur);
+        return lines.length ? lines : ["-"];
+      };
+
+      const pagesStreams = [];
+      let stream = [];
+      let y = 780;
+
+      const startPage = () => {
+        stream = [];
+        y = 780;
+        stream.push("BT /F1 15 Tf 40 795 Td (Relatorio de Chamadas Arquivadas - Tivit / Coop) Tj ET");
+        stream.push("BT /F1 9 Tf 40 780 Td (" + sanitizePdfText("Gerado em: " + formatarDataHoraAgora() + " | Total: " + registros.length) + ") Tj ET");
+        stream.push("0.5 w 40 770 m 555 770 l S");
+        y = 752;
+      };
+
+      const flushPage = () => {
+        pagesStreams.push(stream.join("\n"));
+      };
+
+      startPage();
+
+      registros.forEach((r, idx) => {
+        const titulo = "Chamada #" + (registros.length - idx) + " - " + (r.arquivadoEm || "-");
+        const nomeLinhas = wrapText("Cliente: " + (r.nomeCliente || "-"), 68);
+        const endLinhas = wrapText("Endereco: " + (r.enderecoCliente || "-"), 68);
+        const numLinha = "O.S: " + (r.woNumero || "-") + "    |    Contrato: " + (r.contratoNumero || "-");
+        const blocoAltura = 18 + nomeLinhas.length * 13 + endLinhas.length * 13 + 16 + 14;
+
+        if (y - blocoAltura < 50) {
+          flushPage();
+          startPage();
+        }
+
+        stream.push("BT /F2 11 Tf 40 " + y + " Td (" + sanitizePdfText(titulo) + ") Tj ET");
+        y -= 15;
+
+        for (const nl of nomeLinhas) {
+          stream.push("BT /F1 10 Tf 48 " + y + " Td (" + sanitizePdfText(nl) + ") Tj ET");
+          y -= 13;
+        }
+
+        for (const el of endLinhas) {
+          stream.push("BT /F1 10 Tf 48 " + y + " Td (" + sanitizePdfText(el) + ") Tj ET");
+          y -= 13;
+        }
+
+        stream.push("BT /F2 10 Tf 48 " + y + " Td (" + sanitizePdfText(numLinha) + ") Tj ET");
+        y -= 14;
+
+        stream.push("0.3 w 48 " + y + " m 550 " + y + " l S");
+        y -= 14;
+      });
+
+      flushPage();
+
+      const objects = [];
+      const addObj = (body) => {
+        objects.push(body);
+        return objects.length;
+      };
+
+      const catalogId = addObj("");
+      const pagesId = addObj("");
+      const font1Id = addObj("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>");
+      const font2Id = addObj("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>");
+
+      const pageIds = [];
+      for (const st of pagesStreams) {
+        const contentId = addObj("<< /Length " + st.length + " >>\nstream\n" + st + "\nendstream");
+        const pageId = addObj(
+          "<< /Type /Page /Parent " +
+            pagesId +
+            " 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 " +
+            font1Id +
+            " 0 R /F2 " +
+            font2Id +
+            " 0 R >> >> /Contents " +
+            contentId +
+            " 0 R >>"
+        );
+        pageIds.push(pageId);
+      }
+
+      objects[catalogId - 1] = "<< /Type /Catalog /Pages " + pagesId + " 0 R >>";
+      objects[pagesId - 1] =
+        "<< /Type /Pages /Kids [" +
+        pageIds.map((id) => id + " 0 R").join(" ") +
+        "] /Count " +
+        pageIds.length +
+        " >>";
+
+      let pdf = "%PDF-1.4\n";
+      const offsets = [0];
+
+      for (let i = 0; i < objects.length; i++) {
+        offsets.push(pdf.length);
+        pdf += (i + 1) + " 0 obj\n" + objects[i] + "\nendobj\n";
+      }
+
+      const xrefPos = pdf.length;
+      pdf += "xref\n0 " + (objects.length + 1) + "\n";
+      pdf += "0000000000 65535 f \n";
+      for (let i = 1; i <= objects.length; i++) {
+        pdf += String(offsets[i]).padStart(10, "0") + " 00000 n \n";
+      }
+      pdf += "trailer\n<< /Size " + (objects.length + 1) + " /Root " + catalogId + " 0 R >>\nstartxref\n" + xrefPos + "\n%%EOF";
+
+      return new Blob([pdf], { type: "application/pdf" });
+    }
+
+    function baixarPdf() {
+      const registros = lerArquivo();
+      if (!registros.length) {
+        setStatus("Não há chamadas arquivadas para baixar em PDF.", true);
+        return;
+      }
+      const pdfBlob = gerarPdfBytes(registros);
+      const url = URL.createObjectURL(pdfBlob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "chamadas-arquivadas-tivit-coop.pdf";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      setStatus("PDF de chamadas arquivadas baixado com sucesso.");
+    }
+
     function renderizarArquivo() {
       const registros = lerArquivo();
       if (!registros.length) {
-        listaArquivadas.innerHTML = `<div class="archive-empty">Nenhuma chamada arquivada ainda. Clique em "Arquivar dados da chamada" para salvar o atendimento.</div>`;
+        listaArquivadas.innerHTML = `<div class="archive-empty">Nenhuma chamada arquivada ainda. Clique em "Arquivar dados da chamada" ou importe um arquivo JSON/CSV.</div>`;
         return;
       }
 
@@ -964,6 +1369,47 @@
     }
 
     document.getElementById("btnArquivarChamada").addEventListener("click", arquivarDadosChamada);
+    document.getElementById("btnExportarJson").addEventListener("click", exportarJson);
+    document.getElementById("btnExportarCsv").addEventListener("click", exportarCsv);
+    document.getElementById("btnBaixarPdf").addEventListener("click", baixarPdf);
+
+    document.getElementById("btnImportarJson").addEventListener("click", () => {
+      inputImportJson.value = "";
+      inputImportJson.click();
+    });
+
+    document.getElementById("btnImportarCsv").addEventListener("click", () => {
+      inputImportCsv.value = "";
+      inputImportCsv.click();
+    });
+
+    inputImportJson.addEventListener("change", (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          processarImportacaoJson(String(reader.result || ""));
+        } catch {
+          setStatus("Erro ao ler o arquivo JSON. Verifique se o formato é válido.", true);
+        }
+      };
+      reader.readAsText(file, "utf-8");
+    });
+
+    inputImportCsv.addEventListener("change", (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          processarImportacaoCsv(String(reader.result || ""));
+        } catch {
+          setStatus("Erro ao ler o arquivo CSV.", true);
+        }
+      };
+      reader.readAsText(file, "utf-8");
+    });
 
     document.getElementById("btnExportarArquivo").addEventListener("click", () => {
       const registros = lerArquivo();
@@ -974,15 +1420,7 @@
       const conteudo = registros
         .map((r, idx) => `=== CHAMADA #${registros.length - idx} (${r.arquivadoEm}) ===\n${r.mensagemFormatada}`)
         .join("\n\n");
-      const blob = new Blob([conteudo], { type: "text/plain;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "chamadas-arquivadas-tivit-coop.txt";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      baixarBlob(conteudo, "text/plain;charset=utf-8", "chamadas-arquivadas-tivit-coop.txt");
       setStatus("Arquivo de chamadas arquivadas baixado (.txt).");
     });
 
