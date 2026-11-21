@@ -9,9 +9,9 @@ Ferramenta web em arquivo único (`index.html`) voltada para técnicos de teleco
 1. **Botão no topo para ligar para a Tivit**
    - Link direto `tel:+558007690800` no cabeçalho (`Ligar para Tivit (+558007690800)`).
 
-2. **Cola automática ao tocar/clicar (`Nome do cliente`, `Endereço`, `O.S`, `Contrato`)**
-   - Ao tocar ou clicar em qualquer um desses campos, o sistema tenta ler a área de transferência (`navigator.clipboard.readText()`) e aplicar a formatação automaticamente no campo, no roteiro e na prévia.
-   - Caso o navegador exija permissão ou bloqueie a leitura direta em visualização/arquivo local, o campo recebe foco e intercepta o evento `paste` (`Ctrl+V` ou toque em **Colar**) para formatar e atualizar o roteiro automaticamente.
+2. **Cola automática ao clicar (`Nome do cliente`, `Endereço`, `O.S`, `Contrato`)**
+   - Ao clicar em qualquer um desses campos, o sistema lê a área de transferência (`navigator.clipboard.readText()`) e cola o conteúdo automaticamente no evento `click` padrão.
+   - Caso o navegador bloqueie a leitura direta da área de transferência, o campo mantém o foco para colagem manual (`Ctrl+V` ou toque em **Colar**).
    - Abaixo de cada um dos 4 campos (`Nome do cliente`, `Endereço`, `O.S`, `Contrato`), há um botão pequeno **Limpar campo** para apagar rapidamente caso alguma informação incorreta seja colada.
 
 3. **Formatação e destaque visual de Nome, Endereço, O.S e Contrato**
@@ -38,13 +38,14 @@ Ferramenta web em arquivo único (`index.html`) voltada para técnicos de teleco
 1. Extraia o arquivo `.zip`.
 2. Abra o arquivo `index.html` diretamente no navegador (Chrome, Edge, Safari etc.).
 3. Use o botão do topo para ligar para a Tivit (`+558007690800`), se necessário.
-4. Copie cada informação necessária e toque/clique no campo correspondente para colar (ou use `Ctrl+V` / **Colar** e **Limpar campo** se precisar corrigir).
+4. Copie cada informação necessária e clique no campo correspondente para colar (ou use `Ctrl+V` / **Colar** e **Limpar campo** se precisar corrigir).
 5. Use o roteiro na ligação, formate para WhatsApp, arquive a chamada e utilize os botões de **JSON**, **CSV**, **PDF** ou **.txt** conforme necessário.
 
 ---
 
 ## Histórico de versões
 
+- **Versão 1.12 - 21.11.26 - 03:04:** Restauração do fluxo direto de clique (`click`) para colar da área de transferência nos campos **Nome do cliente**, **Endereço**, **O.S** e **Contrato**, e atualização do `README.md`.
 - **Versão 1.11 - 21.11.26 - 02:48:** Reforço na leitura da área de transferência no toque/clique (`pointerdown`), tratamento do evento `paste` para formatação imediata e atualização do `README.md`.
 - **Versão 1.10 - 21.11.26 - 02:39:** Adição de **Exportar JSON**, **Importar JSON**, **Exportar CSV**, **Importar CSV** e **Baixar PDF** na seção de chamadas arquivadas, além da atualização do `README.md`.
 - **Versão 1.9 - 21.11.26 - 02:26:** Formatação do campo `O.S` no padrão `xxx.xxx.xxxx`, aumento do tamanho da fonte de `Nome do cliente`, `Endereço`, `O.S` e `Contrato`, e atualização do `README.md`.
@@ -60,4 +61,4 @@ Ferramenta web em arquivo único (`index.html`) voltada para técnicos de teleco
 
 ---
 
-Criado por Fernando Sato - Versão 1.11 - 21.11.26 - 02:48
+Criado por Fernando Sato - Versão 1.12 - 21.11.26 - 03:04
