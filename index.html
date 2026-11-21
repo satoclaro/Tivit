@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Automação de Ligação e WhatsApp — Tivit / Coop</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --card-2: #0b1220;
+      --border: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-hover: #0ea5e9;
+      --whatsapp: #22c55e;
+      --whatsapp-hover: #16a34a;
+      --danger: #f87171;
+      --ok: #34d399;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(180deg, #0b1120 0%, #0f172a 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 20px 14px 32px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto;
+      flex: 1;
+    }
+
+    header {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    header h1 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    header p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .badge {
+      background: rgba(56, 189, 248, 0.14);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .panel-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .panel-subtitle {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    @media (min-width: 600px) {
+      .grid.two-col {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    label {
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      background: var(--card-2);
+      color: var(--text);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 11px 13px;
+      font-size: 0.95rem;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      outline: none;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18);
+    }
+
+    input[type="text"].prefilled-flash {
+      border-color: var(--ok);
+      box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.22);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 11px 16px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: transform 0.08s ease, background-color 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #061322;
+      flex: 1 1 210px;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-whatsapp {
+      background: var(--whatsapp);
+      color: #052010;
+      flex: 1 1 210px;
+    }
+
+    .btn-whatsapp:hover {
+      background: var(--whatsapp-hover);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .btn-mini {
+      padding: 4px 9px;
+      font-size: 0.74rem;
+      border-radius: 7px;
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.28);
+    }
+
+    .btn-mini:hover {
+      background: rgba(56, 189, 248, 0.22);
+    }
+
+    .preview-box {
+      margin-top: 16px;
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .preview-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    textarea#msgPreview {
+      min-height: 175px;
+      resize: vertical;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    .status-msg {
+      margin-top: 10px;
+      font-size: 0.83rem;
+      min-height: 20px;
+      color: var(--ok);
+    }
+
+    .status-msg.warn {
+      color: var(--danger);
+    }
+
+    .script-card {
+      background: var(--card-2);
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+      padding: 13px 15px;
+      font-size: 0.9rem;
+      line-height: 1.55;
+      color: #e2e8f0;
+    }
+
+    .script-card strong {
+      color: var(--accent);
+    }
+
+    footer {
+      width: 100%;
+      max-width: 720px;
+      margin: 12px auto 0;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+      padding-top: 8px;
+      border-top: 1px solid rgba(148, 163, 184, 0.16);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>Automação de Ligação e WhatsApp — Tivit / Coop</h1>
+        <p>Clique nos campos vazios para preencher os dados rapidamente, conferir na ligação e formatar para WhatsApp.</p>
+      </div>
+      <span class="badge">Fluxo Tivit / Coop</span>
+    </header>
+
+    <section class="panel" aria-label="Campos da Ordem de Serviço">
+      <div class="panel-title">Dados da Ordem de Serviço</div>
+      <div class="panel-subtitle">
+        Os campos iniciam vazios. Clique em qualquer campo (ou use "Preencher todos") para inserir os dados disponíveis da OS.
+      </div>
+
+      <div class="grid">
+        <div class="field-group">
+          <div class="field-header">
+            <label for="nomeCliente">Nome do cliente</label>
+            <button type="button" class="btn-mini" data-fill="nomeCliente">Preencher nome</button>
+          </div>
+          <input
+            type="text"
+            id="nomeCliente"
+            placeholder="Clique para preencher o nome do cliente..."
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="field-group">
+          <div class="field-header">
+            <label for="enderecoCliente">Endereço</label>
+            <button type="button" class="btn-mini" data-fill="enderecoCliente">Preencher endereço</button>
+          </div>
+          <input
+            type="text"
+            id="enderecoCliente"
+            placeholder="Clique para preencher o endereço..."
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="grid two-col">
+          <div class="field-group">
+            <div class="field-header">
+              <label for="woNumero">WO</label>
+              <button type="button" class="btn-mini" data-fill="woNumero">Preencher WO</button>
+            </div>
+            <input
+              type="text"
+              id="woNumero"
+              inputmode="numeric"
+              placeholder="Clique para preencher o WO..."
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="field-group">
+            <div class="field-header">
+              <label for="contratoNumero">Contrato</label>
+              <button type="button" class="btn-mini" data-fill="contratoNumero">Preencher contrato</button>
+            </div>
+            <input
+              type="text"
+              id="contratoNumero"
+              inputmode="numeric"
+              placeholder="Clique para preencher o contrato..."
+              autocomplete="off"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn-secondary" id="btnPreencherTodos">Preencher todos os campos</button>
+        <button type="button" class="btn-primary" id="btnFormatarWpp">Formatar para WhatsApp</button>
+        <button type="button" class="btn-whatsapp" id="btnAbrirWpp">Formatar e abrir WhatsApp</button>
+        <button type="button" class="btn-secondary" id="btnLimpar">Limpar</button>
+      </div>
+
+      <div id="statusMsg" class="status-msg" role="status" aria-live="polite"></div>
+
+      <div class="preview-box">
+        <div class="preview-label">
+          <span>Mensagem formatada para WhatsApp</span>
+          <button type="button" class="btn-mini" id="btnCopiar">Copiar mensagem</button>
+        </div>
+        <textarea
+          id="msgPreview"
+          placeholder="Clique em 'Formatar para WhatsApp' para gerar a mensagem formatada..."
+        ></textarea>
+      </div>
+    </section>
+
+    <section class="panel" aria-label="Roteiro rápido para ligação Tivit / Coop">
+      <div class="panel-title">Roteiro rápido para ligação (Tivit / Coop)</div>
+      <div class="panel-subtitle">Referência atualizada automaticamente conforme os campos preenchidos acima.</div>
+      <div class="script-card" id="roteiroLigacao">
+        "Olá, contato da <strong>Tivit / Coop</strong>. Estou passando os dados do atendimento: cliente
+        <strong>[Nome do cliente]</strong>, endereço <strong>[Endereço]</strong>, WO
+        <strong>[WO]</strong> e contrato <strong>[Contrato]</strong>."
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    Criado por Fernando Sato - Versão 1.1 - 21.11.26 - 01:17
+  </footer>
+
+  <script>
+    const DADOS_OS = {
+      nomeCliente: "MAGDA SCARPONI",
+      enderecoCliente: "AV RAMIZ GALVAO, 78 - JD BRASIL (ZONA NORTE)",
+      woNumero: "2610719712",
+      contratoNumero: "379895777"
+    };
+
+    const inputs = {
+      nomeCliente: document.getElementById("nomeCliente"),
+      enderecoCliente: document.getElementById("enderecoCliente"),
+      woNumero: document.getElementById("woNumero"),
+      contratoNumero: document.getElementById("contratoNumero")
+    };
+
+    const msgPreview = document.getElementById("msgPreview");
+    const statusMsg = document.getElementById("statusMsg");
+    const roteiroLigacao = document.getElementById("roteiroLigacao");
+
+    function setStatus(texto, isWarn = false) {
+      statusMsg.textContent = texto;
+      statusMsg.classList.toggle("warn", isWarn);
+    }
+
+    function flashInput(el) {
+      el.classList.remove("prefilled-flash");
+      void el.offsetWidth;
+      el.classList.add("prefilled-flash");
+      setTimeout(() => el.classList.remove("prefilled-flash"), 900);
+    }
+
+    function atualizarRoteiro() {
+      const nome = inputs.nomeCliente.value.trim() || "[Nome do cliente]";
+      const end = inputs.enderecoCliente.value.trim() || "[Endereço]";
+      const wo = inputs.woNumero.value.trim() || "[WO]";
+      const contrato = inputs.contratoNumero.value.trim() || "[Contrato]";
+
+      roteiroLigacao.innerHTML =
+        `"Olá, contato da <strong>Tivit / Coop</strong>. Estou passando os dados do atendimento: cliente ` +
+        `<strong>${escapeHtml(nome)}</strong>, endereço <strong>${escapeHtml(end)}</strong>, WO ` +
+        `<strong>${escapeHtml(wo)}</strong> e contrato <strong>${escapeHtml(contrato)}</strong>."`;
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function preencherCampo(key) {
+      const el = inputs[key];
+      if (!el) return;
+      if (!el.value.trim()) {
+        el.value = DADOS_OS[key];
+        flashInput(el);
+        atualizarRoteiro();
+        setStatus("Campo preenchido automaticamente.");
+      }
+    }
+
+    Object.keys(inputs).forEach((key) => {
+      const el = inputs[key];
+      el.addEventListener("click", () => preencherCampo(key));
+      el.addEventListener("input", atualizarRoteiro);
+    });
+
+    document.querySelectorAll("[data-fill]").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const key = btn.getAttribute("data-fill");
+        inputs[key].value = DADOS_OS[key];
+        flashInput(inputs[key]);
+        atualizarRoteiro();
+        setStatus("Campo preenchido.");
+      });
+    });
+
+    document.getElementById("btnPreencherTodos").addEventListener("click", () => {
+      Object.keys(inputs).forEach((key) => {
+        inputs[key].value = DADOS_OS[key];
+        flashInput(inputs[key]);
+      });
+      atualizarRoteiro();
+      setStatus("Todos os campos foram preenchidos.");
+    });
+
+    function montarMensagemWhatsApp() {
+      const nome = inputs.nomeCliente.value.trim();
+      const end = inputs.enderecoCliente.value.trim();
+      const wo = inputs.woNumero.value.trim();
+      const contrato = inputs.contratoNumero.value.trim();
+
+      if (!nome && !end && !wo && !contrato) {
+        setStatus("Preencha ou clique nos campos antes de formatar para WhatsApp.", true);
+        return null;
+      }
+
+      const linhas = [
+        "*ATENDIMENTO TIVIT / COOP*",
+        `*Cliente:* ${nome || "-"}`,
+        `*Endereço:* ${end || "-"}`,
+        `*WO:* ${wo || "-"}`,
+        `*Contrato:* ${contrato || "-"}`
+      ];
+
+      const texto = linhas.join("\n");
+      msgPreview.value = texto;
+      setStatus("Mensagem formatada para WhatsApp.");
+      return texto;
+    }
+
+    document.getElementById("btnFormatarWpp").addEventListener("click", () => {
+      montarMensagemWhatsApp();
+    });
+
+    document.getElementById("btnAbrirWpp").addEventListener("click", () => {
+      const texto = msgPreview.value.trim() || montarMensagemWhatsApp();
+      if (!texto) return;
+      const url = "https://wa.me/?text=" + encodeURIComponent(texto);
+      window.open(url, "_blank", "noopener,noreferrer");
+    });
+
+    document.getElementById("btnCopiar").addEventListener("click", async () => {
+      const texto = msgPreview.value.trim() || montarMensagemWhatsApp();
+      if (!texto) return;
+      try {
+        await navigator.clipboard.writeText(texto);
+        setStatus("Mensagem copiada para a área de transferência.");
+      } catch {
+        msgPreview.select();
+        document.execCommand("copy");
+        setStatus("Mensagem selecionada/copiada.");
+      }
+    });
+
+    document.getElementById("btnLimpar").addEventListener("click", () => {
+      Object.values(inputs).forEach((el) => {
+        el.value = "";
+      });
+      msgPreview.value = "";
+      atualizarRoteiro();
+      setStatus("Campos limpos.");
+    });
+  </script>
+</body>
+</html>
