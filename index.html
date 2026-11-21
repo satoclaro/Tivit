@@ -16,8 +16,6 @@
       --accent-hover: #0ea5e9;
       --whatsapp: #22c55e;
       --whatsapp-hover: #16a34a;
-      --archive: #f59e0b;
-      --archive-hover: #d97706;
       --danger: #f87171;
       --ok: #34d399;
     }
@@ -55,11 +53,7 @@
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-    }
-
-    .header-left {
-      flex: 1 1 320px;
+      gap: 10px;
     }
 
     header h1 {
@@ -72,35 +66,6 @@
       font-size: 0.85rem;
       color: var(--muted);
       margin-top: 2px;
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .btn-call {
-      background: var(--ok);
-      color: #042014;
-      text-decoration: none;
-      border-radius: 10px;
-      padding: 9px 14px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: opacity 0.15s ease, transform 0.08s ease;
-    }
-
-    .btn-call:hover {
-      opacity: 0.92;
-    }
-
-    .btn-call:active {
-      transform: scale(0.98);
     }
 
     .badge {
@@ -298,7 +263,7 @@
     .btn-primary {
       background: var(--accent);
       color: #061322;
-      flex: 1 1 180px;
+      flex: 1 1 200px;
     }
 
     .btn-primary:hover {
@@ -308,21 +273,11 @@
     .btn-whatsapp {
       background: var(--whatsapp);
       color: #052010;
-      flex: 1 1 180px;
+      flex: 1 1 200px;
     }
 
     .btn-whatsapp:hover {
       background: var(--whatsapp-hover);
-    }
-
-    .btn-archive {
-      background: var(--archive);
-      color: #1f1202;
-      flex: 1 1 160px;
-    }
-
-    .btn-archive:hover {
-      background: var(--archive-hover);
     }
 
     .btn-secondary {
@@ -346,16 +301,6 @@
 
     .btn-mini:hover {
       background: rgba(56, 189, 248, 0.22);
-    }
-
-    .btn-mini.danger {
-      background: rgba(248, 113, 113, 0.12);
-      color: var(--danger);
-      border-color: rgba(248, 113, 113, 0.3);
-    }
-
-    .btn-mini.danger:hover {
-      background: rgba(248, 113, 113, 0.22);
     }
 
     .preview-box {
@@ -398,54 +343,6 @@
       color: var(--danger);
     }
 
-    .archive-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .archive-item {
-      background: var(--card-2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .archive-top {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-
-    .archive-meta {
-      font-size: 0.88rem;
-      line-height: 1.45;
-      color: var(--text);
-    }
-
-    .archive-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .empty-archive {
-      background: var(--card-2);
-      border: 1px dashed var(--border);
-      border-radius: 10px;
-      padding: 16px;
-      text-align: center;
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
-
     footer {
       width: 100%;
       max-width: 780px;
@@ -461,16 +358,11 @@
 <body>
   <div class="container">
     <header>
-      <div class="header-left">
+      <div>
         <h1>Automação de Ligação e WhatsApp — Sistema Tivit / Coop</h1>
-        <p>Clique em Nome, Endereço, O.S ou Contrato para colar automaticamente o conteúdo da área de transferência.</p>
+        <p>Clique em Nome, Endereço, WO ou Contrato para colar automaticamente o conteúdo da área de transferência.</p>
       </div>
-      <div class="header-actions">
-        <a class="btn-call" href="tel:+558007690800" aria-label="Ligar para Tivit no número +55 800 769 0800">
-          Ligar Tivit (+558007690800)
-        </a>
-        <span class="badge">Telecom • Tivit / Coop</span>
-      </div>
+      <span class="badge">Telecom • Tivit / Coop</span>
     </header>
 
     <section class="panel" aria-label="Campos variáveis com cola automática da área de transferência">
@@ -510,15 +402,14 @@
         <div class="grid two-col">
           <div class="field-group">
             <div class="field-header">
-              <label for="woNumero">O.S</label>
-              <span class="paste-tag">Formato: xxx. xxx.xxx.xxxx</span>
+              <label for="woNumero">WO</label>
+              <span class="paste-tag">Clique = Colar</span>
             </div>
             <input
               type="text"
               id="woNumero"
               inputmode="numeric"
-              maxlength="14"
-              placeholder="xxx. xxx.xxx.xxxx"
+              placeholder="Clique para colar o WO..."
               autocomplete="off"
             />
           </div>
@@ -526,14 +417,13 @@
           <div class="field-group">
             <div class="field-header">
               <label for="contratoNumero">Contrato</label>
-              <span class="paste-tag">Formato: xxx.xxx.xxx</span>
+              <span class="paste-tag">Clique = Colar</span>
             </div>
             <input
               type="text"
               id="contratoNumero"
               inputmode="numeric"
-              maxlength="11"
-              placeholder="xxx.xxx.xxx"
+              placeholder="Clique para colar o Contrato..."
               autocomplete="off"
             />
           </div>
@@ -543,7 +433,6 @@
       <div class="actions">
         <button type="button" class="btn-primary" id="btnFormatarWpp">Formatar para WhatsApp</button>
         <button type="button" class="btn-whatsapp" id="btnAbrirWpp">Formatar e abrir WhatsApp</button>
-        <button type="button" class="btn-archive" id="btnArquivar">Arquivar chamada</button>
         <button type="button" class="btn-secondary" id="btnLimpar">Limpar campos</button>
       </div>
 
@@ -563,24 +452,35 @@
 
     <section class="panel" aria-label="Roteiro de fala na ordem solicitada">
       <div class="panel-title">2. Roteiro para falar com a atendente (ordem do sistema)</div>
-      <div class="panel-subtitle">Atualiza em tempo real conforme você cola Nome, Endereço, O.S e Contrato.</div>
+      <div class="panel-subtitle">Atualiza em tempo real conforme você cola Nome, Endereço, WO e Contrato.</div>
       <div class="script-list" id="roteiroLigacao"></div>
     </section>
 
-    <section class="panel" aria-label="Chamadas arquivadas">
-      <div class="panel-title">3. Chamadas arquivadas</div>
-      <div class="panel-subtitle">Histórico salvo localmente no navegador para consulta e reenvio rápido.</div>
-      <div id="listaArquivadas" class="archive-list"></div>
+    <section class="panel" aria-label="Dados fixos configurados">
+      <div class="panel-title">3. Dados fixos mantidos na formatação</div>
+      <div class="panel-subtitle">Incluídos automaticamente na ordem solicitada para o atendimento Tivit / Coop.</div>
+      <table class="fixed-table">
+        <tbody>
+          <tr><td class="k">Opção do serviço</td><td class="v">239</td></tr>
+          <tr><td class="k">Cidade</td><td class="v">003</td></tr>
+          <tr><td class="k">Código da empresa</td><td class="v">68804663#</td></tr>
+          <tr><td class="k">Nome do Funcionário</td><td class="v">Fernando Sato</td></tr>
+          <tr><td class="k">Código Funcionário</td><td class="v">Z688632</td></tr>
+          <tr><td class="k">Nome da Conveniada</td><td class="v">CSR Engenharia Ltda</td></tr>
+          <tr><td class="k">PDA</td><td class="v">91520-6585</td></tr>
+          <tr><td class="k">Código da Baixa</td><td class="v">409</td></tr>
+          <tr><td class="k">Tipo de wo</td><td class="v">Instalação/ Mudança de Pacote</td></tr>
+          <tr><td class="k">Hora de Início</td><td class="v">12:00</td></tr>
+        </tbody>
+      </table>
     </section>
   </div>
 
   <footer>
-    Criado por Fernando Sato - Versão 1.3 - 21.11.26
+    Criado por Fernando Sato - Versão 1.2 - 21.11.26 - 01:32
   </footer>
 
   <script>
-    const STORAGE_KEY = "tivit_coop_chamadas_arquivadas_v1";
-
     const DADOS_FIXOS = {
       opcaoServico: "239",
       cidade: "003",
@@ -590,7 +490,7 @@
       nomeConveniada: "CSR Engenharia Ltda",
       pda: "91520-6585",
       codigoBaixa: "409",
-      tipoWo: "Instalação/ Mudança de Pacote",
+      tipoWo: "Instalação/	Mudança de Pacote",
       horaInicio: "12:00"
     };
 
@@ -604,7 +504,6 @@
     const msgPreview = document.getElementById("msgPreview");
     const statusMsg = document.getElementById("statusMsg");
     const roteiroLigacao = document.getElementById("roteiroLigacao");
-    const listaArquivadas = document.getElementById("listaArquivadas");
 
     function setStatus(texto, isWarn = false) {
       statusMsg.textContent = texto;
@@ -626,45 +525,11 @@
         .replace(/"/g, "&quot;");
     }
 
-    // Formato Contrato: xxx.xxx.xxx (até 9 dígitos)
-    function formatarContrato(valor) {
-      const digits = String(valor || "").replace(/\D/g, "").slice(0, 9);
-      if (!digits) return "";
-      const p1 = digits.slice(0, 3);
-      const p2 = digits.slice(3, 6);
-      const p3 = digits.slice(6, 9);
-      let out = p1;
-      if (digits.length > 3) out += "." + p2;
-      if (digits.length > 6) out += "." + p3;
-      return out;
-    }
-
-    // Formato O.S: xxx. xxx.xxx.xxxx (até 13 dígitos)
-    function formatarOS(valor) {
-      const digits = String(valor || "").replace(/\D/g, "").slice(0, 13);
-      if (!digits) return "";
-      const p1 = digits.slice(0, 3);
-      const p2 = digits.slice(3, 6);
-      const p3 = digits.slice(6, 9);
-      const p4 = digits.slice(9, 13);
-      let out = p1;
-      if (digits.length > 3) out += ". " + p2;
-      if (digits.length > 6) out += "." + p3;
-      if (digits.length > 9) out += "." + p4;
-      return out;
-    }
-
-    function aplicarMascaraSeNecessario(key, valor) {
-      if (key === "contratoNumero") return formatarContrato(valor);
-      if (key === "woNumero") return formatarOS(valor);
-      return valor;
-    }
-
     function obterLinhasOrdenadas() {
       const nome = inputs.nomeCliente.value.trim();
       const endereco = inputs.enderecoCliente.value.trim();
-      const wo = formatarOS(inputs.woNumero.value.trim());
-      const contrato = formatarContrato(inputs.contratoNumero.value.trim());
+      const wo = inputs.woNumero.value.trim();
+      const contrato = inputs.contratoNumero.value.trim();
 
       return [
         { label: "Opção do serviço", valor: DADOS_FIXOS.opcaoServico, display: DADOS_FIXOS.opcaoServico },
@@ -675,11 +540,11 @@
         { label: "Nome da Conveniada", valor: DADOS_FIXOS.nomeConveniada, display: DADOS_FIXOS.nomeConveniada },
         { label: "PDA", valor: DADOS_FIXOS.pda, display: DADOS_FIXOS.pda },
         { label: "Código da Baixa", valor: DADOS_FIXOS.codigoBaixa, display: DADOS_FIXOS.codigoBaixa },
-        { label: "Tipo de wo", valor: DADOS_FIXOS.tipoWo, display: DADOS_FIXOS.tipoWo },
+        { label: "Tipo de wo", valor: DADOS_FIXOS.tipoWo, display: "Instalação/ Mudança de Pacote" },
         { label: "Hora de Início", valor: DADOS_FIXOS.horaInicio, display: DADOS_FIXOS.horaInicio },
         { label: "Nome do cliente", valor: nome || "-", display: nome || "[Colar nome]" },
         { label: "Endereço", valor: endereco || "-", display: endereco || "[Colar endereço]" },
-        { label: "O.S", valor: wo || "-", display: wo || "[Colar O.S]" },
+        { label: "WO", valor: wo || "-", display: wo || "[Colar WO]" },
         { label: "Contrato", valor: contrato || "-", display: contrato || "[Colar Contrato]" }
       ];
     }
@@ -703,7 +568,7 @@
         try {
           const textoClipboard = await navigator.clipboard.readText();
           if (textoClipboard && textoClipboard.trim() !== "") {
-            el.value = aplicarMascaraSeNecessario(key, textoClipboard.trim());
+            el.value = textoClipboard.trim();
             flashInput(el);
             atualizarRoteiro();
             setStatus(`Conteúdo colado em "${el.labels?.[0]?.textContent || key}".`);
@@ -724,139 +589,17 @@
     Object.keys(inputs).forEach((key) => {
       const el = inputs[key];
       el.addEventListener("click", () => colarDaAreaTransferencia(key));
-      el.addEventListener("input", () => {
-        if (key === "contratoNumero" || key === "woNumero") {
-          el.value = aplicarMascaraSeNecessario(key, el.value);
-        }
-        atualizarRoteiro();
-      });
+      el.addEventListener("input", atualizarRoteiro);
     });
 
     function montarMensagemWhatsApp() {
       const itens = obterLinhasOrdenadas();
       const linhas = itens.map((item) => `*${item.label}:* ${item.valor}`);
-      const texto = linhas.join("
-");
+      const texto = linhas.join("\n");
       msgPreview.value = texto;
       setStatus("Mensagem formatada para WhatsApp na ordem do sistema Tivit / Coop.");
       return texto;
     }
-
-    function carregarArquivadas() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        const parsed = raw ? JSON.parse(raw) : [];
-        return Array.isArray(parsed) ? parsed : [];
-      } catch {
-        return [];
-      }
-    }
-
-    function salvarArquivadas(lista) {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(lista));
-      } catch {
-        // Ignora erro de armazenamento se indisponível
-      }
-    }
-
-    function renderizarArquivadas() {
-      const lista = carregarArquivadas();
-      if (!lista.length) {
-        listaArquivadas.innerHTML = `<div class="empty-archive">Nenhuma chamada arquivada ainda. Preencha os dados e clique em <strong>Arquivar chamada</strong>.</div>`;
-        return;
-      }
-
-      listaArquivadas.innerHTML = lista
-        .map(
-          (item) => `
-          <div class="archive-item" data-id="${escapeHtml(item.id)}">
-            <div class="archive-top">
-              <span><strong>Arquivado em:</strong> ${escapeHtml(item.dataHora)}</span>
-              <span><strong>O.S:</strong> ${escapeHtml(item.os || "-")} • <strong>Contrato:</strong> ${escapeHtml(item.contrato || "-")}</span>
-            </div>
-            <div class="archive-meta">
-              <strong>Cliente:</strong> ${escapeHtml(item.nome || "-")} — <strong>Endereço:</strong> ${escapeHtml(item.endereco || "-")}
-            </div>
-            <div class="archive-actions">
-              <button type="button" class="btn-mini" onclick="carregarChamada('${escapeHtml(item.id)}')">Carregar nos campos</button>
-              <button type="button" class="btn-mini" onclick="copiarChamada('${escapeHtml(item.id)}')">Copiar mensagem</button>
-              <button type="button" class="btn-mini danger" onclick="excluirChamada('${escapeHtml(item.id)}')">Excluir</button>
-            </div>
-          </div>
-        `
-        )
-        .join("");
-    }
-
-    window.carregarChamada = function (id) {
-      const lista = carregarArquivadas();
-      const encontrada = lista.find((x) => x.id === id);
-      if (!encontrada) return;
-      inputs.nomeCliente.value = encontrada.nome || "";
-      inputs.enderecoCliente.value = encontrada.endereco || "";
-      inputs.woNumero.value = encontrada.os || "";
-      inputs.contratoNumero.value = encontrada.contrato || "";
-      msgPreview.value = encontrada.mensagem || "";
-      atualizarRoteiro();
-      setStatus(`Chamada de "${encontrada.nome || "cliente sem nome"}" carregada nos campos.`);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    };
-
-    window.copiarChamada = async function (id) {
-      const lista = carregarArquivadas();
-      const encontrada = lista.find((x) => x.id === id);
-      if (!encontrada) return;
-      const texto = encontrada.mensagem || "";
-      try {
-        await navigator.clipboard.writeText(texto);
-        setStatus("Mensagem da chamada arquivada copiada.");
-      } catch {
-        msgPreview.value = texto;
-        msgPreview.select();
-        document.execCommand("copy");
-        setStatus("Mensagem da chamada arquivada copiada.");
-      }
-    };
-
-    window.excluirChamada = function (id) {
-      const lista = carregarArquivadas().filter((x) => x.id !== id);
-      salvarArquivadas(lista);
-      renderizarArquivadas();
-      setStatus("Registro arquivado removido.");
-    };
-
-    document.getElementById("btnArquivar").addEventListener("click", () => {
-      const nome = inputs.nomeCliente.value.trim();
-      const endereco = inputs.enderecoCliente.value.trim();
-      const os = formatarOS(inputs.woNumero.value.trim());
-      const contrato = formatarContrato(inputs.contratoNumero.value.trim());
-
-      if (!nome && !endereco && !os && !contrato) {
-        setStatus("Preencha ao menos um campo antes de arquivar a chamada.", true);
-        return;
-      }
-
-      const mensagem = msgPreview.value.trim() || montarMensagemWhatsApp();
-      const agora = new Date();
-      const dataHora = agora.toLocaleString("pt-BR");
-
-      const novoRegistro = {
-        id: String(Date.now()) + "_" + Math.random().toString(36).slice(2, 7),
-        dataHora,
-        nome,
-        endereco,
-        os,
-        contrato,
-        mensagem
-      };
-
-      const lista = carregarArquivadas();
-      lista.unshift(novoRegistro);
-      salvarArquivadas(lista);
-      renderizarArquivadas();
-      setStatus("Chamada arquivada com sucesso.");
-    });
 
     document.getElementById("btnFormatarWpp").addEventListener("click", () => {
       montarMensagemWhatsApp();
@@ -892,7 +635,6 @@
     });
 
     atualizarRoteiro();
-    renderizarArquivadas();
   </script>
 </body>
 </html>
