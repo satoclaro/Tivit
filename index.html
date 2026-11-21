@@ -648,12 +648,13 @@
   </div>
 
   <footer>
-    Criado por Fernando Sato - Versão 1.10 - 21.11.26 - 02:39
+    Criado por Fernando Sato - Versão 1.11 - 21.11.26 - 02:48
   </footer>
 
   <script>
-    const STORAGE_KEY = "tivit_coop_chamadas_arquivadas_v1_10";
+    const STORAGE_KEY = "tivit_coop_chamadas_arquivadas_v1_11";
     const LEGACY_KEYS = [
+      "tivit_coop_chamadas_arquivadas_v1_10",
       "tivit_coop_chamadas_arquivadas_v1_9",
       "tivit_coop_chamadas_arquivadas_v1_8",
       "tivit_coop_chamadas_arquivadas_v1_7"
@@ -778,37 +779,78 @@
       }
     }
 
-    async function colarDaAreaTransferencia(key) {
+    function aplicarTextoNoCampo(key, textoBruto) {
+      const el = inputs[key];
+      const limpo = String(textoBruto || "").trim();
+      if (!limpo) return false;
+      el.value = limpo;
+      aplicarFormatacaoCampo(key);
+      flashInput(el);
+      atualizarRoteiro();
+      setStatus(`Conteúdo colado em "${nomesCampos[key] || key}".`);
+      return true;
+    }
+
+    async function colarDaAreaTransferencia(key, e = null) {
       const el = inputs[key];
       if (!el) return;
-      el.focus();
 
+      // Em alguns navegadores/iframes/arquivos locais, readText() pode falhar ou exigir permissão
       if (navigator.clipboard && typeof navigator.clipboard.readText === "function") {
         try {
           const textoClipboard = await navigator.clipboard.readText();
           if (textoClipboard && textoClipboard.trim() !== "") {
-            el.value = textoClipboard.trim();
+            aplicarTextoNoCampo(key, textoClipboard);
+            return;
+          }
+        } catch (err) {
+          // Fallback: se o navegador já disparou paste nativo ou o usuário usar Ctrl+V / menu Colar
+        }
+      }
+
+      // Tentativa adicional via execCommand('paste') quando suportado
+      try {
+        el.focus({ preventScroll: true });
+        if (typeof document.queryCommandSupported === "function" && document.queryCommandSupported("paste")) {
+          const valorAntes = el.value;
+          const ok = document.execCommand("paste");
+          if (ok && el.value.trim() !== "" && el.value !== valorAntes) {
             aplicarFormatacaoCampo(key);
             flashInput(el);
             atualizarRoteiro();
             setStatus(`Conteúdo colado em "${nomesCampos[key] || key}".`);
             return;
-          } else {
-            setStatus("A área de transferência está vazia.", true);
-            return;
           }
-        } catch (err) {
-          setStatus("Permissão de leitura da área de transferência bloqueada pelo navegador. Use Ctrl+V ou toque em Colar.", true);
-          return;
         }
+      } catch (err) {
+        // Ignora e mantém foco para colagem manual
       }
 
-      setStatus("Seu navegador não suporta leitura automática ao clicar. Use Ctrl+V ou toque em Colar.", true);
+      if (e && e.type === "click") {
+        setStatus(`Clique em "${nomesCampos[key] || key}" pronto — se não colou automaticamente, use Ctrl+V ou toque em Colar.`, true);
+      }
     }
 
     Object.keys(inputs).forEach((key) => {
       const el = inputs[key];
-      el.addEventListener("click", () => colarDaAreaTransferencia(key));
+      el.addEventListener("pointerdown", (e) => {
+        if (e.button !== undefined && e.button !== 0) return;
+        colarDaAreaTransferencia(key, e);
+      });
+      el.addEventListener("paste", (e) => {
+        const clipboardData = e.clipboardData || window.clipboardData;
+        const textoColado = clipboardData ? clipboardData.getData("text") : "";
+        if (textoColado && textoColado.trim() !== "") {
+          e.preventDefault();
+          aplicarTextoNoCampo(key, textoColado);
+        } else {
+          setTimeout(() => {
+            aplicarFormatacaoCampo(key);
+            atualizarRoteiro();
+            setStatus(`Conteúdo colado em "${nomesCampos[key] || key}".`);
+          }, 0);
+        }
+      });
       el.addEventListener("input", () => {
         aplicarFormatacaoCampo(key);
         atualizarRoteiro();
@@ -979,7 +1021,7 @@
       }
       const payload = {
         sistema: "Tivit / Coop",
-        versao: "1.10",
+        versao: "1.11",
         exportadoEm: formatarDataHoraAgora(),
         totalRegistros: registros.length,
         chamadas: registros
@@ -1029,7 +1071,6 @@
       setStatus(`Exportados ${registros.length} registro(s) em CSV.`);
     }
 
-    // Parser de CSV compatível com aspas duplas e separadores ; ou ,
     function parseCsvLinhas(texto) {
       const linhas = [];
       let atual = [];
@@ -1157,7 +1198,6 @@
       mesclarRegistrosImportados(items, "CSV");
     }
 
-    // Geração de PDF real (PDF 1.4 válido com tabela e detalhes das chamadas arquivadas)
     function gerarPdfBytes(registros) {
       const sanitizePdfText = (s) =>
         String(s || "")
