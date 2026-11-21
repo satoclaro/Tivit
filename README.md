@@ -1,15 +1,21 @@
 # Automação de Ligação e WhatsApp — Sistema Tivit / Coop
 
-Aplicação web em arquivo único (`index.html`) baseada no arquivo enviado (`index_2.html` / `Versão 1.2`) com as formatações e recursos adicionados.
+Aplicação web em HTML único (`index.html`) para agilizar o atendimento, a ligação e o envio de mensagens formatadas no WhatsApp para o sistema **Tivit / Coop**.
 
-## O que foi implantado sobre o HTML enviado (`index_2.html`)
+## Funcionalidades
 
-- **Formatação de WO / O.S. (`xxx.xxx.xxx.xxxx`):** Formata automaticamente os dígitos em `xxx.xxx.xxx.xxxx` ao colar ou digitar, e reflete o valor formatado no roteiro e na mensagem de WhatsApp.
-- **Formatação de Contrato (`xxx.xxx.xxx`):** Formata automaticamente os dígitos em `xxx.xxx.xxx` ao colar ou digitar, e reflete o valor formatado no roteiro e na mensagem de WhatsApp.
-- **Colagem ao clicar + formatação no `paste`:** Mantém a tentativa de colar da área de transferência ao clicar no campo e aplica a formatação imediatamente também ao colar com `Ctrl+V` / menu **Colar**.
-- **Botão para ligar no topo:** Atalho para `+558007690800` (`tel:+558007690800`).
-- **Campo Opção e botão limpar opção:** Campo adicional com botão **Limpar campo opção** logo abaixo.
-- **Arquivamento, JSON, CSV e PDF:** Botões para arquivar chamadas, importar/exportar **JSON** e **CSV**, e baixar **PDF**.
-- **Rodapé atualizado:** `Criado por Fernando Sato - Versão 1.4 - 21.11.26 - 04:06`.
+- **Botão de ligação para a Tivit no topo:** aciona diretamente `tel:+558007690800`.
+- **Colagem rápida da área de transferência ao clicar:** clique em **Nome do cliente**, **Endereço**, **O.S** ou **Contrato** para colar automaticamente o texto copiado (com fallback para `Ctrl+V` / colar manual caso o navegador exija permissão).
+- **Máscaras automáticas:**
+  - **Contrato:** `xxx.xxx.xxx`
+  - **O.S:** `xxx. xxx.xxx.xxxx`
+- **Formatação e envio para WhatsApp:** monta a mensagem na ordem exata do sistema Tivit / Coop, permite copiar ou abrir direto no WhatsApp.
+- **Arquivamento de chamadas:** salva o registro da chamada localmente no navegador (`localStorage`) com data/hora, permitindo recarregar nos campos, copiar a mensagem ou excluir.
+- **Roteiro de ligação:** exibe os dados na ordem do atendimento em tempo real.
 
-Criado por Fernando Sato - Versão 1.4 - 21.11.26 - 04:06
+## Como usar
+
+1. Abra o arquivo `index.html` em qualquer navegador moderno (Chrome, Edge, Firefox, Safari).
+2. Clique no botão **Ligar Tivit (+558007690800)** no topo quando precisar iniciar a chamada.
+3. Copie os dados e clique nos campos correspondentes para colar e formatar automaticamente.
+4. Use **Arquivar chamada** para guardar o histórico da chamada no navegador.
