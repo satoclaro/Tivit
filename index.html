@@ -18,6 +18,8 @@
       --whatsapp-hover: #16a34a;
       --archive: #f59e0b;
       --archive-hover: #d97706;
+      --call: #38bdf8;
+      --call-hover: #0ea5e9;
       --danger: #f87171;
       --ok: #34d399;
     }
@@ -55,7 +57,7 @@
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 12px;
     }
 
     header h1 {
@@ -68,6 +70,35 @@
       font-size: 0.85rem;
       color: var(--muted);
       margin-top: 2px;
+    }
+
+    .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-call {
+      background: var(--call);
+      color: #051322;
+      text-decoration: none;
+      border-radius: 10px;
+      padding: 9px 14px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background-color 0.15s ease, transform 0.08s ease;
+    }
+
+    .btn-call:hover {
+      background: var(--call-hover);
+    }
+
+    .btn-call:active {
+      transform: scale(0.98);
     }
 
     .badge {
@@ -164,41 +195,6 @@
     input[type="text"].pasted-flash {
       border-color: var(--ok);
       box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.24);
-    }
-
-    .fixed-table {
-      width: 100%;
-      border-collapse: collapse;
-      background: var(--card-2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-      font-size: 0.86rem;
-    }
-
-    .fixed-table tr {
-      border-bottom: 1px solid rgba(51, 65, 85, 0.65);
-    }
-
-    .fixed-table tr:last-child {
-      border-bottom: none;
-    }
-
-    .fixed-table td {
-      padding: 9px 12px;
-      vertical-align: top;
-    }
-
-    .fixed-table td.k {
-      color: var(--muted);
-      font-weight: 600;
-      width: 42%;
-    }
-
-    .fixed-table td.v {
-      color: var(--text);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      word-break: break-word;
     }
 
     .script-list {
@@ -457,14 +453,19 @@
         <h1>Automação de Ligação e WhatsApp — Sistema Tivit / Coop</h1>
         <p>Clique em Nome, Endereço, WO ou Contrato para colar automaticamente o conteúdo da área de transferência.</p>
       </div>
-      <span class="badge">Telecom • Tivit / Coop</span>
+      <div class="header-actions">
+        <a href="tel:+558007690800" class="btn-call" id="btnLigarTivit" aria-label="Ligar para Tivit +558007690800">
+          Ligar para Tivit (+558007690800)
+        </a>
+        <span class="badge">Telecom • Tivit / Coop</span>
+      </div>
     </header>
 
     <section class="panel" aria-label="Campos variáveis com cola automática da área de transferência">
       <div class="panel-title">1. Campos para colar da área de transferência (ao clicar)</div>
       <div class="panel-subtitle">
         Copie o dado desejado e clique no campo correspondente para colar o conteúdo da área de transferência automaticamente.
-        Caso o navegador peça permissão ou bloqueie leitura direta, o campo foca e você pode usar <kbd>Ctrl+V</kbd> / colar normalmente.
+        O campo <strong>WO</strong> exibe no formato <code>xxx. xxx.xxx.xxxx</code> e <strong>Contrato</strong> no formato <code>xxx.xxx.xxx</code>.
       </div>
 
       <div class="grid">
@@ -497,28 +498,28 @@
         <div class="grid two-col">
           <div class="field-group">
             <div class="field-header">
-              <label for="woNumero">WO</label>
+              <label for="woNumero">WO (xxx. xxx.xxx.xxxx)</label>
               <span class="paste-tag">Clique = Colar</span>
             </div>
             <input
               type="text"
               id="woNumero"
               inputmode="numeric"
-              placeholder="Clique para colar o WO..."
+              placeholder="xxx. xxx.xxx.xxxx"
               autocomplete="off"
             />
           </div>
 
           <div class="field-group">
             <div class="field-header">
-              <label for="contratoNumero">Contrato</label>
+              <label for="contratoNumero">Contrato (xxx.xxx.xxx)</label>
               <span class="paste-tag">Clique = Colar</span>
             </div>
             <input
               type="text"
               id="contratoNumero"
               inputmode="numeric"
-              placeholder="Clique para colar o Contrato..."
+              placeholder="xxx.xxx.xxx"
               autocomplete="off"
             />
           </div>
@@ -567,33 +568,14 @@
       <div class="panel-subtitle">Atualiza em tempo real conforme você cola Nome, Endereço, WO e Contrato.</div>
       <div class="script-list" id="roteiroLigacao"></div>
     </section>
-
-    <section class="panel" aria-label="Dados fixos configurados">
-      <div class="panel-title">4. Dados fixos mantidos na formatação</div>
-      <div class="panel-subtitle">Incluídos automaticamente na ordem solicitada para o atendimento Tivit / Coop.</div>
-      <table class="fixed-table">
-        <tbody>
-          <tr><td class="k">Opção do serviço</td><td class="v">239</td></tr>
-          <tr><td class="k">Cidade</td><td class="v">003</td></tr>
-          <tr><td class="k">Código da empresa</td><td class="v">68804663#</td></tr>
-          <tr><td class="k">Nome do Funcionário</td><td class="v">Fernando Sato</td></tr>
-          <tr><td class="k">Código Funcionário</td><td class="v">Z688632</td></tr>
-          <tr><td class="k">Nome da Conveniada</td><td class="v">CSR Engenharia Ltda</td></tr>
-          <tr><td class="k">PDA</td><td class="v">91520-6585</td></tr>
-          <tr><td class="k">Código da Baixa</td><td class="v">409</td></tr>
-          <tr><td class="k">Tipo de wo</td><td class="v">Instalação/ Mudança de Pacote</td></tr>
-          <tr><td class="k">Hora de Início</td><td class="v">12:00</td></tr>
-        </tbody>
-      </table>
-    </section>
   </div>
 
   <footer>
-    Criado por Fernando Sato - Versão 1.3 - 21.11.26 - 01:34
+    Criado por Fernando Sato - Versão 1.4 - 21.11.26 - 01:55
   </footer>
 
   <script>
-    const STORAGE_KEY = "tivit_coop_chamadas_arquivadas_v1_3";
+    const STORAGE_KEY = "tivit_coop_chamadas_arquivadas_v1_4";
 
     const DADOS_FIXOS = {
       opcaoServico: "239",
@@ -640,11 +622,29 @@
         .replace(/"/g, "&quot;");
     }
 
+    // Máscara WO: xxx. xxx.xxx.xxxx (até 10 dígitos)
+    function formatarWO(valor) {
+      const digitos = String(valor || "").replace(/\D/g, "").slice(0, 10);
+      if (!digitos) return "";
+      if (digitos.length <= 3) return digitos;
+      if (digitos.length <= 6) return `${digitos.slice(0, 3)}. ${digitos.slice(3)}`;
+      return `${digitos.slice(0, 3)}. ${digitos.slice(3, 6)}.${digitos.slice(6)}`;
+    }
+
+    // Máscara Contrato: xxx.xxx.xxx (até 9 dígitos)
+    function formatarContrato(valor) {
+      const digitos = String(valor || "").replace(/\D/g, "").slice(0, 9);
+      if (!digitos) return "";
+      if (digitos.length <= 3) return digitos;
+      if (digitos.length <= 6) return `${digitos.slice(0, 3)}.${digitos.slice(3)}`;
+      return `${digitos.slice(0, 3)}.${digitos.slice(3, 6)}.${digitos.slice(6)}`;
+    }
+
     function obterLinhasOrdenadas(overrideData = null) {
       const nome = (overrideData ? overrideData.nomeCliente : inputs.nomeCliente.value).trim();
       const endereco = (overrideData ? overrideData.enderecoCliente : inputs.enderecoCliente.value).trim();
-      const wo = (overrideData ? overrideData.woNumero : inputs.woNumero.value).trim();
-      const contrato = (overrideData ? overrideData.contratoNumero : inputs.contratoNumero.value).trim();
+      const wo = formatarWO(overrideData ? overrideData.woNumero : inputs.woNumero.value);
+      const contrato = formatarContrato(overrideData ? overrideData.contratoNumero : inputs.contratoNumero.value);
 
       return [
         { label: "Opção do serviço", valor: DADOS_FIXOS.opcaoServico, display: DADOS_FIXOS.opcaoServico },
@@ -674,6 +674,14 @@
         .join("");
     }
 
+    function aplicarFormatacaoCampo(key) {
+      if (key === "woNumero") {
+        inputs.woNumero.value = formatarWO(inputs.woNumero.value);
+      } else if (key === "contratoNumero") {
+        inputs.contratoNumero.value = formatarContrato(inputs.contratoNumero.value);
+      }
+    }
+
     async function colarDaAreaTransferencia(key) {
       const el = inputs[key];
       if (!el) return;
@@ -684,6 +692,7 @@
           const textoClipboard = await navigator.clipboard.readText();
           if (textoClipboard && textoClipboard.trim() !== "") {
             el.value = textoClipboard.trim();
+            aplicarFormatacaoCampo(key);
             flashInput(el);
             atualizarRoteiro();
             setStatus(`Conteúdo colado em "${el.labels?.[0]?.textContent || key}".`);
@@ -704,7 +713,10 @@
     Object.keys(inputs).forEach((key) => {
       const el = inputs[key];
       el.addEventListener("click", () => colarDaAreaTransferencia(key));
-      el.addEventListener("input", atualizarRoteiro);
+      el.addEventListener("input", () => {
+        aplicarFormatacaoCampo(key);
+        atualizarRoteiro();
+      });
     });
 
     function formatarTextoChamada(overrideData = null) {
@@ -751,8 +763,8 @@
     function arquivarDadosChamada() {
       const nome = inputs.nomeCliente.value.trim();
       const endereco = inputs.enderecoCliente.value.trim();
-      const wo = inputs.woNumero.value.trim();
-      const contrato = inputs.contratoNumero.value.trim();
+      const wo = formatarWO(inputs.woNumero.value);
+      const contrato = formatarContrato(inputs.contratoNumero.value);
 
       if (!nome && !endereco && !wo && !contrato) {
         setStatus("Preencha ou cole ao menos um campo da chamada antes de arquivar.", true);
@@ -788,8 +800,8 @@
 
       inputs.nomeCliente.value = item.nomeCliente || "";
       inputs.enderecoCliente.value = item.enderecoCliente || "";
-      inputs.woNumero.value = item.woNumero || "";
-      inputs.contratoNumero.value = item.contratoNumero || "";
+      inputs.woNumero.value = formatarWO(item.woNumero || "");
+      inputs.contratoNumero.value = formatarContrato(item.contratoNumero || "");
       msgPreview.value = item.mensagemFormatada || formatarTextoChamada();
       atualizarRoteiro();
       setStatus(`Dados da chamada de ${item.arquivadoEm} carregados nos campos.`);
@@ -917,7 +929,7 @@
       });
       msgPreview.value = "";
       atualizarRoteiro();
-      setStatus("Campos variáveis limpos. Dados fixos mantidos.");
+      setStatus("Campos variáveis limpos.");
     });
 
     atualizarRoteiro();
