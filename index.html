@@ -494,7 +494,7 @@
     <header>
       <div>
         <h1>Automação de Ligação e WhatsApp — Sistema Tivit / Coop</h1>
-        <p>Clique em Nome, Endereço, WO ou Contrato para colar automaticamente o conteúdo da área de transferência.</p>
+        <p>Clique em Nome, Endereço, O.S ou Contrato para colar automaticamente o conteúdo da área de transferência.</p>
       </div>
       <div class="header-actions">
         <a href="tel:+558007690800" class="btn-call" id="btnLigarTivit" aria-label="Ligar para Tivit +558007690800">
@@ -508,7 +508,7 @@
       <div class="panel-title">1. Campos para colar da área de transferência (ao clicar)</div>
       <div class="panel-subtitle">
         Copie o dado desejado e clique no campo correspondente para colar o conteúdo da área de transferência automaticamente.
-        <strong>WO</strong> formata como <code>O.S xxx.xxx.xxxx</code> e <strong>Contrato</strong> como <code>xxx.xxx.xxx</code>, ambos com fonte ampliada.
+        <strong>O.S</strong> e <strong>Contrato</strong> exibem no formato <code>xxx.xxx.xxx</code> com fonte ampliada.
       </div>
 
       <div class="grid">
@@ -547,7 +547,7 @@
         <div class="grid two-col">
           <div class="field-group">
             <div class="field-header">
-              <label for="woNumero">WO (O.S xxx.xxx.xxxx)</label>
+              <label for="woNumero">O.S (xxx.xxx.xxx)</label>
               <span class="paste-tag">Clique = Colar</span>
             </div>
             <input
@@ -555,7 +555,7 @@
               id="woNumero"
               class="num-destaque"
               inputmode="numeric"
-              placeholder="O.S xxx.xxx.xxxx"
+              placeholder="xxx.xxx.xxx"
               autocomplete="off"
             />
             <div class="field-footer">
@@ -622,17 +622,17 @@
 
     <section class="panel" aria-label="Roteiro de fala na ordem solicitada">
       <div class="panel-title">3. Roteiro para falar com a atendente (ordem do sistema)</div>
-      <div class="panel-subtitle">Atualiza em tempo real conforme você cola Nome, Endereço, WO e Contrato.</div>
+      <div class="panel-subtitle">Atualiza em tempo real conforme você cola Nome, Endereço, O.S e Contrato.</div>
       <div class="script-list" id="roteiroLigacao"></div>
     </section>
   </div>
 
   <footer>
-    Criado por Fernando Sato - Versão 1.7 - 21.11.26 - 02:14
+    Criado por Fernando Sato - Versão 1.8 - 21.11.26 - 02:18
   </footer>
 
   <script>
-    const STORAGE_KEY = "tivit_coop_chamadas_arquivadas_v1_7";
+    const STORAGE_KEY = "tivit_coop_chamadas_arquivadas_v1_8";
 
     const DADOS_FIXOS = {
       opcaoServico: "239",
@@ -657,7 +657,7 @@
     const nomesCampos = {
       nomeCliente: "Nome do cliente",
       enderecoCliente: "Endereço",
-      woNumero: "WO",
+      woNumero: "O.S",
       contratoNumero: "Contrato"
     };
 
@@ -686,7 +686,7 @@
         .replace(/"/g, "&quot;");
     }
 
-    // Formatação xxx.xxx.xxx (até 9 dígitos) para Contrato
+    // Formatação xxx.xxx.xxx (até 9 dígitos) para O.S e Contrato
     function formatarBlocoTres(valor) {
       const digitos = String(valor || "").replace(/\D/g, "").slice(0, 9);
       if (!digitos) return "";
@@ -695,23 +695,10 @@
       return `${digitos.slice(0, 3)}.${digitos.slice(3, 6)}.${digitos.slice(6)}`;
     }
 
-    // Formatação O.S xxx.xxx.xxxx (até 10 dígitos) para WO
-    function formatarWoOs(valor) {
-      const digitos = String(valor || "").replace(/\D/g, "").slice(0, 10);
-      if (!digitos) return "";
-      let parteNum = digitos;
-      if (digitos.length > 6) {
-        parteNum = `${digitos.slice(0, 3)}.${digitos.slice(3, 6)}.${digitos.slice(6)}`;
-      } else if (digitos.length > 3) {
-        parteNum = `${digitos.slice(0, 3)}.${digitos.slice(3)}`;
-      }
-      return `O.S ${parteNum}`;
-    }
-
     function obterLinhasOrdenadas(overrideData = null) {
       const nome = (overrideData ? overrideData.nomeCliente : inputs.nomeCliente.value).trim();
       const endereco = (overrideData ? overrideData.enderecoCliente : inputs.enderecoCliente.value).trim();
-      const wo = formatarWoOs(overrideData ? overrideData.woNumero : inputs.woNumero.value);
+      const os = formatarBlocoTres(overrideData ? overrideData.woNumero : inputs.woNumero.value);
       const contrato = formatarBlocoTres(overrideData ? overrideData.contratoNumero : inputs.contratoNumero.value);
 
       return [
@@ -727,7 +714,7 @@
         { label: "Hora de Início", valor: DADOS_FIXOS.horaInicio, display: DADOS_FIXOS.horaInicio, destaque: false },
         { label: "Nome do cliente", valor: nome || "-", display: nome || "[Colar nome]", destaque: false },
         { label: "Endereço", valor: endereco || "-", display: endereco || "[Colar endereço]", destaque: false },
-        { label: "WO", valor: wo || "-", display: wo || "[Colar WO]", destaque: true },
+        { label: "O.S", valor: os || "-", display: os || "[Colar O.S]", destaque: true },
         { label: "Contrato", valor: contrato || "-", display: contrato || "[Colar Contrato]", destaque: true }
       ];
     }
@@ -743,9 +730,7 @@
     }
 
     function aplicarFormatacaoCampo(key) {
-      if (key === "woNumero") {
-        inputs[key].value = formatarWoOs(inputs[key].value);
-      } else if (key === "contratoNumero") {
+      if (key === "woNumero" || key === "contratoNumero") {
         inputs[key].value = formatarBlocoTres(inputs[key].value);
       }
     }
@@ -842,10 +827,10 @@
     function arquivarDadosChamada() {
       const nome = inputs.nomeCliente.value.trim();
       const endereco = inputs.enderecoCliente.value.trim();
-      const wo = formatarWoOs(inputs.woNumero.value);
+      const os = formatarBlocoTres(inputs.woNumero.value);
       const contrato = formatarBlocoTres(inputs.contratoNumero.value);
 
-      if (!nome && !endereco && !wo && !contrato) {
+      if (!nome && !endereco && !os && !contrato) {
         setStatus("Preencha ou cole ao menos um campo da chamada antes de arquivar.", true);
         return;
       }
@@ -855,12 +840,12 @@
         arquivadoEm: formatarDataHoraAgora(),
         nomeCliente: nome,
         enderecoCliente: endereco,
-        woNumero: wo,
+        woNumero: os,
         contratoNumero: contrato,
         mensagemFormatada: formatarTextoChamada({
           nomeCliente: nome,
           enderecoCliente: endereco,
-          woNumero: wo,
+          woNumero: os,
           contratoNumero: contrato
         })
       };
@@ -879,7 +864,7 @@
 
       inputs.nomeCliente.value = item.nomeCliente || "";
       inputs.enderecoCliente.value = item.enderecoCliente || "";
-      inputs.woNumero.value = formatarWoOs(item.woNumero || "");
+      inputs.woNumero.value = formatarBlocoTres(item.woNumero || "");
       inputs.contratoNumero.value = formatarBlocoTres(item.contratoNumero || "");
       msgPreview.value = item.mensagemFormatada || formatarTextoChamada();
       atualizarRoteiro();
@@ -914,7 +899,7 @@
             </div>
             <div class="archive-summary">
               <strong>Cliente:</strong> ${escapeHtml(r.nomeCliente || "-")} |
-              <strong>WO:</strong> <span class="archive-num">${escapeHtml(r.woNumero || "-")}</span> |
+              <strong>O.S:</strong> <span class="archive-num">${escapeHtml(r.woNumero || "-")}</span> |
               <strong>Contrato:</strong> <span class="archive-num">${escapeHtml(r.contratoNumero || "-")}</span><br />
               <strong>Endereço:</strong> ${escapeHtml(r.enderecoCliente || "-")}
             </div>
