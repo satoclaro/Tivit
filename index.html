@@ -18,6 +18,7 @@
       --whatsapp-hover: #16a34a;
       --danger: #f87171;
       --ok: #34d399;
+      --amber: #fbbf24;
     }
 
     * {
@@ -38,7 +39,7 @@
 
     .container {
       width: 100%;
-      max-width: 780px;
+      max-width: 820px;
       margin: 0 auto;
       flex: 1;
     }
@@ -53,7 +54,11 @@
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 12px;
+    }
+
+    .header-left {
+      flex: 1 1 320px;
     }
 
     header h1 {
@@ -66,6 +71,35 @@
       font-size: 0.85rem;
       color: var(--muted);
       margin-top: 2px;
+    }
+
+    .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-call-tivit {
+      background: #ef4444;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 10px;
+      padding: 10px 15px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: background-color 0.15s ease, transform 0.08s ease;
+    }
+
+    .btn-call-tivit:hover {
+      background: #dc2626;
+    }
+
+    .btn-call-tivit:active {
+      transform: scale(0.98);
     }
 
     .badge {
@@ -164,38 +198,61 @@
       box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.24);
     }
 
-    .fixed-table {
-      width: 100%;
-      border-collapse: collapse;
+    .formatted-highlight-box {
+      margin-top: 16px;
       background: var(--card-2);
+      border: 1.5px solid rgba(56, 189, 248, 0.45);
+      border-radius: 12px;
+      padding: 16px;
+      display: none;
+    }
+
+    .formatted-highlight-box.visible {
+      display: block;
+    }
+
+    .formatted-highlight-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .formatted-big-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    @media (min-width: 600px) {
+      .formatted-big-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .formatted-big-item {
+      background: rgba(30, 41, 59, 0.65);
       border: 1px solid var(--border);
       border-radius: 10px;
-      overflow: hidden;
-      font-size: 0.86rem;
+      padding: 12px 14px;
     }
 
-    .fixed-table tr {
-      border-bottom: 1px solid rgba(51, 65, 85, 0.65);
-    }
-
-    .fixed-table tr:last-child {
-      border-bottom: none;
-    }
-
-    .fixed-table td {
-      padding: 9px 12px;
-      vertical-align: top;
-    }
-
-    .fixed-table td.k {
-      color: var(--muted);
+    .formatted-big-label {
+      font-size: 0.8rem;
       font-weight: 600;
-      width: 42%;
+      color: var(--muted);
+      margin-bottom: 4px;
     }
 
-    .fixed-table td.v {
-      color: var(--text);
+    .formatted-big-value {
+      font-size: 1.65rem;
+      font-weight: 800;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      color: #ffffff;
+      letter-spacing: 0.02em;
+      line-height: 1.25;
       word-break: break-word;
     }
 
@@ -245,8 +302,8 @@
     button {
       border: none;
       border-radius: 10px;
-      padding: 11px 16px;
-      font-size: 0.9rem;
+      padding: 11px 15px;
+      font-size: 0.88rem;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
@@ -263,7 +320,7 @@
     .btn-primary {
       background: var(--accent);
       color: #061322;
-      flex: 1 1 200px;
+      flex: 1 1 190px;
     }
 
     .btn-primary:hover {
@@ -273,11 +330,21 @@
     .btn-whatsapp {
       background: var(--whatsapp);
       color: #052010;
-      flex: 1 1 200px;
+      flex: 1 1 190px;
     }
 
     .btn-whatsapp:hover {
       background: var(--whatsapp-hover);
+    }
+
+    .btn-archive {
+      background: rgba(251, 191, 36, 0.16);
+      color: var(--amber);
+      border: 1px solid rgba(251, 191, 36, 0.45);
+    }
+
+    .btn-archive:hover {
+      background: rgba(251, 191, 36, 0.26);
     }
 
     .btn-secondary {
@@ -325,7 +392,7 @@
     }
 
     textarea#msgPreview {
-      min-height: 290px;
+      min-height: 280px;
       resize: vertical;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       font-size: 0.85rem;
@@ -343,9 +410,60 @@
       color: var(--danger);
     }
 
+    .archive-list {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .archive-card {
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .archive-meta {
+      font-size: 0.86rem;
+      line-height: 1.4;
+    }
+
+    .archive-meta strong {
+      color: #ffffff;
+    }
+
+    .archive-sub {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 2px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    .archive-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .empty-state {
+      font-size: 0.84rem;
+      color: var(--muted);
+      background: var(--card-2);
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+    }
+
     footer {
       width: 100%;
-      max-width: 780px;
+      max-width: 820px;
       margin: 12px auto 0;
       text-align: center;
       font-size: 0.8rem;
@@ -353,16 +471,55 @@
       padding-top: 8px;
       border-top: 1px solid rgba(148, 163, 184, 0.16);
     }
+
+    @media print {
+      body {
+        background: #ffffff;
+        color: #000000;
+        padding: 0;
+      }
+      .header-actions,
+      .paste-tag,
+      .actions,
+      .btn-mini,
+      .archive-actions,
+      #importJsonInput,
+      #importCsvInput {
+        display: none !important;
+      }
+      .panel,
+      header,
+      .formatted-highlight-box,
+      .preview-box,
+      .script-list,
+      .archive-card,
+      .formatted-big-item,
+      input,
+      textarea {
+        background: #ffffff !important;
+        color: #000000 !important;
+        border-color: #cbd5e1 !important;
+        box-shadow: none !important;
+      }
+      .formatted-big-value {
+        color: #000000 !important;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <div>
+      <div class="header-left">
         <h1>Automação de Ligação e WhatsApp — Sistema Tivit / Coop</h1>
         <p>Clique em Nome, Endereço, WO ou Contrato para colar automaticamente o conteúdo da área de transferência.</p>
       </div>
-      <span class="badge">Telecom • Tivit / Coop</span>
+      <div class="header-actions">
+        <a href="tel:+558007690800" class="btn-call-tivit" id="btnLigarTivit">
+          Ligar Tivit (+55 800 769 0800)
+        </a>
+        <span class="badge">Telecom • Tivit / Coop</span>
+      </div>
     </header>
 
     <section class="panel" aria-label="Campos variáveis com cola automática da área de transferência">
@@ -430,9 +587,25 @@
         </div>
       </div>
 
+      <div id="formattedHighlightBox" class="formatted-highlight-box" aria-live="polite">
+        <div class="formatted-highlight-title">Números formatados após formatação (fonte ampliada)</div>
+        <div class="formatted-big-grid">
+          <div class="formatted-big-item">
+            <div class="formatted-big-label">Número formatado (xxx.xxx.xxx)</div>
+            <div class="formatted-big-value" id="displayNumeroFormatado">---.---.---</div>
+          </div>
+          <div class="formatted-big-item">
+            <div class="formatted-big-label">O.S formatada (O.S xxx.xxx.xxxx xxx)</div>
+            <div class="formatted-big-value" id="displayOsFormatada">O.S ---.---.---- ---</div>
+          </div>
+        </div>
+      </div>
+
       <div class="actions">
         <button type="button" class="btn-primary" id="btnFormatarWpp">Formatar para WhatsApp</button>
         <button type="button" class="btn-whatsapp" id="btnAbrirWpp">Formatar e abrir WhatsApp</button>
+        <button type="button" class="btn-archive" id="btnArquivarChamada">Arquivar chamada</button>
+        <button type="button" class="btn-secondary" id="btnBaixarPdf">Baixar em PDF</button>
         <button type="button" class="btn-secondary" id="btnLimpar">Limpar campos</button>
       </div>
 
@@ -456,28 +629,29 @@
       <div class="script-list" id="roteiroLigacao"></div>
     </section>
 
-    <section class="panel" aria-label="Dados fixos configurados">
-      <div class="panel-title">3. Dados fixos mantidos na formatação</div>
-      <div class="panel-subtitle">Incluídos automaticamente na ordem solicitada para o atendimento Tivit / Coop.</div>
-      <table class="fixed-table">
-        <tbody>
-          <tr><td class="k">Opção do serviço</td><td class="v">239</td></tr>
-          <tr><td class="k">Cidade</td><td class="v">003</td></tr>
-          <tr><td class="k">Código da empresa</td><td class="v">68804663#</td></tr>
-          <tr><td class="k">Nome do Funcionário</td><td class="v">Fernando Sato</td></tr>
-          <tr><td class="k">Código Funcionário</td><td class="v">Z688632</td></tr>
-          <tr><td class="k">Nome da Conveniada</td><td class="v">CSR Engenharia Ltda</td></tr>
-          <tr><td class="k">PDA</td><td class="v">91520-6585</td></tr>
-          <tr><td class="k">Código da Baixa</td><td class="v">409</td></tr>
-          <tr><td class="k">Tipo de wo</td><td class="v">Instalação/ Mudança de Pacote</td></tr>
-          <tr><td class="k">Hora de Início</td><td class="v">12:00</td></tr>
-        </tbody>
-      </table>
+    <section class="panel" aria-label="Chamadas arquivadas e exportação/importação">
+      <div class="panel-title">3. Chamadas arquivadas (JSON e CSV)</div>
+      <div class="panel-subtitle">
+        Arquive os registros de chamada com um clique e exporte ou importe seu histórico em JSON ou CSV.
+      </div>
+
+      <div class="actions" style="margin-top: 0;">
+        <button type="button" class="btn-secondary" id="btnExportJson">Exportar JSON</button>
+        <button type="button" class="btn-secondary" id="btnImportJson">Importar JSON</button>
+        <button type="button" class="btn-secondary" id="btnExportCsv">Exportar CSV</button>
+        <button type="button" class="btn-secondary" id="btnImportCsv">Importar CSV</button>
+        <button type="button" class="btn-secondary" id="btnLimparArquivo">Limpar arquivo</button>
+      </div>
+
+      <input type="file" id="importJsonInput" accept=".json,application/json" style="display: none;" />
+      <input type="file" id="importCsvInput" accept=".csv,text/csv" style="display: none;" />
+
+      <div class="archive-list" id="listaArquivadas"></div>
     </section>
   </div>
 
   <footer>
-    Criado por Fernando Sato - Versão 1.2 - 21.11.26 - 01:32
+    Criado por Fernando Sato - Versão 1.3 - 21.11.26
   </footer>
 
   <script>
@@ -490,9 +664,11 @@
       nomeConveniada: "CSR Engenharia Ltda",
       pda: "91520-6585",
       codigoBaixa: "409",
-      tipoWo: "Instalação/	Mudança de Pacote",
+      tipoWo: "Instalação/ Mudança de Pacote",
       horaInicio: "12:00"
     };
+
+    const STORAGE_KEY = "tivit_coop_chamadas_arquivadas_v1";
 
     const inputs = {
       nomeCliente: document.getElementById("nomeCliente"),
@@ -504,6 +680,12 @@
     const msgPreview = document.getElementById("msgPreview");
     const statusMsg = document.getElementById("statusMsg");
     const roteiroLigacao = document.getElementById("roteiroLigacao");
+    const formattedHighlightBox = document.getElementById("formattedHighlightBox");
+    const displayNumeroFormatado = document.getElementById("displayNumeroFormatado");
+    const displayOsFormatada = document.getElementById("displayOsFormatada");
+    const listaArquivadas = document.getElementById("listaArquivadas");
+
+    let chamadasArquivadas = [];
 
     function setStatus(texto, isWarn = false) {
       statusMsg.textContent = texto;
@@ -525,6 +707,29 @@
         .replace(/"/g, "&quot;");
     }
 
+    function apenasDigitos(val) {
+      return String(val || "").replace(/\D+/g, "");
+    }
+
+    function formatarNumeroPadrao(raw) {
+      const digits = apenasDigitos(raw);
+      if (!digits) return "---.---.---";
+      const p1 = digits.slice(0, 3).padEnd(3, "-");
+      const p2 = digits.slice(3, 6).padEnd(3, "-");
+      const p3 = digits.slice(6, 9).padEnd(3, "-");
+      return `${p1}.${p2}.${p3}`;
+    }
+
+    function formatarOsPadrao(woRaw, contratoRaw) {
+      const combined = apenasDigitos(woRaw) + apenasDigitos(contratoRaw);
+      if (!combined) return "O.S ---.---.---- ---";
+      const g1 = combined.slice(0, 3).padEnd(3, "-");
+      const g2 = combined.slice(3, 6).padEnd(3, "-");
+      const g3 = combined.slice(6, 10).padEnd(4, "-");
+      const g4 = combined.slice(10, 13).padEnd(3, "-");
+      return `O.S ${g1}.${g2}.${g3} ${g4}`;
+    }
+
     function obterLinhasOrdenadas() {
       const nome = inputs.nomeCliente.value.trim();
       const endereco = inputs.enderecoCliente.value.trim();
@@ -540,7 +745,7 @@
         { label: "Nome da Conveniada", valor: DADOS_FIXOS.nomeConveniada, display: DADOS_FIXOS.nomeConveniada },
         { label: "PDA", valor: DADOS_FIXOS.pda, display: DADOS_FIXOS.pda },
         { label: "Código da Baixa", valor: DADOS_FIXOS.codigoBaixa, display: DADOS_FIXOS.codigoBaixa },
-        { label: "Tipo de wo", valor: DADOS_FIXOS.tipoWo, display: "Instalação/ Mudança de Pacote" },
+        { label: "Tipo de wo", valor: DADOS_FIXOS.tipoWo, display: DADOS_FIXOS.tipoWo },
         { label: "Hora de Início", valor: DADOS_FIXOS.horaInicio, display: DADOS_FIXOS.horaInicio },
         { label: "Nome do cliente", valor: nome || "-", display: nome || "[Colar nome]" },
         { label: "Endereço", valor: endereco || "-", display: endereco || "[Colar endereço]" },
@@ -593,13 +798,273 @@
     });
 
     function montarMensagemWhatsApp() {
+      const nome = inputs.nomeCliente.value.trim();
+      const endereco = inputs.enderecoCliente.value.trim();
+      const wo = inputs.woNumero.value.trim();
+      const contrato = inputs.contratoNumero.value.trim();
+
+      const numeroFmt = formatarNumeroPadrao(contrato || wo);
+      const osFmt = formatarOsPadrao(wo, contrato);
+
+      displayNumeroFormatado.textContent = numeroFmt;
+      displayOsFormatada.textContent = osFmt;
+      formattedHighlightBox.classList.add("visible");
+
       const itens = obterLinhasOrdenadas();
       const linhas = itens.map((item) => `*${item.label}:* ${item.valor}`);
-      const texto = linhas.join("\n");
+      linhas.push(`*Número formatado:* ${numeroFmt}`);
+      linhas.push(`*O.S formatada:* ${osFmt}`);
+
+      const texto = linhas.join("
+");
       msgPreview.value = texto;
-      setStatus("Mensagem formatada para WhatsApp na ordem do sistema Tivit / Coop.");
+      setStatus("Mensagem formatada e números exibidos em destaque.");
       return texto;
     }
+
+    function salvarStorage() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(chamadasArquivadas));
+      } catch (e) {
+        // Ignora erro de quota local
+      }
+    }
+
+    function carregarStorage() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) {
+            chamadasArquivadas = parsed;
+          }
+        }
+      } catch (e) {
+        chamadasArquivadas = [];
+      }
+    }
+
+    function renderizarArquivadas() {
+      if (!chamadasArquivadas.length) {
+        listaArquivadas.innerHTML = `<div class="empty-state">Nenhuma chamada arquivada no momento. Preencha os dados e clique em "Arquivar chamada".</div>`;
+        return;
+      }
+
+      listaArquivadas.innerHTML = chamadasArquivadas
+        .map((item, idx) => {
+          return `
+            <div class="archive-card">
+              <div class="archive-meta">
+                <strong>${escapeHtml(item.nomeCliente || "Sem nome")}</strong> — ${escapeHtml(item.numeroFormatado || "---.---.---")}
+                <div class="archive-sub">${escapeHtml(item.osFormatada || "O.S ---.---.---- ---")} | WO: ${escapeHtml(item.woNumero || "-")} | Contrato: ${escapeHtml(item.contratoNumero || "-")} | ${escapeHtml(item.dataHora || "")}</div>
+              </div>
+              <div class="archive-actions">
+                <button type="button" class="btn-mini" onclick="carregarChamada(${idx})">Carregar</button>
+                <button type="button" class="btn-mini" onclick="removerChamada(${idx})">Excluir</button>
+              </div>
+            </div>
+          `;
+        })
+        .join("");
+    }
+
+    window.carregarChamada = function(idx) {
+      const item = chamadasArquivadas[idx];
+      if (!item) return;
+      inputs.nomeCliente.value = item.nomeCliente || "";
+      inputs.enderecoCliente.value = item.enderecoCliente || "";
+      inputs.woNumero.value = item.woNumero || "";
+      inputs.contratoNumero.value = item.contratoNumero || "";
+      atualizarRoteiro();
+      montarMensagemWhatsApp();
+      setStatus(`Registro #${idx + 1} carregado nos campos.`);
+    };
+
+    window.removerChamada = function(idx) {
+      chamadasArquivadas.splice(idx, 1);
+      salvarStorage();
+      renderizarArquivadas();
+      setStatus("Registro removido do arquivo.");
+    };
+
+    document.getElementById("btnArquivarChamada").addEventListener("click", () => {
+      const nome = inputs.nomeCliente.value.trim();
+      const endereco = inputs.enderecoCliente.value.trim();
+      const wo = inputs.woNumero.value.trim();
+      const contrato = inputs.contratoNumero.value.trim();
+
+      if (!nome && !endereco && !wo && !contrato) {
+        setStatus("Preencha ao menos um campo antes de arquivar a chamada.", true);
+        return;
+      }
+
+      const numeroFmt = formatarNumeroPadrao(contrato || wo);
+      const osFmt = formatarOsPadrao(wo, contrato);
+      const agora = new Date().toLocaleString("pt-BR");
+
+      const registro = {
+        dataHora: agora,
+        nomeCliente: nome,
+        enderecoCliente: endereco,
+        woNumero: wo,
+        contratoNumero: contrato,
+        numeroFormatado: numeroFmt,
+        osFormatada: osFmt,
+        mensagemFormatada: msgPreview.value.trim() || montarMensagemWhatsApp()
+      };
+
+      chamadasArquivadas.unshift(registro);
+      salvarStorage();
+      renderizarArquivadas();
+      setStatus("Dados da chamada arquivados com sucesso.");
+    });
+
+    function baixarArquivo(conteudo, nomeArquivo, mimeType) {
+      const blob = new Blob([conteudo], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = nomeArquivo;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById("btnExportJson").addEventListener("click", () => {
+      const dados = chamadasArquivadas.length
+        ? chamadasArquivadas
+        : [{
+            dataHora: new Date().toLocaleString("pt-BR"),
+            nomeCliente: inputs.nomeCliente.value.trim(),
+            enderecoCliente: inputs.enderecoCliente.value.trim(),
+            woNumero: inputs.woNumero.value.trim(),
+            contratoNumero: inputs.contratoNumero.value.trim(),
+            numeroFormatado: formatarNumeroPadrao(inputs.contratoNumero.value.trim() || inputs.woNumero.value.trim()),
+            osFormatada: formatarOsPadrao(inputs.woNumero.value.trim(), inputs.contratoNumero.value.trim()),
+            mensagemFormatada: msgPreview.value.trim()
+          }];
+      baixarArquivo(JSON.stringify(dados, null, 2), "chamadas-tivit-coop.json", "application/json;charset=utf-8");
+      setStatus("Arquivo JSON exportado.");
+    });
+
+    const importJsonInput = document.getElementById("importJsonInput");
+    document.getElementById("btnImportJson").addEventListener("click", () => importJsonInput.click());
+    importJsonInput.addEventListener("change", async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const parsed = JSON.parse(text);
+        const lista = Array.isArray(parsed) ? parsed : [parsed];
+        chamadasArquivadas = [...lista, ...chamadasArquivadas];
+        salvarStorage();
+        renderizarArquivadas();
+        setStatus(`Importados ${lista.length} registro(s) via JSON.`);
+      } catch (err) {
+        setStatus("Erro ao importar JSON: arquivo inválido.", true);
+      }
+      e.target.value = "";
+    });
+
+    function escapeCsv(val) {
+      const s = String(val ?? "").replace(/"/g, '""');
+      return `"${s}"`;
+    }
+
+    document.getElementById("btnExportCsv").addEventListener("click", () => {
+      const base = chamadasArquivadas.length
+        ? chamadasArquivadas
+        : [{
+            dataHora: new Date().toLocaleString("pt-BR"),
+            nomeCliente: inputs.nomeCliente.value.trim(),
+            enderecoCliente: inputs.enderecoCliente.value.trim(),
+            woNumero: inputs.woNumero.value.trim(),
+            contratoNumero: inputs.contratoNumero.value.trim(),
+            numeroFormatado: formatarNumeroPadrao(inputs.contratoNumero.value.trim() || inputs.woNumero.value.trim()),
+            osFormatada: formatarOsPadrao(inputs.woNumero.value.trim(), inputs.contratoNumero.value.trim())
+          }];
+
+      const headers = ["dataHora", "nomeCliente", "enderecoCliente", "woNumero", "contratoNumero", "numeroFormatado", "osFormatada"];
+      const linhas = [headers.join(",")];
+      for (const r of base) {
+        linhas.push(headers.map((h) => escapeCsv(r[h])).join(","));
+      }
+      baixarArquivo("﻿" + linhas.join("
+"), "chamadas-tivit-coop.csv", "text/csv;charset=utf-8");
+      setStatus("Arquivo CSV exportado.");
+    });
+
+    const importCsvInput = document.getElementById("importCsvInput");
+    document.getElementById("btnImportCsv").addEventListener("click", () => importCsvInput.click());
+    importCsvInput.addEventListener("change", async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      try {
+        const text = (await file.text()).replace(/^﻿/, "");
+        const linhas = text.split(/?
+/).filter((l) => l.trim() !== "");
+        if (linhas.length < 2) throw new Error("CSV sem dados");
+
+        const parseLinha = (line) => {
+          const cols = [];
+          let cur = "";
+          let inQuotes = false;
+          for (let i = 0; i < line.length; i++) {
+            const ch = line[i];
+            if (ch === '"') {
+              if (inQuotes && line[i + 1] === '"') {
+                cur += '"';
+                i++;
+              } else {
+                inQuotes = !inQuotes;
+              }
+            } else if (ch === "," && !inQuotes) {
+              cols.push(cur);
+              cur = "";
+            } else {
+              cur += ch;
+            }
+          }
+          cols.push(cur);
+          return cols;
+        };
+
+        const headers = parseLinha(linhas[0]);
+        const importados = [];
+        for (let i = 1; i < linhas.length; i++) {
+          const cols = parseLinha(linhas[i]);
+          const obj = {};
+          headers.forEach((h, idx) => {
+            obj[h.trim()] = (cols[idx] || "").trim();
+          });
+          importados.push(obj);
+        }
+
+        chamadasArquivadas = [...importados, ...chamadasArquivadas];
+        salvarStorage();
+        renderizarArquivadas();
+        setStatus(`Importados ${importados.length} registro(s) via CSV.`);
+      } catch (err) {
+        setStatus("Erro ao importar CSV: verifique o formato do arquivo.", true);
+      }
+      e.target.value = "";
+    });
+
+    document.getElementById("btnLimparArquivo").addEventListener("click", () => {
+      chamadasArquivadas = [];
+      salvarStorage();
+      renderizarArquivadas();
+      setStatus("Histórico de chamadas arquivadas limpo.");
+    });
+
+    document.getElementById("btnBaixarPdf").addEventListener("click", () => {
+      if (!msgPreview.value.trim()) {
+        montarMensagemWhatsApp();
+      }
+      setStatus("Abrindo janela de impressão / salvar como PDF...");
+      window.print();
+    });
 
     document.getElementById("btnFormatarWpp").addEventListener("click", () => {
       montarMensagemWhatsApp();
@@ -630,11 +1095,14 @@
         el.value = "";
       });
       msgPreview.value = "";
+      formattedHighlightBox.classList.remove("visible");
       atualizarRoteiro();
-      setStatus("Campos variáveis limpos. Dados fixos mantidos.");
+      setStatus("Campos variáveis limpos.");
     });
 
+    carregarStorage();
     atualizarRoteiro();
+    renderizarArquivadas();
   </script>
 </body>
 </html>
