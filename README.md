@@ -1,65 +1,40 @@
-# Automação de Ligação e WhatsApp — Sistema Tivit / Coop
+# Roteiro de Chamada — Sistema Tivit / Coop
 
-Ferramenta web em arquivo único (`index.html`) voltada para técnicos de telecomunicações agilizar o repasse de informações durante ligações com o atendimento do sistema **Tivit / Coop**, formatar mensagens para **WhatsApp** e **arquivar os dados da chamada**.
-
----
+Aplicação web local (`index.html`) desenvolvida para agilizar o atendimento e o registro de chamadas técnicas no sistema **Tivit / Coop**.
 
 ## Funcionalidades
 
-1. **Botão no topo para ligar para a Tivit**
-   - Link direto `tel:+558007690800` no cabeçalho (`Ligar para Tivit (+558007690800)`).
+- **Botão de Ligação Rápida no Topo:** Discagem direta para `+558007690800` via link `tel:+558007690800`.
+- **Colagem Automática ao Clicar:** Clicar nos campos **Nome do Cliente**, **Endereço**, **WO / O.S.** ou **Contrato** lê o conteúdo da área de transferência e preenche o campo automaticamente (com suporte a digitação e `Ctrl+V` caso o navegador exija permissão).
+- **Máscaras de Formatação:**
+  - **Contrato:** `xxx.xxx.xxx`
+  - **WO / O.S.:** `xxx.xxx.xxx.xxxx`
+- **Botão Limpar Campo Opção:** Localizado logo abaixo do campo **Opção / Observação Adicional** para limpar rapidamente caso haja cópia ou digitação incorreta.
+- **Ordem Fixa de Parâmetros:** Mantém na sequência definida:
+  - `Opção do serviço: 239`
+  - `Cidade: 003`
+  - `Código da empresa: 68804663#`
+  - `Nome do Funcionário: Fernando Sato`
+  - `Código Funcionário: Z688632`
+  - `Nome da Conveniada: CSR Engenharia Ltda`
+  - `PDA: 91520-6585`
+  - `Código da Baixa: 409`
+  - `Tipo de wo: Instalação/ Mudança de Pacote`
+  - `Hora de Início : 12:00`
+- **Formatação para WhatsApp:** Gera a mensagem formatada com negrito e marcadores pronta para envio no WhatsApp.
+- **Arquivamento e Portabilidade de Dados:**
+  - Arquiva chamadas localmente no navegador (`localStorage`).
+  - Exporta e importa dados em **JSON** e **CSV**.
+  - Gera download em **PDF**.
 
-2. **Cola automática ao clicar (`Nome do cliente`, `Endereço`, `O.S`, `Contrato`)**
-   - Restaura a função de colar nos campos no padrão da versão `1.2` (`colarNaCampo` ao clicar no campo usando `navigator.clipboard.readText()`).
-   - Caso o navegador bloqueie a leitura automática, o campo mantém o foco para colagem manual (`Ctrl+V` ou toque em **Colar**).
-   - Abaixo de cada um dos 4 campos (`Nome do cliente`, `Endereço`, `O.S`, `Contrato`), há um botão pequeno **Limpar campo** para apagar rapidamente caso alguma informação incorreta seja colada.
-
-3. **Formatação e destaque visual de Nome, Endereço, O.S e Contrato**
-   - **O.S:** formatado como `xxx.xxx.xxxx` com fonte ampliada.
-   - **Contrato:** formatado como `xxx.xxx.xxx` com fonte ampliada.
-   - **Nome do cliente** e **Endereço:** exibidos com fonte ampliada no campo, no roteiro e nas chamadas arquivadas.
-
-4. **Formatação e envio para WhatsApp**
-   - **Formatar para WhatsApp:** monta a mensagem com os dados fixos do atendimento e variáveis na sequência configurada.
-   - **Formatar e abrir WhatsApp:** gera a mensagem e abre o link `https://wa.me/?text=...`.
-   - **Copiar mensagem:** copia o texto formatado para a área de transferência.
-
-5. **Arquivamento, Importação, Exportação (JSON / CSV) e Download em PDF**
-   - **Arquivar dados da chamada:** salva o registro com data e hora no armazenamento local do navegador (`localStorage`), permitindo **Carregar** novamente nos campos, **Copiar Wpp** ou **Excluir**.
-   - **Exportar JSON / Importar JSON:** salva e restaura o histórico em arquivo `.json` (`chamadas-arquivadas-tivit-coop.json`).
-   - **Exportar CSV / Importar CSV:** salva em planilha compatível com Excel (`chamadas-arquivadas-tivit-coop.csv`) e importa registros de arquivos `.csv`.
-   - **Baixar PDF:** gera e baixa diretamente um relatório em PDF (`chamadas-arquivadas-tivit-coop.pdf`) com os registros arquivados.
-   - **Baixar (.txt) / Limpar arquivo:** exporta o histórico em texto simples ou limpa os registros salvos.
-
----
-
-## Como usar
+## Como Usar
 
 1. Extraia o arquivo `.zip`.
-2. Abra o arquivo `index.html` diretamente no navegador (Chrome, Edge, Safari etc.).
-3. Use o botão do topo para ligar para a Tivit (`+558007690800`), se necessário.
-4. Copie cada informação necessária e clique no campo correspondente para colar (ou use `Ctrl+V` / **Colar** e **Limpar campo** se precisar corrigir).
-5. Use o roteiro na ligação, formate para WhatsApp, arquive a chamada e utilize os botões de **JSON**, **CSV**, **PDF** ou **.txt** conforme necessário.
+2. Abra o arquivo `index.html` em qualquer navegador moderno (Chrome, Edge, Firefox ou navegador mobile).
+3. Clique nos campos desejados para colar os dados, revise o texto gerado e utilize os botões de copiar, WhatsApp, arquivar, exportar/importar ou baixar PDF.
 
----
+## Histórico de Versões
 
-## Histórico de versões
+- **Versão 1.0 - 21.11.26 - 03:43** — Versão inicial com colagem por clique, máscaras de Contrato e O.S., botão de limpeza de opção, formatação WhatsApp, arquivo local, importação/exportação JSON e CSV, exportação PDF e atalho de chamada para Tivit.
 
-- **Versão 1.13 - 21.11.26 - 03:15:** Restauração da função de colar nos campos no padrão da versão `1.2` (`colarNaCampo`) e atualização do `README.md`.
-- **Versão 1.12 - 21.11.26 - 03:04:** Restauração do fluxo direto de clique (`click`) para colar da área de transferência nos campos **Nome do cliente**, **Endereço**, **O.S** e **Contrato**, e atualização do `README.md`.
-- **Versão 1.11 - 21.11.26 - 02:48:** Reforço na leitura da área de transferência no toque/clique (`pointerdown`), tratamento do evento `paste` para formatação imediata e atualização do `README.md`.
-- **Versão 1.10 - 21.11.26 - 02:39:** Adição de **Exportar JSON**, **Importar JSON**, **Exportar CSV**, **Importar CSV** e **Baixar PDF** na seção de chamadas arquivadas, além da atualização do `README.md`.
-- **Versão 1.9 - 21.11.26 - 02:26:** Formatação do campo `O.S` no padrão `xxx.xxx.xxxx`, aumento do tamanho da fonte de `Nome do cliente`, `Endereço`, `O.S` e `Contrato`, e atualização do `README.md`.
-- **Versão 1.8 - 21.11.26 - 02:18:** Remoção do prefixo `O.S` do valor formatado e alteração do rótulo `WO` para `O.S` (formato `xxx.xxx.xxx` com fonte ampliada), e atualização do `README.md`.
-- **Versão 1.7 - 21.11.26 - 02:14:** Formatação do campo WO no padrão `O.S xxx.xxx.xxxx` (mantendo fonte ampliada), ajuste no roteiro, mensagem do WhatsApp e chamadas arquivadas, e atualização do `README.md`.
-- **Versão 1.6 - 21.11.26 - 02:06:** Inclusão de botão pequeno **Limpar campo** abaixo de cada um dos 4 campos (`Nome do cliente`, `Endereço`, `WO` e `Contrato`) e atualização do `README.md`.
-- **Versão 1.5 - 21.11.26 - 02:01:** Formatação do campo WO no padrão `xxx.xxx.xxx`, aumento do tamanho da fonte dos números de WO e de Contrato (campos, roteiro e chamadas arquivadas) e atualização do `README.md`.
-- **Versão 1.4 - 21.11.26 - 01:55:** Adição do botão no topo para ligar para Tivit (`+558007690800`), máscaras de exibição para Contrato (`xxx.xxx.xxx`) e WO (`xxx. xxx.xxx.xxxx`), remoção do bloco `4. Dados fixos` na interface e atualização do `README.md`.
-- **Versão 1.3 - 21.11.26 - 01:34:** Inclusão do botão **Arquivar dados da chamada**, histórico com carregar/copiar/excluir/exportar `.txt` e inclusão do `README.md` no pacote `.zip`.
-- **Versão 1.2 - 21.11.26 - 01:32:** Cola automática da área de transferência ao clicar nos campos variáveis e inclusão dos dados fixos do sistema Tivit / Coop.
-- **Versão 1.1 - 21.11.26 - 01:17:** Padronização do arquivo principal como `index.html` no `.zip`.
-- **Versão 1.0 - 21.11.26 - 00:14:** Versão inicial com campos de atendimento e formatação para WhatsApp.
-
----
-
-Criado por Fernando Sato - Versão 1.13 - 21.11.26 - 03:15
+Criado por Fernando Sato - Versão 1.0 - 21.11.26 - 03:43

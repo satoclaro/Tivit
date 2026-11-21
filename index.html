@@ -3,25 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Automação de Ligação e WhatsApp — Sistema Tivit / Coop</title>
+  <title>Automação de Chamada — Sistema Tivit / Coop</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     :root {
-      --bg: #0f172a;
-      --card: #1e293b;
-      --card-2: #0b1220;
-      --border: #334155;
-      --text: #f8fafc;
-      --muted: #94a3b8;
-      --accent: #38bdf8;
-      --accent-hover: #0ea5e9;
-      --whatsapp: #22c55e;
-      --whatsapp-hover: #16a34a;
-      --archive: #f59e0b;
-      --archive-hover: #d97706;
-      --call: #38bdf8;
-      --call-hover: #0ea5e9;
-      --danger: #f87171;
-      --ok: #34d399;
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --surface-alt: #f8fafc;
+      --border: #cbd5e1;
+      --border-focus: #0284c7;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --call-bg: #15803d;
+      --call-hover: #166534;
+      --whatsapp-bg: #16a34a;
+      --whatsapp-hover: #15803d;
+      --danger: #dc2626;
+      --danger-hover: #b91c1c;
+      --accent-soft: #e0f2fe;
+      --radius: 10px;
+      --shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
     }
 
     * {
@@ -31,28 +34,26 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: linear-gradient(180deg, #0b1120 0%, #0f172a 100%);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+      background: var(--bg);
       color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      padding: 20px 14px 32px;
+      line-height: 1.5;
+      padding: 16px;
     }
 
     .container {
-      width: 100%;
-      max-width: 800px;
+      max-width: 980px;
       margin: 0 auto;
-      flex: 1;
     }
 
-    header {
-      background: var(--card);
+    /* Top Bar */
+    .top-bar {
+      background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 18px 20px;
+      border-radius: var(--radius);
+      padding: 14px 18px;
       margin-bottom: 16px;
+      box-shadow: var(--shadow);
       display: flex;
       flex-wrap: wrap;
       align-items: center;
@@ -60,609 +61,460 @@
       gap: 12px;
     }
 
-    header h1 {
+    .brand h1 {
       font-size: 1.2rem;
       font-weight: 700;
-      letter-spacing: -0.01em;
+      color: var(--text);
     }
 
-    header p {
+    .brand p {
       font-size: 0.85rem;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-
-    .header-actions {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 10px;
+      color: var(--text-muted);
     }
 
     .btn-call {
-      background: var(--call);
-      color: #051322;
-      text-decoration: none;
-      border-radius: 10px;
-      padding: 9px 14px;
-      font-size: 0.85rem;
-      font-weight: 700;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      transition: background-color 0.15s ease, transform 0.08s ease;
+      gap: 8px;
+      background: var(--call-bg);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 10px 18px;
+      border-radius: 8px;
+      transition: background 0.15s ease, transform 0.1s ease;
+      box-shadow: 0 2px 6px rgba(21, 128, 61, 0.25);
     }
 
     .btn-call:hover {
       background: var(--call-hover);
+      transform: translateY(-1px);
     }
 
-    .btn-call:active {
-      transform: scale(0.98);
-    }
-
-    .badge {
-      background: rgba(56, 189, 248, 0.14);
-      color: var(--accent);
-      border: 1px solid rgba(56, 189, 248, 0.35);
-      font-size: 0.78rem;
-      font-weight: 600;
-      padding: 5px 10px;
-      border-radius: 999px;
-      white-space: nowrap;
-    }
-
-    .panel {
-      background: var(--card);
+    /* Cards */
+    .card {
+      background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 20px;
+      border-radius: var(--radius);
+      padding: 18px;
       margin-bottom: 16px;
+      box-shadow: var(--shadow);
     }
 
-    .panel-title {
-      font-size: 0.98rem;
+    .card-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .card-title {
+      font-size: 1rem;
       font-weight: 700;
-      margin-bottom: 4px;
+      color: var(--text);
     }
 
-    .panel-subtitle {
-      font-size: 0.83rem;
-      color: var(--muted);
-      margin-bottom: 16px;
-      line-height: 1.45;
+    .hint {
+      font-size: 0.8rem;
+      color: var(--text-muted);
     }
 
-    .grid {
+    /* Form Grid */
+    .grid-2 {
       display: grid;
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 14px;
-    }
-
-    @media (min-width: 600px) {
-      .grid.two-col {
-        grid-template-columns: 1fr 1fr;
-      }
     }
 
     .field-group {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
     }
 
-    .field-header {
+    .field-label-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
+      gap: 6px;
     }
 
     label {
-      font-size: 0.85rem;
+      font-size: 0.86rem;
       font-weight: 600;
-      color: #e2e8f0;
+      color: var(--text);
     }
 
-    .paste-tag {
-      font-size: 0.73rem;
-      color: var(--accent);
-      background: rgba(56, 189, 248, 0.12);
-      border: 1px solid rgba(56, 189, 248, 0.28);
-      padding: 2px 8px;
+    .badge-paste {
+      font-size: 0.72rem;
+      background: var(--accent-soft);
+      color: var(--primary-hover);
+      padding: 2px 7px;
       border-radius: 999px;
+      font-weight: 600;
     }
 
     input[type="text"],
     textarea {
       width: 100%;
-      background: var(--card-2);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 9px 11px;
+      font-size: 0.92rem;
       color: var(--text);
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      padding: 11px 13px;
-      font-size: 0.95rem;
+      background: var(--surface);
       transition: border-color 0.15s ease, box-shadow 0.15s ease;
-      outline: none;
     }
 
-    input[type="text"].campo-destaque {
-      font-size: 1.2rem;
-      font-weight: 600;
-      padding: 12px 14px;
-    }
-
-    input[type="text"].num-destaque {
-      font-size: 1.38rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      padding: 12px 14px;
+    input.click-paste {
+      cursor: pointer;
+      background: #f8fcff;
     }
 
     input[type="text"]:focus,
     textarea:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18);
+      outline: none;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.14);
     }
 
-    input[type="text"].pasted-flash {
-      border-color: var(--ok);
-      box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.24);
-    }
-
-    .field-footer {
-      display: flex;
-      justify-content: flex-start;
-      margin-top: 2px;
-    }
-
-    .btn-clear-field {
-      padding: 4px 10px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      border-radius: 7px;
-      background: rgba(248, 113, 113, 0.1);
-      color: var(--danger);
-      border: 1px solid rgba(248, 113, 113, 0.28);
-      transition: background-color 0.15s ease, transform 0.08s ease;
-    }
-
-    .btn-clear-field:hover {
-      background: rgba(248, 113, 113, 0.2);
-    }
-
-    .script-list {
-      background: var(--card-2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-      font-size: 0.88rem;
-      line-height: 1.45;
-    }
-
-    .script-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      border-bottom: 1px dashed rgba(148, 163, 184, 0.15);
-      padding-bottom: 5px;
-    }
-
-    .script-row:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-
-    .script-label {
-      color: var(--muted);
-      font-weight: 600;
-    }
-
-    .script-val {
-      color: var(--accent);
-      font-weight: 600;
-      text-align: right;
-    }
-
-    .script-val.campo-destaque-txt {
-      font-size: 1.08rem;
-      font-weight: 700;
-    }
-
-    .script-val.num-destaque-txt {
-      font-size: 1.22rem;
-      font-weight: 700;
-      letter-spacing: 0.03em;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    }
-
-    .actions {
+    .below-option-actions {
+      margin-top: 10px;
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
+      align-items: center;
+      gap: 8px;
     }
 
+    /* Buttons */
     button {
-      border: none;
-      border-radius: 10px;
-      padding: 11px 16px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 7px;
-      transition: transform 0.08s ease, background-color 0.15s ease, opacity 0.15s ease;
-    }
-
-    button:active {
-      transform: scale(0.98);
+      gap: 6px;
+      border: 1px solid transparent;
+      border-radius: 7px;
+      padding: 8px 13px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease, opacity 0.15s ease;
     }
 
     .btn-primary {
-      background: var(--accent);
-      color: #061322;
-      flex: 1 1 180px;
+      background: var(--primary);
+      color: #fff;
     }
 
     .btn-primary:hover {
-      background: var(--accent-hover);
+      background: var(--primary-hover);
     }
 
     .btn-whatsapp {
-      background: var(--whatsapp);
-      color: #052010;
-      flex: 1 1 180px;
+      background: var(--whatsapp-bg);
+      color: #fff;
     }
 
     .btn-whatsapp:hover {
       background: var(--whatsapp-hover);
     }
 
-    .btn-archive {
-      background: var(--archive);
-      color: #1f1300;
-      flex: 1 1 180px;
-    }
-
-    .btn-archive:hover {
-      background: var(--archive-hover);
-    }
-
     .btn-secondary {
-      background: transparent;
+      background: var(--surface-alt);
       color: var(--text);
-      border: 1px solid var(--border);
+      border-color: var(--border);
     }
 
     .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.05);
+      background: #e2e8f0;
     }
 
-    .btn-mini {
+    .btn-danger-outline {
+      background: #fff;
+      color: var(--danger);
+      border-color: #fca5a5;
+    }
+
+    .btn-danger-outline:hover {
+      background: #fef2f2;
+    }
+
+    .btn-sm {
       padding: 5px 10px;
-      font-size: 0.75rem;
-      border-radius: 7px;
-      background: rgba(56, 189, 248, 0.12);
-      color: var(--accent);
-      border: 1px solid rgba(56, 189, 248, 0.28);
-    }
-
-    .btn-mini:hover {
-      background: rgba(56, 189, 248, 0.22);
-    }
-
-    .btn-mini.danger {
-      background: rgba(248, 113, 113, 0.12);
-      color: var(--danger);
-      border-color: rgba(248, 113, 113, 0.3);
-    }
-
-    .btn-mini.danger:hover {
-      background: rgba(248, 113, 113, 0.22);
-    }
-
-    .preview-box {
-      margin-top: 16px;
-      background: var(--card-2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px;
-    }
-
-    .preview-label {
       font-size: 0.78rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: var(--muted);
-      margin-bottom: 8px;
+    }
+
+    /* Fixed Script Grid */
+    .script-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 8px 16px;
+      background: var(--surface-alt);
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+
+    .script-item {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: baseline;
       gap: 8px;
-    }
-
-    textarea#msgPreview {
-      min-height: 290px;
-      resize: vertical;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 0.85rem;
-      line-height: 1.5;
-    }
-
-    .status-msg {
-      margin-top: 10px;
-      font-size: 0.84rem;
-      min-height: 20px;
-      color: var(--ok);
-    }
-
-    .status-msg.warn {
-      color: var(--danger);
-    }
-
-    .archive-header {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-
-    .archive-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-    }
-
-    .archive-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .archive-empty {
-      background: var(--card-2);
-      border: 1px dashed var(--border);
-      border-radius: 10px;
-      padding: 16px;
-      text-align: center;
-      color: var(--muted);
       font-size: 0.86rem;
+      padding: 4px 0;
+      border-bottom: 1px dashed #e2e8f0;
     }
 
-    .archive-card {
-      background: var(--card-2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 13px 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+    .script-item .k {
+      color: var(--text-muted);
+      font-weight: 500;
     }
 
-    .archive-top {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      border-bottom: 1px solid rgba(51, 65, 85, 0.7);
-      padding-bottom: 7px;
-    }
-
-    .archive-meta {
-      font-size: 0.78rem;
-      color: var(--muted);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    }
-
-    .archive-summary {
-      font-size: 0.96rem;
-      line-height: 1.5;
-      color: #e2e8f0;
-    }
-
-    .archive-summary strong {
-      color: var(--accent);
-    }
-
-    .archive-num {
-      font-size: 1.12rem;
+    .script-item .v {
+      color: var(--text);
       font-weight: 700;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      color: var(--ok);
+      text-align: right;
     }
 
-    .archive-item-btns {
+    /* Output Box */
+    textarea.script-output {
+      min-height: 290px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.86rem;
+      line-height: 1.55;
+      background: var(--surface-alt);
+      resize: vertical;
+    }
+
+    .action-bar {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
+      gap: 8px;
+      margin-top: 12px;
     }
 
-    footer {
+    /* Archive Table */
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 10px;
+    }
+
+    table {
       width: 100%;
-      max-width: 800px;
-      margin: 12px auto 0;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 1px solid #e2e8f0;
+      white-space: nowrap;
+    }
+
+    th {
+      background: var(--surface-alt);
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .empty-state {
       text-align: center;
-      font-size: 0.8rem;
-      color: var(--muted);
-      padding-top: 8px;
-      border-top: 1px solid rgba(148, 163, 184, 0.16);
+      color: var(--text-muted);
+      padding: 18px;
+      font-size: 0.88rem;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #0f172a;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 0.86rem;
+      font-weight: 500;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 999;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 14px 10px 24px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <header>
-      <div>
-        <h1>Automação de Ligação e WhatsApp — Sistema Tivit / Coop</h1>
-        <p>Clique em Nome, Endereço, O.S ou Contrato para colar automaticamente o conteúdo da área de transferência.</p>
+    <!-- Topo com botão para ligar para Tivit -->
+    <header class="top-bar">
+      <div class="brand">
+        <h1>Roteiro de Chamada — Tivit / Coop</h1>
+        <p>Preenchimento rápido com colagem por clique, formatação automática e arquivo de chamadas</p>
       </div>
-      <div class="header-actions">
-        <a href="tel:+558007690800" class="btn-call" id="btnLigarTivit" aria-label="Ligar para Tivit +558007690800">
-          Ligar para Tivit (+558007690800)
-        </a>
-        <span class="badge">Telecom • Tivit / Coop</span>
-      </div>
+      <a class="btn-call" href="tel:+558007690800" title="Ligar para Tivit">
+        <span>Ligar para Tivit: +55 800 769 0800</span>
+      </a>
     </header>
 
-    <section class="panel" aria-label="Campos variáveis com cola automática da área de transferência">
-      <div class="panel-title">1. Campos para colar da área de transferência (ao clicar)</div>
-      <div class="panel-subtitle">
-        Copie o dado desejado e clique no campo correspondente para colar o conteúdo da área de transferência automaticamente.
-        <strong>O.S</strong> formata como <code>xxx.xxx.xxxx</code> e <strong>Contrato</strong> como <code>xxx.xxx.xxx</code>, com fonte ampliada em <strong>Nome</strong>, <strong>Endereço</strong>, <strong>O.S</strong> e <strong>Contrato</strong>.
+    <!-- Campos Dinâmicos da Chamada -->
+    <section class="card">
+      <div class="card-header">
+        <span class="card-title">1. Dados da Chamada (Clique em Nome, Endereço, WO/O.S. ou Contrato para colar)</span>
+        <span class="hint">Permissão de área de transferência pode ser solicitada pelo navegador</span>
       </div>
 
-      <div class="grid">
+      <div class="grid-2">
         <div class="field-group">
-          <div class="field-header">
-            <label for="nomeCliente">Nome do cliente</label>
-            <span class="paste-tag">Clique = Colar área de transferência</span>
+          <div class="field-label-row">
+            <label for="nome">Nome do Cliente</label>
+            <span class="badge-paste">Clique p/ colar</span>
           </div>
-          <input
-            type="text"
-            id="nomeCliente"
-            class="campo-destaque"
-            placeholder="Clique para colar o nome do cliente da área de transferência..."
-            autocomplete="off"
-          />
-          <div class="field-footer">
-            <button type="button" class="btn-clear-field" data-clear-field="nomeCliente">Limpar campo</button>
-          </div>
+          <input type="text" id="nome" class="click-paste" placeholder="Clique aqui para colar o nome..." autocomplete="off" />
         </div>
 
         <div class="field-group">
-          <div class="field-header">
-            <label for="enderecoCliente">Endereço</label>
-            <span class="paste-tag">Clique = Colar área de transferência</span>
+          <div class="field-label-row">
+            <label for="endereco">Endereço</label>
+            <span class="badge-paste">Clique p/ colar</span>
           </div>
-          <input
-            type="text"
-            id="enderecoCliente"
-            class="campo-destaque"
-            placeholder="Clique para colar o endereço da área de transferência..."
-            autocomplete="off"
-          />
-          <div class="field-footer">
-            <button type="button" class="btn-clear-field" data-clear-field="enderecoCliente">Limpar campo</button>
-          </div>
+          <input type="text" id="endereco" class="click-paste" placeholder="Clique aqui para colar o endereço..." autocomplete="off" />
         </div>
 
-        <div class="grid two-col">
-          <div class="field-group">
-            <div class="field-header">
-              <label for="woNumero">O.S (xxx.xxx.xxxx)</label>
-              <span class="paste-tag">Clique = Colar</span>
-            </div>
-            <input
-              type="text"
-              id="woNumero"
-              class="num-destaque"
-              inputmode="numeric"
-              placeholder="xxx.xxx.xxxx"
-              autocomplete="off"
-            />
-            <div class="field-footer">
-              <button type="button" class="btn-clear-field" data-clear-field="woNumero">Limpar campo</button>
-            </div>
+        <div class="field-group">
+          <div class="field-label-row">
+            <label for="wo">WO / O.S. (xxx.xxx.xxx.xxxx)</label>
+            <span class="badge-paste">Clique p/ colar</span>
           </div>
+          <input type="text" id="wo" class="click-paste" inputmode="numeric" placeholder="000.000.000.0000" autocomplete="off" />
+        </div>
 
-          <div class="field-group">
-            <div class="field-header">
-              <label for="contratoNumero">Contrato (xxx.xxx.xxx)</label>
-              <span class="paste-tag">Clique = Colar</span>
-            </div>
-            <input
-              type="text"
-              id="contratoNumero"
-              class="num-destaque"
-              inputmode="numeric"
-              placeholder="xxx.xxx.xxx"
-              autocomplete="off"
-            />
-            <div class="field-footer">
-              <button type="button" class="btn-clear-field" data-clear-field="contratoNumero">Limpar campo</button>
-            </div>
+        <div class="field-group">
+          <div class="field-label-row">
+            <label for="contrato">Contrato (xxx.xxx.xxx)</label>
+            <span class="badge-paste">Clique p/ colar</span>
           </div>
+          <input type="text" id="contrato" class="click-paste" inputmode="numeric" placeholder="000.000.000" autocomplete="off" />
         </div>
       </div>
 
-      <div class="actions">
-        <button type="button" class="btn-primary" id="btnFormatarWpp">Formatar para WhatsApp</button>
-        <button type="button" class="btn-whatsapp" id="btnAbrirWpp">Formatar e abrir WhatsApp</button>
-        <button type="button" class="btn-archive" id="btnArquivarChamada">Arquivar dados da chamada</button>
-        <button type="button" class="btn-secondary" id="btnLimpar">Limpar todos</button>
-      </div>
-
-      <div id="statusMsg" class="status-msg" role="status" aria-live="polite"></div>
-
-      <div class="preview-box">
-        <div class="preview-label">
-          <span>Mensagem formatada para WhatsApp (na ordem do sistema Tivit / Coop)</span>
-          <button type="button" class="btn-mini" id="btnCopiar">Copiar mensagem</button>
+      <div class="field-group" style="margin-top: 14px;">
+        <label for="opcao">Opção / Observação Adicional</label>
+        <input type="text" id="opcao" placeholder="Digite uma opção ou observação caso necessário..." autocomplete="off" />
+        <div class="below-option-actions">
+          <button type="button" id="btnLimparOpcao" class="btn-danger-outline btn-sm">
+            Limpar Campo Opção
+          </button>
+          <button type="button" id="btnLimparTodos" class="btn-secondary btn-sm">
+            Limpar Campos da Chamada
+          </button>
         </div>
-        <textarea
-          id="msgPreview"
-          placeholder="Clique em 'Formatar para WhatsApp' para montar a mensagem na ordem exata solicitada..."
-        ></textarea>
       </div>
     </section>
 
-    <section class="panel" aria-label="Chamadas arquivadas">
-      <div class="archive-header">
-        <div>
-          <div class="panel-title">2. Chamadas arquivadas</div>
-          <div class="panel-subtitle" style="margin-bottom: 0;">
-            Histórico salvo localmente no navegador para consulta, recarregamento, importação/exportação JSON e CSV ou PDF.
-          </div>
-        </div>
-        <div class="archive-actions">
-          <button type="button" class="btn-mini" id="btnExportarJson">Exportar JSON</button>
-          <button type="button" class="btn-mini" id="btnImportarJson">Importar JSON</button>
-          <button type="button" class="btn-mini" id="btnExportarCsv">Exportar CSV</button>
-          <button type="button" class="btn-mini" id="btnImportarCsv">Importar CSV</button>
-          <button type="button" class="btn-mini" id="btnBaixarPdf">Baixar PDF</button>
-          <button type="button" class="btn-mini" id="btnExportarArquivo">Baixar (.txt)</button>
-          <button type="button" class="btn-mini danger" id="btnLimparArquivo">Limpar arquivo</button>
-        </div>
+    <!-- Ordem Fixa / Parâmetros do Sistema -->
+    <section class="card">
+      <div class="card-header">
+        <span class="card-title">2. Parâmetros Fixos da Chamada (Ordem do Atendimento)</span>
+        <span class="hint">Mantidos conforme padrão do sistema</span>
       </div>
-      <input type="file" id="inputImportJson" accept=".json,application/json" style="display:none" />
-      <input type="file" id="inputImportCsv" accept=".csv,text/csv" style="display:none" />
-      <div class="archive-list" id="listaArquivadas"></div>
+      <div class="script-list">
+        <div class="script-item"><span class="k">Opção do serviço:</span><span class="v">239</span></div>
+        <div class="script-item"><span class="k">Cidade:</span><span class="v">003</span></div>
+        <div class="script-item"><span class="k">Código da empresa:</span><span class="v">68804663#</span></div>
+        <div class="script-item"><span class="k">Nome do Funcionário:</span><span class="v">Fernando Sato</span></div>
+        <div class="script-item"><span class="k">Código Funcionário:</span><span class="v">Z688632</span></div>
+        <div class="script-item"><span class="k">Nome da Conveniada:</span><span class="v">CSR Engenharia Ltda</span></div>
+        <div class="script-item"><span class="k">PDA:</span><span class="v">91520-6585</span></div>
+        <div class="script-item"><span class="k">Código da Baixa:</span><span class="v">409</span></div>
+        <div class="script-item"><span class="k">Tipo de WO:</span><span class="v">Instalação / Mudança de Pacote</span></div>
+        <div class="script-item"><span class="k">Hora de Início:</span><span class="v">12:00</span></div>
+      </div>
     </section>
 
-    <section class="panel" aria-label="Roteiro de fala na ordem solicitada">
-      <div class="panel-title">3. Roteiro para falar com a atendente (ordem do sistema)</div>
-      <div class="panel-subtitle">Atualiza em tempo real conforme você cola Nome, Endereço, O.S e Contrato.</div>
-      <div class="script-list" id="roteiroLigacao"></div>
+    <!-- Texto Formatado para Fala / WhatsApp e Exportações -->
+    <section class="card">
+      <div class="card-header">
+        <span class="card-title">3. Roteiro / Mensagem Formatada</span>
+        <span class="hint">Atualiza automaticamente conforme você digita ou cola</span>
+      </div>
+
+      <textarea id="roteiroOutput" class="script-output" readonly></textarea>
+
+      <div class="action-bar">
+        <button type="button" id="btnCopiarTexto" class="btn-primary">Copiar Roteiro</button>
+        <button type="button" id="btnFormatarWhatsApp" class="btn-whatsapp">Formatar p/ WhatsApp</button>
+        <button type="button" id="btnArquivar" class="btn-primary">Arquivar Chamada</button>
+        <button type="button" id="btnExportJson" class="btn-secondary">Exportar JSON</button>
+        <label class="btn-secondary" style="margin: 0;">
+          Importar JSON
+          <input type="file" id="inputImportJson" accept=".json,application/json" style="display: none;" />
+        </label>
+        <button type="button" id="btnExportCsv" class="btn-secondary">Exportar CSV</button>
+        <label class="btn-secondary" style="margin: 0;">
+          Importar CSV
+          <input type="file" id="inputImportCsv" accept=".csv,text/csv" style="display: none;" />
+        </label>
+        <button type="button" id="btnBaixarPdf" class="btn-secondary">Baixar em PDF</button>
+      </div>
     </section>
+
+    <!-- Chamadas Arquivadas -->
+    <section class="card">
+      <div class="card-header">
+        <span class="card-title">4. Chamadas Arquivadas (<span id="archiveCount">0</span>)</span>
+        <button type="button" id="btnLimparArquivo" class="btn-danger-outline btn-sm">Limpar Arquivo Local</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Data/Hora</th>
+              <th>Nome</th>
+              <th>Endereço</th>
+              <th>WO / O.S.</th>
+              <th>Contrato</th>
+              <th>Opção</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="archiveBody">
+            <tr>
+              <td colspan="7" class="empty-state">Nenhuma chamada arquivada ainda.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      Criado por Fernando Sato - Versão 1.0 - 21.11.26 - 03:43
+    </footer>
   </div>
 
-  <footer>
-    Criado por Fernando Sato - Versão 1.13 - 21.11.26 - 03:15
-  </footer>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
-    const STORAGE_KEY = "tivit_coop_chamadas_arquivadas_v1_13";
-    const LEGACY_KEYS = [
-      "tivit_coop_chamadas_arquivadas_v1_12",
-      "tivit_coop_chamadas_arquivadas_v1_11",
-      "tivit_coop_chamadas_arquivadas_v1_10",
-      "tivit_coop_chamadas_arquivadas_v1_9",
-      "tivit_coop_chamadas_arquivadas_v1_8",
-      "tivit_coop_chamadas_arquivadas_v1_7"
-    ];
-
-    const DADOS_FIXOS = {
+    const FIXED_DATA = {
       opcaoServico: "239",
       cidade: "003",
       codigoEmpresa: "68804663#",
@@ -671,42 +523,265 @@
       nomeConveniada: "CSR Engenharia Ltda",
       pda: "91520-6585",
       codigoBaixa: "409",
-      tipoWo: "Instalação/	Mudança de Pacote",
+      tipoWo: "Instalação/ Mudança de Pacote",
       horaInicio: "12:00"
     };
 
-    const inputs = {
-      nomeCliente: document.getElementById("nomeCliente"),
-      enderecoCliente: document.getElementById("enderecoCliente"),
-      woNumero: document.getElementById("woNumero"),
-      contratoNumero: document.getElementById("contratoNumero")
+    const STORAGE_KEY = "tivit_coop_chamadas_arquivadas_v1";
+
+    const els = {
+      nome: document.getElementById("nome"),
+      endereco: document.getElementById("endereco"),
+      wo: document.getElementById("wo"),
+      contrato: document.getElementById("contrato"),
+      opcao: document.getElementById("opcao"),
+      roteiroOutput: document.getElementById("roteiroOutput"),
+      archiveBody: document.getElementById("archiveBody"),
+      archiveCount: document.getElementById("archiveCount"),
+      toast: document.getElementById("toast")
     };
 
-    const nomesCampos = {
-      nomeCliente: "Nome do cliente",
-      enderecoCliente: "Endereço",
-      woNumero: "O.S",
-      contratoNumero: "Contrato"
+    let whatsappMode = false;
+    let archivedCalls = loadArchive();
+
+    function showToast(msg) {
+      els.toast.textContent = msg;
+      els.toast.classList.add("show");
+      clearTimeout(showToast._timer);
+      showToast._timer = setTimeout(() => {
+        els.toast.classList.remove("show");
+      }, 2400);
+    }
+
+    // Máscara Contrato: xxx.xxx.xxx (até 9 dígitos)
+    function formatContrato(raw) {
+      const digits = String(raw || "").replace(/\D/g, "").slice(0, 9);
+      const parts = [];
+      if (digits.length > 0) parts.push(digits.slice(0, 3));
+      if (digits.length > 3) parts.push(digits.slice(3, 6));
+      if (digits.length > 6) parts.push(digits.slice(6, 9));
+      return parts.join(".");
+    }
+
+    // Máscara O.S. / WO: xxx.xxx.xxx.xxxx (até 13 dígitos)
+    function formatOs(raw) {
+      const digits = String(raw || "").replace(/\D/g, "").slice(0, 13);
+      const parts = [];
+      if (digits.length > 0) parts.push(digits.slice(0, 3));
+      if (digits.length > 3) parts.push(digits.slice(3, 6));
+      if (digits.length > 6) parts.push(digits.slice(6, 9));
+      if (digits.length > 9) parts.push(digits.slice(9, 13));
+      return parts.join(".");
+    }
+
+    function getCurrentFormData() {
+      return {
+        nome: els.nome.value.trim(),
+        endereco: els.endereco.value.trim(),
+        wo: formatOs(els.wo.value),
+        contrato: formatContrato(els.contrato.value),
+        opcao: els.opcao.value.trim()
+      };
+    }
+
+    function buildStandardScript(d) {
+      const lines = [
+        `Opção do serviço: ${FIXED_DATA.opcaoServico}`,
+        `Cidade: ${FIXED_DATA.cidade}`,
+        `Código da empresa: ${FIXED_DATA.codigoEmpresa}`,
+        `Nome do Funcionário: ${FIXED_DATA.nomeFuncionario}`,
+        `Código Funcionário: ${FIXED_DATA.codigoFuncionario}`,
+        `Nome da Conveniada: ${FIXED_DATA.nomeConveniada}`,
+        `PDA: ${FIXED_DATA.pda}`,
+        `Código da Baixa: ${FIXED_DATA.codigoBaixa}`,
+        `Tipo de wo: ${FIXED_DATA.tipoWo}`,
+        `Hora de Início : ${FIXED_DATA.horaInicio}`,
+        `Nome: ${d.nome || "-"}`,
+        `Endereço: ${d.endereco || "-"}`,
+        `WO / O.S.: ${d.wo || "-"}`,
+        `Contrato: ${d.contrato || "-"}`
+      ];
+      if (d.opcao) {
+        lines.push(`Opção / Obs.: ${d.opcao}`);
+      }
+      return lines.join("
+");
+    }
+
+    function buildWhatsAppScript(d) {
+      const lines = [
+        `*ATENDIMENTO TIVIT / COOP*`,
+        `• *Opção do serviço:* ${FIXED_DATA.opcaoServico}`,
+        `• *Cidade:* ${FIXED_DATA.cidade}`,
+        `• *Código da empresa:* ${FIXED_DATA.codigoEmpresa}`,
+        `• *Nome do Funcionário:* ${FIXED_DATA.nomeFuncionario}`,
+        `• *Código Funcionário:* ${FIXED_DATA.codigoFuncionario}`,
+        `• *Nome da Conveniada:* ${FIXED_DATA.nomeConveniada}`,
+        `• *PDA:* ${FIXED_DATA.pda}`,
+        `• *Código da Baixa:* ${FIXED_DATA.codigoBaixa}`,
+        `• *Tipo de wo:* ${FIXED_DATA.tipoWo}`,
+        `• *Hora de Início:* ${FIXED_DATA.horaInicio}`,
+        `• *Nome:* ${d.nome || "-"}`,
+        `• *Endereço:* ${d.endereco || "-"}`,
+        `• *WO / O.S.:* ${d.wo || "-"}`,
+        `• *Contrato:* ${d.contrato || "-"}`
+      ];
+      if (d.opcao) {
+        lines.push(`• *Opção / Obs.:* ${d.opcao}`);
+      }
+      return lines.join("
+");
+    }
+
+    function refreshOutput() {
+      const d = getCurrentFormData();
+      els.roteiroOutput.value = whatsappMode ? buildWhatsAppScript(d) : buildStandardScript(d);
+    }
+
+    // Colar conteúdo da área de transferência ao clicar nos campos especificados
+    async function pasteFromClipboardOnClick(inputEl, formatterFn) {
+      inputEl.addEventListener("click", async () => {
+        if (!navigator.clipboard || !navigator.clipboard.readText) {
+          showToast("Área de transferência indisponível neste navegador. Use Ctrl+V.");
+          return;
+        }
+        try {
+          const text = await navigator.clipboard.readText();
+          if (text && text.trim().length > 0) {
+            const clean = text.trim();
+            inputEl.value = formatterFn ? formatterFn(clean) : clean;
+            refreshOutput();
+            showToast("Conteúdo colado da área de transferência.");
+          } else {
+            showToast("Área de transferência vazia.");
+          }
+        } catch (err) {
+          showToast("Permita o acesso à área de transferência ou use Ctrl+V.");
+        }
+      });
+    }
+
+    pasteFromClipboardOnClick(els.nome, null);
+    pasteFromClipboardOnClick(els.endereco, null);
+    pasteFromClipboardOnClick(els.wo, formatOs);
+    pasteFromClipboardOnClick(els.contrato, formatContrato);
+
+    els.wo.addEventListener("input", () => {
+      els.wo.value = formatOs(els.wo.value);
+      refreshOutput();
+    });
+
+    els.contrato.addEventListener("input", () => {
+      els.contrato.value = formatContrato(els.contrato.value);
+      refreshOutput();
+    });
+
+    [els.nome, els.endereco, els.opcao].forEach((el) => {
+      el.addEventListener("input", refreshOutput);
+    });
+
+    // Limpar campo opção
+    document.getElementById("btnLimparOpcao").addEventListener("click", () => {
+      els.opcao.value = "";
+      els.opcao.focus();
+      refreshOutput();
+      showToast("Campo Opção limpo.");
+    });
+
+    // Limpar campos dinâmicos da chamada
+    document.getElementById("btnLimparTodos").addEventListener("click", () => {
+      els.nome.value = "";
+      els.endereco.value = "";
+      els.wo.value = "";
+      els.contrato.value = "";
+      els.opcao.value = "";
+      whatsappMode = false;
+      refreshOutput();
+      showToast("Campos da chamada limpos.");
+    });
+
+    // Copiar roteiro
+    document.getElementById("btnCopiarTexto").addEventListener("click", async () => {
+      const txt = els.roteiroOutput.value;
+      try {
+        await navigator.clipboard.writeText(txt);
+        showToast("Roteiro copiado para a área de transferência.");
+      } catch {
+        els.roteiroOutput.select();
+        document.execCommand("copy");
+        showToast("Roteiro copiado.");
+      }
+    });
+
+    // Formatar para WhatsApp
+    document.getElementById("btnFormatarWhatsApp").addEventListener("click", async () => {
+      whatsappMode = true;
+      refreshOutput();
+      try {
+        await navigator.clipboard.writeText(els.roteiroOutput.value);
+        showToast("Formatado para WhatsApp e copiado!");
+      } catch {
+        showToast("Formatado para WhatsApp.");
+      }
+    });
+
+    // Arquivar chamada
+    function loadArchive() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveArchive() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(archivedCalls));
+      renderArchive();
+    }
+
+    function renderArchive() {
+      els.archiveCount.textContent = archivedCalls.length;
+      if (!archivedCalls.length) {
+        els.archiveBody.innerHTML = `<tr><td colspan="7" class="empty-state">Nenhuma chamada arquivada ainda.</td></tr>`;
+        return;
+      }
+
+      els.archiveBody.innerHTML = archivedCalls
+        .map((item, idx) => `
+          <tr>
+            <td>${escapeHtml(item.registradoEm || "")}</td>
+            <td>${escapeHtml(item.nome || "-")}</td>
+            <td>${escapeHtml(item.endereco || "-")}</td>
+            <td>${escapeHtml(item.wo || "-")}</td>
+            <td>${escapeHtml(item.contrato || "-")}</td>
+            <td>${escapeHtml(item.opcao || "-")}</td>
+            <td>
+              <button type="button" class="btn-secondary btn-sm" onclick="carregarItem(${idx})">Carregar</button>
+              <button type="button" class="btn-danger-outline btn-sm" onclick="removerItem(${idx})">Excluir</button>
+            </td>
+          </tr>
+        `)
+        .join("");
+    }
+
+    window.carregarItem = function (idx) {
+      const item = archivedCalls[idx];
+      if (!item) return;
+      els.nome.value = item.nome || "";
+      els.endereco.value = item.endereco || "";
+      els.wo.value = formatOs(item.wo || "");
+      els.contrato.value = formatContrato(item.contrato || "");
+      els.opcao.value = item.opcao || "";
+      refreshOutput();
+      showToast("Chamada carregada nos campos.");
     };
 
-    const msgPreview = document.getElementById("msgPreview");
-    const statusMsg = document.getElementById("statusMsg");
-    const roteiroLigacao = document.getElementById("roteiroLigacao");
-    const listaArquivadas = document.getElementById("listaArquivadas");
-    const inputImportJson = document.getElementById("inputImportJson");
-    const inputImportCsv = document.getElementById("inputImportCsv");
-
-    function setStatus(texto, isWarn = false) {
-      statusMsg.textContent = texto;
-      statusMsg.classList.toggle("warn", isWarn);
-    }
-
-    function flashInput(el) {
-      el.classList.remove("pasted-flash");
-      void el.offsetWidth;
-      el.classList.add("pasted-flash");
-      setTimeout(() => el.classList.remove("pasted-flash"), 900);
-    }
+    window.removerItem = function (idx) {
+      archivedCalls.splice(idx, 1);
+      saveArchive();
+      showToast("Registro removido do arquivo.");
+    };
 
     function escapeHtml(str) {
       return String(str)
@@ -716,750 +791,225 @@
         .replace(/"/g, "&quot;");
     }
 
-    // Formatação xxx.xxx.xxx (até 9 dígitos) para Contrato
-    function formatarBlocoTres(valor) {
-      const digitos = String(valor || "").replace(/\D/g, "").slice(0, 9);
-      if (!digitos) return "";
-      if (digitos.length <= 3) return digitos;
-      if (digitos.length <= 6) return `${digitos.slice(0, 3)}.${digitos.slice(3)}`;
-      return `${digitos.slice(0, 3)}.${digitos.slice(3, 6)}.${digitos.slice(6)}`;
-    }
-
-    // Formatação xxx.xxx.xxxx (até 10 dígitos) para O.S
-    function formatarOsDez(valor) {
-      const digitos = String(valor || "").replace(/\D/g, "").slice(0, 10);
-      if (!digitos) return "";
-      if (digitos.length <= 3) return digitos;
-      if (digitos.length <= 6) return `${digitos.slice(0, 3)}.${digitos.slice(3)}`;
-      return `${digitos.slice(0, 3)}.${digitos.slice(3, 6)}.${digitos.slice(6)}`;
-    }
-
-    function obterLinhasOrdenadas(overrideData = null) {
-      const nome = (overrideData ? overrideData.nomeCliente : inputs.nomeCliente.value).trim();
-      const endereco = (overrideData ? overrideData.enderecoCliente : inputs.enderecoCliente.value).trim();
-      const os = formatarOsDez(overrideData ? overrideData.woNumero : inputs.woNumero.value);
-      const contrato = formatarBlocoTres(overrideData ? overrideData.contratoNumero : inputs.contratoNumero.value);
-
-      return [
-        { label: "Opção do serviço", valor: DADOS_FIXOS.opcaoServico, display: DADOS_FIXOS.opcaoServico, destaqueTipo: null },
-        { label: "Cidade", valor: DADOS_FIXOS.cidade, display: DADOS_FIXOS.cidade, destaqueTipo: null },
-        { label: "Código da empresa", valor: DADOS_FIXOS.codigoEmpresa, display: DADOS_FIXOS.codigoEmpresa, destaqueTipo: null },
-        { label: "Nome do Funcionário", valor: DADOS_FIXOS.nomeFuncionario, display: DADOS_FIXOS.nomeFuncionario, destaqueTipo: null },
-        { label: "Código Funcionário", valor: DADOS_FIXOS.codigoFuncionario, display: DADOS_FIXOS.codigoFuncionario, destaqueTipo: null },
-        { label: "Nome da Conveniada", valor: DADOS_FIXOS.nomeConveniada, display: DADOS_FIXOS.nomeConveniada, destaqueTipo: null },
-        { label: "PDA", valor: DADOS_FIXOS.pda, display: DADOS_FIXOS.pda, destaqueTipo: null },
-        { label: "Código da Baixa", valor: DADOS_FIXOS.codigoBaixa, display: DADOS_FIXOS.codigoBaixa, destaqueTipo: null },
-        { label: "Tipo de wo", valor: DADOS_FIXOS.tipoWo, display: "Instalação/ Mudança de Pacote", destaqueTipo: null },
-        { label: "Hora de Início", valor: DADOS_FIXOS.horaInicio, display: DADOS_FIXOS.horaInicio, destaqueTipo: null },
-        { label: "Nome do cliente", valor: nome || "-", display: nome || "[Colar nome]", destaqueTipo: "campo" },
-        { label: "Endereço", valor: endereco || "-", display: endereco || "[Colar endereço]", destaqueTipo: "campo" },
-        { label: "O.S", valor: os || "-", display: os || "[Colar O.S]", destaqueTipo: "num" },
-        { label: "Contrato", valor: contrato || "-", display: contrato || "[Colar Contrato]", destaqueTipo: "num" }
-      ];
-    }
-
-    function atualizarRoteiro() {
-      const itens = obterLinhasOrdenadas();
-      roteiroLigacao.innerHTML = itens
-        .map((item) => {
-          let valClass = "script-val";
-          if (item.destaqueTipo === "num") {
-            valClass = "script-val num-destaque-txt";
-          } else if (item.destaqueTipo === "campo") {
-            valClass = "script-val campo-destaque-txt";
-          }
-          return `<div class="script-row"><span class="script-label">${escapeHtml(item.label)}:</span><span class="${valClass}">${escapeHtml(item.display)}</span></div>`;
-        })
-        .join("");
-    }
-
-    function aplicarFormatacaoCampo(key) {
-      if (key === "woNumero") {
-        inputs[key].value = formatarOsDez(inputs[key].value);
-      } else if (key === "contratoNumero") {
-        inputs[key].value = formatarBlocoTres(inputs[key].value);
+    document.getElementById("btnArquivar").addEventListener("click", () => {
+      const d = getCurrentFormData();
+      if (!d.nome && !d.endereco && !d.wo && !d.contrato && !d.opcao) {
+        showToast("Preencha ao menos um campo antes de arquivar.");
+        return;
       }
-    }
-
-    // Função de colar restaurada no padrão exato da versão 1.2
-    async function colarNaCampo(campoKey) {
-      const el = inputs[campoKey];
-      if (!el) return;
-      el.focus();
-
-      try {
-        const texto = await navigator.clipboard.readText();
-        if (texto && texto.trim() !== "") {
-          el.value = texto.trim();
-          aplicarFormatacaoCampo(campoKey);
-          flashInput(el);
-          atualizarRoteiro();
-          setStatus(`Conteúdo da área de transferência colado em "${nomesCampos[campoKey] || campoKey}".`);
-        } else {
-          setStatus("A área de transferência está vazia.", true);
-        }
-      } catch (err) {
-        setStatus("Não foi possível ler a área de transferência automaticamente. Cole com Ctrl+V ou toque em Colar.", true);
-      }
-    }
-
-    Object.keys(inputs).forEach((key) => {
-      const el = inputs[key];
-      el.addEventListener("click", () => colarNaCampo(key));
-      el.addEventListener("input", () => {
-        aplicarFormatacaoCampo(key);
-        atualizarRoteiro();
+      const agora = new Date().toLocaleString("pt-BR");
+      archivedCalls.unshift({
+        registradoEm: agora,
+        ...FIXED_DATA,
+        ...d
       });
-    });
-
-    document.querySelectorAll("[data-clear-field]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const key = btn.getAttribute("data-clear-field");
-        const el = inputs[key];
-        if (!el) return;
-        el.value = "";
-        atualizarRoteiro();
-        setStatus(`Campo "${nomesCampos[key] || key}" limpo.`);
-      });
-    });
-
-    function formatarTextoChamada(overrideData = null) {
-      const itens = obterLinhasOrdenadas(overrideData);
-      return itens.map((item) => `*${item.label}:* ${item.valor}`).join("\n");
-    }
-
-    function montarMensagemWhatsApp() {
-      const texto = formatarTextoChamada();
-      msgPreview.value = texto;
-      setStatus("Mensagem formatada para WhatsApp na ordem do sistema Tivit / Coop.");
-      return texto;
-    }
-
-    function normalizarRegistro(rawItem) {
-      if (!rawItem || typeof rawItem !== "object") return null;
-      const nomeCliente = String(rawItem.nomeCliente ?? rawItem.nome ?? rawItem.cliente ?? "").trim();
-      const enderecoCliente = String(rawItem.enderecoCliente ?? rawItem.endereco ?? "").trim();
-      const osRaw = String(rawItem.woNumero ?? rawItem.os ?? rawItem.wo ?? "").trim();
-      const contratoRaw = String(rawItem.contratoNumero ?? rawItem.contrato ?? "").trim();
-      const woNumero = formatarOsDez(osRaw) || osRaw;
-      const contratoNumero = formatarBlocoTres(contratoRaw) || contratoRaw;
-      const arquivadoEm = String(rawItem.arquivadoEm ?? rawItem.dataHora ?? formatarDataHoraAgora()).trim();
-
-      if (!nomeCliente && !enderecoCliente && !woNumero && !contratoNumero) {
-        return null;
-      }
-
-      const msg =
-        typeof rawItem.mensagemFormatada === "string" && rawItem.mensagemFormatada.trim()
-          ? rawItem.mensagemFormatada
-          : formatarTextoChamada({ nomeCliente, enderecoCliente, woNumero, contratoNumero });
-
-      return {
-        id:
-          typeof rawItem.id === "string" && rawItem.id.trim()
-            ? rawItem.id.trim()
-            : String(Date.now()) + "-" + Math.random().toString(36).slice(2, 7),
-        arquivadoEm,
-        nomeCliente,
-        enderecoCliente,
-        woNumero,
-        contratoNumero,
-        mensagemFormatada: msg
-      };
-    }
-
-    function lerArquivo() {
-      try {
-        let raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) {
-          for (const legacyKey of LEGACY_KEYS) {
-            const legacyRaw = localStorage.getItem(legacyKey);
-            if (legacyRaw) {
-              raw = legacyRaw;
-              localStorage.setItem(STORAGE_KEY, legacyRaw);
-              break;
-            }
-          }
-        }
-        const parsed = raw ? JSON.parse(raw) : [];
-        if (!Array.isArray(parsed)) return [];
-        return parsed.map(normalizarRegistro).filter(Boolean);
-      } catch {
-        return [];
-      }
-    }
-
-    function salvarArquivo(registros) {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(registros));
-      } catch {
-        setStatus("Não foi possível salvar no armazenamento local do navegador.", true);
-      }
-    }
-
-    function formatarDataHoraAgora() {
-      const agora = new Date();
-      const pad = (n) => String(n).padStart(2, "0");
-      const dia = pad(agora.getDate());
-      const mes = pad(agora.getMonth() + 1);
-      const ano = String(agora.getFullYear()).slice(-2);
-      const hora = pad(agora.getHours());
-      const min = pad(agora.getMinutes());
-      return `${dia}.${mes}.${ano} - ${hora}:${min}`;
-    }
-
-    function arquivarDadosChamada() {
-      const nome = inputs.nomeCliente.value.trim();
-      const endereco = inputs.enderecoCliente.value.trim();
-      const os = formatarOsDez(inputs.woNumero.value);
-      const contrato = formatarBlocoTres(inputs.contratoNumero.value);
-
-      if (!nome && !endereco && !os && !contrato) {
-        setStatus("Preencha ou cole ao menos um campo da chamada antes de arquivar.", true);
-        return;
-      }
-
-      const registro = normalizarRegistro({
-        id: String(Date.now()) + "-" + Math.random().toString(36).slice(2, 6),
-        arquivadoEm: formatarDataHoraAgora(),
-        nomeCliente: nome,
-        enderecoCliente: endereco,
-        woNumero: os,
-        contratoNumero: contrato
-      });
-
-      const registros = lerArquivo();
-      registros.unshift(registro);
-      salvarArquivo(registros);
-      renderizarArquivo();
-      setStatus(`Chamada arquivada em ${registro.arquivadoEm}.`);
-    }
-
-    function carregarRegistro(id) {
-      const registros = lerArquivo();
-      const item = registros.find((r) => r.id === id);
-      if (!item) return;
-
-      inputs.nomeCliente.value = item.nomeCliente || "";
-      inputs.enderecoCliente.value = item.enderecoCliente || "";
-      inputs.woNumero.value = formatarOsDez(item.woNumero || "");
-      inputs.contratoNumero.value = formatarBlocoTres(item.contratoNumero || "");
-      msgPreview.value = item.mensagemFormatada || formatarTextoChamada();
-      atualizarRoteiro();
-      setStatus(`Dados da chamada de ${item.arquivadoEm} carregados nos campos.`);
-    }
-
-    function excluirRegistro(id) {
-      const registros = lerArquivo().filter((r) => r.id !== id);
-      salvarArquivo(registros);
-      renderizarArquivo();
-      setStatus("Registro removido do arquivo.");
-    }
-
-    function baixarBlob(conteudo, mimeType, nomeArquivo) {
-      const blob = new Blob([conteudo], { type: mimeType });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = nomeArquivo;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-    }
-
-    function exportarJson() {
-      const registros = lerArquivo();
-      if (!registros.length) {
-        setStatus("Não há chamadas arquivadas para exportar em JSON.", true);
-        return;
-      }
-      const payload = {
-        sistema: "Tivit / Coop",
-        versao: "1.13",
-        exportadoEm: formatarDataHoraAgora(),
-        totalRegistros: registros.length,
-        chamadas: registros
-      };
-      baixarBlob(JSON.stringify(payload, null, 2), "application/json;charset=utf-8", "chamadas-arquivadas-tivit-coop.json");
-      setStatus(`Exportados ${registros.length} registro(s) em JSON.`);
-    }
-
-    function escaparCsvCampo(valor) {
-      const str = String(valor ?? "");
-      const seguro = /^[=+\-@]/.test(str) ? "'" + str : str;
-      return `"${seguro.replace(/"/g, '""')}"`;
-    }
-
-    function exportarCsv() {
-      const registros = lerArquivo();
-      if (!registros.length) {
-        setStatus("Não há chamadas arquivadas para exportar em CSV.", true);
-        return;
-      }
-      const cabecalho = [
-        "ID",
-        "Arquivado em",
-        "Nome do cliente",
-        "Endereço",
-        "O.S",
-        "Contrato",
-        "Mensagem WhatsApp"
-      ].map(escaparCsvCampo).join(";");
-
-      const linhas = registros.map((r) =>
-        [
-          r.id,
-          r.arquivadoEm,
-          r.nomeCliente,
-          r.enderecoCliente,
-          r.woNumero,
-          r.contratoNumero,
-          r.mensagemFormatada
-        ]
-          .map(escaparCsvCampo)
-          .join(";")
-      );
-
-      const csvContent = "﻿" + [cabecalho, ...linhas].join("\r\n");
-      baixarBlob(csvContent, "text/csv;charset=utf-8", "chamadas-arquivadas-tivit-coop.csv");
-      setStatus(`Exportados ${registros.length} registro(s) em CSV.`);
-    }
-
-    function parseCsvLinhas(texto) {
-      const linhas = [];
-      let atual = [];
-      let campo = "";
-      let emAspas = false;
-      const sep = texto.indexOf(";") !== -1 ? ";" : ",";
-
-      for (let i = 0; i < texto.length; i++) {
-        const ch = texto[i];
-        const prox = texto[i + 1];
-
-        if (ch === '"') {
-          if (emAspas && prox === '"') {
-            campo += '"';
-            i++;
-          } else {
-            emAspas = !emAspas;
-          }
-        } else if (ch === sep && !emAspas) {
-          atual.push(campo);
-          campo = "";
-        } else if ((ch === "\n" || ch === "\r") && !emAspas) {
-          if (ch === "\r" && prox === "\n") i++;
-          atual.push(campo);
-          if (atual.some((c) => c.trim() !== "")) {
-            linhas.push(atual);
-          }
-          atual = [];
-          campo = "";
-        } else {
-          campo += ch;
-        }
-      }
-
-      if (campo.length > 0 || atual.length > 0) {
-        atual.push(campo);
-        if (atual.some((c) => c.trim() !== "")) {
-          linhas.push(atual);
-        }
-      }
-      return linhas;
-    }
-
-    function mesclarRegistrosImportados(novosItens, origemRotulo) {
-      const validos = novosItens.map(normalizarRegistro).filter(Boolean);
-      if (!validos.length) {
-        setStatus(`Nenhum registro válido encontrado no arquivo ${origemRotulo}.`, true);
-        return;
-      }
-
-      const atuais = lerArquivo();
-      const idsExistentes = new Set(atuais.map((r) => r.id));
-      let adicionados = 0;
-
-      for (const item of validos) {
-        let candidato = { ...item };
-        if (idsExistentes.has(candidato.id)) {
-          candidato.id = String(Date.now()) + "-" + Math.random().toString(36).slice(2, 7);
-        }
-        idsExistentes.add(candidato.id);
-        atuais.push(candidato);
-        adicionados++;
-      }
-
-      salvarArquivo(atuais);
-      renderizarArquivo();
-      setStatus(`Importados ${adicionados} registro(s) de ${origemRotulo}.`);
-    }
-
-    function processarImportacaoJson(texto) {
-      const parsed = JSON.parse(texto);
-      const lista = Array.isArray(parsed)
-        ? parsed
-        : Array.isArray(parsed?.chamadas)
-          ? parsed.chamadas
-          : Array.isArray(parsed?.registros)
-            ? parsed.registros
-            : [];
-      mesclarRegistrosImportados(lista, "JSON");
-    }
-
-    function processarImportacaoCsv(texto) {
-      const limpo = texto.replace(/^﻿/, "");
-      const linhas = parseCsvLinhas(limpo);
-      if (!linhas.length) {
-        setStatus("Arquivo CSV vazio.", true);
-        return;
-      }
-
-      const headerNormalizado = linhas[0].map((h) => h.trim().toLowerCase());
-      const temCabecalho = headerNormalizado.some((h) =>
-        ["nome", "nome do cliente", "o.s", "os", "wo", "contrato", "endereço", "endereco", "arquivado em"].includes(h)
-      );
-
-      const startIdx = temCabecalho ? 1 : 0;
-      const items = [];
-
-      for (let i = startIdx; i < linhas.length; i++) {
-        const cols = linhas[i];
-        if (temCabecalho) {
-          const obj = {};
-          headerNormalizado.forEach((h, idx) => {
-            obj[h] = cols[idx] ?? "";
-          });
-          items.push({
-            id: obj["id"] || "",
-            arquivadoEm: obj["arquivado em"] || obj["arquivadoem"] || obj["datahora"] || "",
-            nomeCliente: obj["nome do cliente"] || obj["nome"] || obj["cliente"] || "",
-            enderecoCliente: obj["endereço"] || obj["endereco"] || "",
-            woNumero: obj["o.s"] || obj["os"] || obj["wo"] || "",
-            contratoNumero: obj["contrato"] || "",
-            mensagemFormatada: obj["mensagem whatsapp"] || obj["mensagemformatada"] || ""
-          });
-        } else {
-          items.push({
-            arquivadoEm: cols[0] || "",
-            nomeCliente: cols[1] || "",
-            enderecoCliente: cols[2] || "",
-            woNumero: cols[3] || "",
-            contratoNumero: cols[4] || ""
-          });
-        }
-      }
-
-      mesclarRegistrosImportados(items, "CSV");
-    }
-
-    function gerarPdfBytes(registros) {
-      const sanitizePdfText = (s) =>
-        String(s || "")
-          .normalize("NFD")
-          .replace(/[̀-ͯ]/g, "")
-          .replace(/[^ -~]/g, " ")
-          .replace(/\/g, "\\")
-          .replace(/\(/g, "\(")
-          .replace(/\)/g, "\)");
-
-      const wrapText = (text, maxChars) => {
-        const words = String(text || "-").split(/\s+/);
-        const lines = [];
-        let cur = "";
-        for (const w of words) {
-          if (!cur) {
-            cur = w;
-          } else if ((cur + " " + w).length <= maxChars) {
-            cur += " " + w;
-          } else {
-            lines.push(cur);
-            cur = w;
-          }
-        }
-        if (cur) lines.push(cur);
-        return lines.length ? lines : ["-"];
-      };
-
-      const pagesStreams = [];
-      let stream = [];
-      let y = 780;
-
-      const startPage = () => {
-        stream = [];
-        y = 780;
-        stream.push("BT /F1 15 Tf 40 795 Td (Relatorio de Chamadas Arquivadas - Tivit / Coop) Tj ET");
-        stream.push("BT /F1 9 Tf 40 780 Td (" + sanitizePdfText("Gerado em: " + formatarDataHoraAgora() + " | Total: " + registros.length) + ") Tj ET");
-        stream.push("0.5 w 40 770 m 555 770 l S");
-        y = 752;
-      };
-
-      const flushPage = () => {
-        pagesStreams.push(stream.join("\n"));
-      };
-
-      startPage();
-
-      registros.forEach((r, idx) => {
-        const titulo = "Chamada #" + (registros.length - idx) + " - " + (r.arquivadoEm || "-");
-        const nomeLinhas = wrapText("Cliente: " + (r.nomeCliente || "-"), 68);
-        const endLinhas = wrapText("Endereco: " + (r.enderecoCliente || "-"), 68);
-        const numLinha = "O.S: " + (r.woNumero || "-") + "    |    Contrato: " + (r.contratoNumero || "-");
-        const blocoAltura = 18 + nomeLinhas.length * 13 + endLinhas.length * 13 + 16 + 14;
-
-        if (y - blocoAltura < 50) {
-          flushPage();
-          startPage();
-        }
-
-        stream.push("BT /F2 11 Tf 40 " + y + " Td (" + sanitizePdfText(titulo) + ") Tj ET");
-        y -= 15;
-
-        for (const nl of nomeLinhas) {
-          stream.push("BT /F1 10 Tf 48 " + y + " Td (" + sanitizePdfText(nl) + ") Tj ET");
-          y -= 13;
-        }
-
-        for (const el of endLinhas) {
-          stream.push("BT /F1 10 Tf 48 " + y + " Td (" + sanitizePdfText(el) + ") Tj ET");
-          y -= 13;
-        }
-
-        stream.push("BT /F2 10 Tf 48 " + y + " Td (" + sanitizePdfText(numLinha) + ") Tj ET");
-        y -= 14;
-
-        stream.push("0.3 w 48 " + y + " m 550 " + y + " l S");
-        y -= 14;
-      });
-
-      flushPage();
-
-      const objects = [];
-      const addObj = (body) => {
-        objects.push(body);
-        return objects.length;
-      };
-
-      const catalogId = addObj("");
-      const pagesId = addObj("");
-      const font1Id = addObj("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>");
-      const font2Id = addObj("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>");
-
-      const pageIds = [];
-      for (const st of pagesStreams) {
-        const contentId = addObj("<< /Length " + st.length + " >>\nstream\n" + st + "\nendstream");
-        const pageId = addObj(
-          "<< /Type /Page /Parent " +
-            pagesId +
-            " 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 " +
-            font1Id +
-            " 0 R /F2 " +
-            font2Id +
-            " 0 R >> >> /Contents " +
-            contentId +
-            " 0 R >>"
-        );
-        pageIds.push(pageId);
-      }
-
-      objects[catalogId - 1] = "<< /Type /Catalog /Pages " + pagesId + " 0 R >>";
-      objects[pagesId - 1] =
-        "<< /Type /Pages /Kids [" +
-        pageIds.map((id) => id + " 0 R").join(" ") +
-        "] /Count " +
-        pageIds.length +
-        " >>";
-
-      let pdf = "%PDF-1.4\n";
-      const offsets = [0];
-
-      for (let i = 0; i < objects.length; i++) {
-        offsets.push(pdf.length);
-        pdf += (i + 1) + " 0 obj\n" + objects[i] + "\nendobj\n";
-      }
-
-      const xrefPos = pdf.length;
-      pdf += "xref\n0 " + (objects.length + 1) + "\n";
-      pdf += "0000000000 65535 f \n";
-      for (let i = 1; i <= objects.length; i++) {
-        pdf += String(offsets[i]).padStart(10, "0") + " 00000 n \n";
-      }
-      pdf += "trailer\n<< /Size " + (objects.length + 1) + " /Root " + catalogId + " 0 R >>\nstartxref\n" + xrefPos + "\n%%EOF";
-
-      return new Blob([pdf], { type: "application/pdf" });
-    }
-
-    function baixarPdf() {
-      const registros = lerArquivo();
-      if (!registros.length) {
-        setStatus("Não há chamadas arquivadas para baixar em PDF.", true);
-        return;
-      }
-      const pdfBlob = gerarPdfBytes(registros);
-      const url = URL.createObjectURL(pdfBlob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "chamadas-arquivadas-tivit-coop.pdf";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-      setStatus("PDF de chamadas arquivadas baixado com sucesso.");
-    }
-
-    function renderizarArquivo() {
-      const registros = lerArquivo();
-      if (!registros.length) {
-        listaArquivadas.innerHTML = `<div class="archive-empty">Nenhuma chamada arquivada ainda. Clique em "Arquivar dados da chamada" ou importe um arquivo JSON/CSV.</div>`;
-        return;
-      }
-
-      listaArquivadas.innerHTML = registros
-        .map(
-          (r) => `
-          <div class="archive-card">
-            <div class="archive-top">
-              <span class="archive-meta">Arquivado em: ${escapeHtml(r.arquivadoEm)}</span>
-              <div class="archive-item-btns">
-                <button type="button" class="btn-mini" data-load="${escapeHtml(r.id)}">Carregar</button>
-                <button type="button" class="btn-mini" data-copy-id="${escapeHtml(r.id)}">Copiar Wpp</button>
-                <button type="button" class="btn-mini danger" data-del="${escapeHtml(r.id)}">Excluir</button>
-              </div>
-            </div>
-            <div class="archive-summary">
-              <strong>Cliente:</strong> ${escapeHtml(r.nomeCliente || "-")} |
-              <strong>O.S:</strong> <span class="archive-num">${escapeHtml(r.woNumero || "-")}</span> |
-              <strong>Contrato:</strong> <span class="archive-num">${escapeHtml(r.contratoNumero || "-")}</span><br />
-              <strong>Endereço:</strong> ${escapeHtml(r.enderecoCliente || "-")}
-            </div>
-          </div>
-        `
-        )
-        .join("");
-
-      listaArquivadas.querySelectorAll("[data-load]").forEach((btn) => {
-        btn.addEventListener("click", () => carregarRegistro(btn.getAttribute("data-load")));
-      });
-
-      listaArquivadas.querySelectorAll("[data-del]").forEach((btn) => {
-        btn.addEventListener("click", () => excluirRegistro(btn.getAttribute("data-del")));
-      });
-
-      listaArquivadas.querySelectorAll("[data-copy-id]").forEach((btn) => {
-        btn.addEventListener("click", async () => {
-          const item = lerArquivo().find((r) => r.id === btn.getAttribute("data-copy-id"));
-          if (!item) return;
-          const texto = item.mensagemFormatada || formatarTextoChamada(item);
-          try {
-            await navigator.clipboard.writeText(texto);
-            setStatus("Mensagem arquivada copiada para a área de transferência.");
-          } catch {
-            msgPreview.value = texto;
-            msgPreview.select();
-            document.execCommand("copy");
-            setStatus("Mensagem arquivada copiada.");
-          }
-        });
-      });
-    }
-
-    document.getElementById("btnArquivarChamada").addEventListener("click", arquivarDadosChamada);
-    document.getElementById("btnExportarJson").addEventListener("click", exportarJson);
-    document.getElementById("btnExportarCsv").addEventListener("click", exportarCsv);
-    document.getElementById("btnBaixarPdf").addEventListener("click", baixarPdf);
-
-    document.getElementById("btnImportarJson").addEventListener("click", () => {
-      inputImportJson.value = "";
-      inputImportJson.click();
-    });
-
-    document.getElementById("btnImportarCsv").addEventListener("click", () => {
-      inputImportCsv.value = "";
-      inputImportCsv.click();
-    });
-
-    inputImportJson.addEventListener("change", (e) => {
-      const file = e.target.files && e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        try {
-          processarImportacaoJson(String(reader.result || ""));
-        } catch {
-          setStatus("Erro ao ler o arquivo JSON. Verifique se o formato é válido.", true);
-        }
-      };
-      reader.readAsText(file, "utf-8");
-    });
-
-    inputImportCsv.addEventListener("change", (e) => {
-      const file = e.target.files && e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        try {
-          processarImportacaoCsv(String(reader.result || ""));
-        } catch {
-          setStatus("Erro ao ler o arquivo CSV.", true);
-        }
-      };
-      reader.readAsText(file, "utf-8");
-    });
-
-    document.getElementById("btnExportarArquivo").addEventListener("click", () => {
-      const registros = lerArquivo();
-      if (!registros.length) {
-        setStatus("Não há chamadas arquivadas para baixar.", true);
-        return;
-      }
-      const conteudo = registros
-        .map((r, idx) => `=== CHAMADA #${registros.length - idx} (${r.arquivadoEm}) ===\n${r.mensagemFormatada}`)
-        .join("\n\n");
-      baixarBlob(conteudo, "text/plain;charset=utf-8", "chamadas-arquivadas-tivit-coop.txt");
-      setStatus("Arquivo de chamadas arquivadas baixado (.txt).");
+      saveArchive();
+      showToast("Chamada arquivada com sucesso.");
     });
 
     document.getElementById("btnLimparArquivo").addEventListener("click", () => {
-      salvarArquivo([]);
-      renderizarArquivo();
-      setStatus("Histórico de chamadas arquivadas limpo.");
+      if (!archivedCalls.length) return;
+      archivedCalls = [];
+      saveArchive();
+      showToast("Arquivo local limpo.");
     });
 
-    document.getElementById("btnFormatarWpp").addEventListener("click", () => {
-      montarMensagemWhatsApp();
+    // Exportar JSON
+    document.getElementById("btnExportJson").addEventListener("click", () => {
+      const payload = {
+        exportadoEm: new Date().toISOString(),
+        chamadaAtual: { ...FIXED_DATA, ...getCurrentFormData() },
+        chamadasArquivadas: archivedCalls
+      };
+      downloadFile(
+        JSON.stringify(payload, null, 2),
+        `chamadas-tivit-coop-${timestampSlug()}.json`,
+        "application/json"
+      );
+      showToast("JSON exportado.");
     });
 
-    document.getElementById("btnAbrirWpp").addEventListener("click", () => {
-      const texto = msgPreview.value.trim() || montarMensagemWhatsApp();
-      if (!texto) return;
-      const url = "https://wa.me/?text=" + encodeURIComponent(texto);
-      window.open(url, "_blank", "noopener,noreferrer");
+    // Importar JSON
+    document.getElementById("inputImportJson").addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          if (parsed.chamadaAtual) {
+            els.nome.value = parsed.chamadaAtual.nome || "";
+            els.endereco.value = parsed.chamadaAtual.endereco || "";
+            els.wo.value = formatOs(parsed.chamadaAtual.wo || "");
+            els.contrato.value = formatContrato(parsed.chamadaAtual.contrato || "");
+            els.opcao.value = parsed.chamadaAtual.opcao || "";
+          }
+          if (Array.isArray(parsed.chamadasArquivadas)) {
+            archivedCalls = [...parsed.chamadasArquivadas, ...archivedCalls];
+            saveArchive();
+          }
+          refreshOutput();
+          showToast("JSON importado com sucesso.");
+        } catch {
+          showToast("Arquivo JSON inválido.");
+        }
+        e.target.value = "";
+      };
+      reader.readAsText(file);
     });
 
-    document.getElementById("btnCopiar").addEventListener("click", async () => {
-      const texto = msgPreview.value.trim() || montarMensagemWhatsApp();
-      if (!texto) return;
-      try {
-        await navigator.clipboard.writeText(texto);
-        setStatus("Mensagem formatada copiada para a área de transferência.");
-      } catch {
-        msgPreview.select();
-        document.execCommand("copy");
-        setStatus("Mensagem selecionada/copiada.");
+    // Exportar CSV
+    function csvEscape(val) {
+      const s = String(val ?? "");
+      return `"${s.replace(/"/g, '""')}"`;
+    }
+
+    document.getElementById("btnExportCsv").addEventListener("click", () => {
+      const headers = [
+        "registradoEm", "nome", "endereco", "wo", "contrato", "opcao",
+        "opcaoServico", "cidade", "codigoEmpresa", "nomeFuncionario",
+        "codigoFuncionario", "nomeConveniada", "pda", "codigoBaixa",
+        "tipoWo", "horaInicio"
+      ];
+      const rows = archivedCalls.length
+        ? archivedCalls
+        : [{ registradoEm: new Date().toLocaleString("pt-BR"), ...FIXED_DATA, ...getCurrentFormData() }];
+
+      const csvLines = [
+        headers.map(csvEscape).join(";"),
+        ...rows.map((r) => headers.map((h) => csvEscape(r[h])).join(";"))
+      ];
+      downloadFile(
+        "﻿" + csvLines.join("
+"),
+        `chamadas-tivit-coop-${timestampSlug()}.csv`,
+        "text/csv;charset=utf-8;"
+      );
+      showToast("CSV exportado.");
+    });
+
+    // Importar CSV
+    function parseCsvLine(line, delimiter) {
+      const result = [];
+      let current = "";
+      let inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (inQuotes) {
+          if (ch === '"' && line[i + 1] === '"') {
+            current += '"';
+            i++;
+          } else if (ch === '"') {
+            inQuotes = false;
+          } else {
+            current += ch;
+          }
+        } else if (ch === '"') {
+          inQuotes = true;
+        } else if (ch === delimiter) {
+          result.push(current);
+          current = "";
+        } else {
+          current += ch;
+        }
       }
+      result.push(current);
+      return result;
+    }
+
+    document.getElementById("inputImportCsv").addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const text = reader.result.replace(/^﻿/, "");
+          const lines = text.split(/?
+/).filter((l) => l.trim().length > 0);
+          if (lines.length < 2) {
+            showToast("CSV sem dados para importar.");
+            return;
+          }
+          const delimiter = lines[0].includes(";") ? ";" : ",";
+          const headers = parseCsvLine(lines[0], delimiter).map((h) => h.trim());
+          const imported = [];
+          for (let i = 1; i < lines.length; i++) {
+            const vals = parseCsvLine(lines[i], delimiter);
+            const obj = { ...FIXED_DATA };
+            headers.forEach((h, idx) => {
+              obj[h] = vals[idx] ?? "";
+            });
+            obj.wo = formatOs(obj.wo);
+            obj.contrato = formatContrato(obj.contrato);
+            imported.push(obj);
+          }
+          if (imported.length) {
+            const first = imported[0];
+            els.nome.value = first.nome || "";
+            els.endereco.value = first.endereco || "";
+            els.wo.value = first.wo || "";
+            els.contrato.value = first.contrato || "";
+            els.opcao.value = first.opcao || "";
+            archivedCalls = [...imported, ...archivedCalls];
+            saveArchive();
+            refreshOutput();
+            showToast(`${imported.length} registro(s) importado(s) do CSV.`);
+          }
+        } catch {
+          showToast("Erro ao ler arquivo CSV.");
+        }
+        e.target.value = "";
+      };
+      reader.readAsText(file);
     });
 
-    document.getElementById("btnLimpar").addEventListener("click", () => {
-      Object.values(inputs).forEach((el) => {
-        el.value = "";
-      });
-      msgPreview.value = "";
-      atualizarRoteiro();
-      setStatus("Campos variáveis limpos.");
+    // Baixar em PDF
+    document.getElementById("btnBaixarPdf").addEventListener("click", () => {
+      if (!window.jspdf || !window.jspdf.jsPDF) {
+        showToast("Biblioteca jsPDF não carregada. Verifique a conexão.");
+        return;
+      }
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: "mm", format: "a4" });
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(14);
+      doc.text("Roteiro de Chamada — Sistema Tivit / Coop", 14, 18);
+
+      doc.setFont("courier", "normal");
+      doc.setFontSize(10);
+      const textLines = doc.splitTextToSize(els.roteiroOutput.value, 182);
+      doc.text(textLines, 14, 28);
+
+      const footerY = 285;
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8.5);
+      doc.text("Criado por Fernando Sato - Versão 1.0 - 21.11.26 - 03:43", 14, footerY);
+
+      doc.save(`roteiro-tivit-coop-${timestampSlug()}.pdf`);
+      showToast("PDF gerado para download.");
     });
 
-    atualizarRoteiro();
-    renderizarArquivo();
+    function downloadFile(content, filename, mimeType) {
+      const blob = new Blob([content], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function timestampSlug() {
+      const now = new Date();
+      const pad = (n) => String(n).padStart(2, "0");
+      return `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}`;
+    }
+
+    // Inicialização
+    refreshOutput();
+    renderArchive();
   </script>
 </body>
 </html>
