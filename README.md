@@ -12,6 +12,7 @@ Ferramenta web em arquivo único (`index.html`) voltada para técnicos de teleco
 2. **Cola automática ao clicar (`Nome do cliente`, `Endereço`, `WO`, `Contrato`)**
    - Ao clicar em qualquer um desses campos, o sistema lê a área de transferência (`navigator.clipboard.readText()`) e cola o conteúdo automaticamente.
    - Caso o navegador bloqueie a leitura direta da área de transferência, o campo recebe foco para colagem manual (`Ctrl+V` ou toque em **Colar**).
+   - Abaixo de cada um dos 4 campos (`Nome do cliente`, `Endereço`, `WO`, `Contrato`), há um botão pequeno **Limpar campo** para apagar rapidamente caso alguma informação incorreta seja colada.
 
 3. **Formatação e destaque visual de WO e Contrato**
    - **WO:** formatado como `xxx.xxx.xxx` com fonte ampliada.
@@ -32,13 +33,14 @@ Ferramenta web em arquivo único (`index.html`) voltada para técnicos de teleco
 1. Extraia o arquivo `.zip`.
 2. Abra o arquivo `index.html` diretamente no navegador (Chrome, Edge, Safari etc.).
 3. Use o botão do topo para ligar para a Tivit (`+558007690800`), se necessário.
-4. Copie cada informação necessária e clique no campo correspondente para colar.
+4. Copie cada informação necessária e clique no campo correspondente para colar (ou use **Limpar campo** abaixo do campo se precisar corrigir).
 5. Use o roteiro na ligação, formate para WhatsApp e clique em **Arquivar dados da chamada** ao finalizar.
 
 ---
 
 ## Histórico de versões
 
+- **Versão 1.6 - 21.11.26 - 02:06:** Inclusão de botão pequeno **Limpar campo** abaixo de cada um dos 4 campos (`Nome do cliente`, `Endereço`, `WO` e `Contrato`) e atualização do `README.md`.
 - **Versão 1.5 - 21.11.26 - 02:01:** Formatação do campo WO no padrão `xxx.xxx.xxx`, aumento do tamanho da fonte dos números de WO e de Contrato (campos, roteiro e chamadas arquivadas) e atualização do `README.md`.
 - **Versão 1.4 - 21.11.26 - 01:55:** Adição do botão no topo para ligar para Tivit (`+558007690800`), máscaras de exibição para Contrato (`xxx.xxx.xxx`) e WO (`xxx. xxx.xxx.xxxx`), remoção do bloco `4. Dados fixos` na interface e atualização do `README.md`.
 - **Versão 1.3 - 21.11.26 - 01:34:** Inclusão do botão **Arquivar dados da chamada**, histórico com carregar/copiar/excluir/exportar `.txt` e inclusão do `README.md` no pacote `.zip`.
@@ -48,4 +50,4 @@ Ferramenta web em arquivo único (`index.html`) voltada para técnicos de teleco
 
 ---
 
-Criado por Fernando Sato - Versão 1.5 - 21.11.26 - 02:01
+Criado por Fernando Sato - Versão 1.6 - 21.11.26 - 02:06

@@ -205,6 +205,27 @@
       box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.24);
     }
 
+    .field-footer {
+      display: flex;
+      justify-content: flex-start;
+      margin-top: 2px;
+    }
+
+    .btn-clear-field {
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 7px;
+      background: rgba(248, 113, 113, 0.1);
+      color: var(--danger);
+      border: 1px solid rgba(248, 113, 113, 0.28);
+      transition: background-color 0.15s ease, transform 0.08s ease;
+    }
+
+    .btn-clear-field:hover {
+      background: rgba(248, 113, 113, 0.2);
+    }
+
     .script-list {
       background: var(--card-2);
       border: 1px solid var(--border);
@@ -502,6 +523,9 @@
             placeholder="Clique para colar o nome do cliente da área de transferência..."
             autocomplete="off"
           />
+          <div class="field-footer">
+            <button type="button" class="btn-clear-field" data-clear-field="nomeCliente">Limpar campo</button>
+          </div>
         </div>
 
         <div class="field-group">
@@ -515,6 +539,9 @@
             placeholder="Clique para colar o endereço da área de transferência..."
             autocomplete="off"
           />
+          <div class="field-footer">
+            <button type="button" class="btn-clear-field" data-clear-field="enderecoCliente">Limpar campo</button>
+          </div>
         </div>
 
         <div class="grid two-col">
@@ -531,6 +558,9 @@
               placeholder="xxx.xxx.xxx"
               autocomplete="off"
             />
+            <div class="field-footer">
+              <button type="button" class="btn-clear-field" data-clear-field="woNumero">Limpar campo</button>
+            </div>
           </div>
 
           <div class="field-group">
@@ -546,6 +576,9 @@
               placeholder="xxx.xxx.xxx"
               autocomplete="off"
             />
+            <div class="field-footer">
+              <button type="button" class="btn-clear-field" data-clear-field="contratoNumero">Limpar campo</button>
+            </div>
           </div>
         </div>
       </div>
@@ -554,7 +587,7 @@
         <button type="button" class="btn-primary" id="btnFormatarWpp">Formatar para WhatsApp</button>
         <button type="button" class="btn-whatsapp" id="btnAbrirWpp">Formatar e abrir WhatsApp</button>
         <button type="button" class="btn-archive" id="btnArquivarChamada">Arquivar dados da chamada</button>
-        <button type="button" class="btn-secondary" id="btnLimpar">Limpar campos</button>
+        <button type="button" class="btn-secondary" id="btnLimpar">Limpar todos</button>
       </div>
 
       <div id="statusMsg" class="status-msg" role="status" aria-live="polite"></div>
@@ -595,11 +628,11 @@
   </div>
 
   <footer>
-    Criado por Fernando Sato - Versão 1.5 - 21.11.26 - 02:01
+    Criado por Fernando Sato - Versão 1.6 - 21.11.26 - 02:06
   </footer>
 
   <script>
-    const STORAGE_KEY = "tivit_coop_chamadas_arquivadas_v1_5";
+    const STORAGE_KEY = "tivit_coop_chamadas_arquivadas_v1_6";
 
     const DADOS_FIXOS = {
       opcaoServico: "239",
@@ -619,6 +652,13 @@
       enderecoCliente: document.getElementById("enderecoCliente"),
       woNumero: document.getElementById("woNumero"),
       contratoNumero: document.getElementById("contratoNumero")
+    };
+
+    const nomesCampos = {
+      nomeCliente: "Nome do cliente",
+      enderecoCliente: "Endereço",
+      woNumero: "WO",
+      contratoNumero: "Contrato"
     };
 
     const msgPreview = document.getElementById("msgPreview");
@@ -708,7 +748,7 @@
             aplicarFormatacaoCampo(key);
             flashInput(el);
             atualizarRoteiro();
-            setStatus(`Conteúdo colado em "${el.labels?.[0]?.textContent || key}".`);
+            setStatus(`Conteúdo colado em "${nomesCampos[key] || key}".`);
             return;
           } else {
             setStatus("A área de transferência está vazia.", true);
@@ -729,6 +769,17 @@
       el.addEventListener("input", () => {
         aplicarFormatacaoCampo(key);
         atualizarRoteiro();
+      });
+    });
+
+    document.querySelectorAll("[data-clear-field]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const key = btn.getAttribute("data-clear-field");
+        const el = inputs[key];
+        if (!el) return;
+        el.value = "";
+        atualizarRoteiro();
+        setStatus(`Campo "${nomesCampos[key] || key}" limpo.`);
       });
     });
 
