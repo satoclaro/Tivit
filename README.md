@@ -14,9 +14,10 @@ Ferramenta web em arquivo único (`index.html`) voltada para técnicos de teleco
    - Caso o navegador bloqueie a leitura direta da área de transferência, o campo recebe foco para colagem manual (`Ctrl+V` ou toque em **Colar**).
    - Abaixo de cada um dos 4 campos (`Nome do cliente`, `Endereço`, `O.S`, `Contrato`), há um botão pequeno **Limpar campo** para apagar rapidamente caso alguma informação incorreta seja colada.
 
-3. **Formatação e destaque visual de O.S e Contrato**
-   - **O.S:** formatado como `xxx.xxx.xxx` com fonte ampliada.
+3. **Formatação e destaque visual de Nome, Endereço, O.S e Contrato**
+   - **O.S:** formatado como `xxx.xxx.xxxx` com fonte ampliada.
    - **Contrato:** formatado como `xxx.xxx.xxx` com fonte ampliada.
+   - **Nome do cliente** e **Endereço:** exibidos com fonte ampliada no campo, no roteiro e nas chamadas arquivadas.
 
 4. **Formatação e envio para WhatsApp**
    - **Formatar para WhatsApp:** monta a mensagem com os dados fixos do atendimento e variáveis na sequência configurada.
@@ -40,6 +41,7 @@ Ferramenta web em arquivo único (`index.html`) voltada para técnicos de teleco
 
 ## Histórico de versões
 
+- **Versão 1.9 - 21.11.26 - 02:26:** Formatação do campo `O.S` no padrão `xxx.xxx.xxxx`, aumento do tamanho da fonte de `Nome do cliente`, `Endereço`, `O.S` e `Contrato`, e atualização do `README.md`.
 - **Versão 1.8 - 21.11.26 - 02:18:** Remoção do prefixo `O.S` do valor formatado e alteração do rótulo `WO` para `O.S` (formato `xxx.xxx.xxx` com fonte ampliada), e atualização do `README.md`.
 - **Versão 1.7 - 21.11.26 - 02:14:** Formatação do campo WO no padrão `O.S xxx.xxx.xxxx` (mantendo fonte ampliada), ajuste no roteiro, mensagem do WhatsApp e chamadas arquivadas, e atualização do `README.md`.
 - **Versão 1.6 - 21.11.26 - 02:06:** Inclusão de botão pequeno **Limpar campo** abaixo de cada um dos 4 campos (`Nome do cliente`, `Endereço`, `WO` e `Contrato`) e atualização do `README.md`.
@@ -52,4 +54,4 @@ Ferramenta web em arquivo único (`index.html`) voltada para técnicos de teleco
 
 ---
 
-Criado por Fernando Sato - Versão 1.8 - 21.11.26 - 02:18
+Criado por Fernando Sato - Versão 1.9 - 21.11.26 - 02:26

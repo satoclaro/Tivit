@@ -186,8 +186,14 @@
       outline: none;
     }
 
+    input[type="text"].campo-destaque {
+      font-size: 1.2rem;
+      font-weight: 600;
+      padding: 12px 14px;
+    }
+
     input[type="text"].num-destaque {
-      font-size: 1.35rem;
+      font-size: 1.38rem;
       font-weight: 700;
       letter-spacing: 0.04em;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -262,8 +268,13 @@
       text-align: right;
     }
 
+    .script-val.campo-destaque-txt {
+      font-size: 1.08rem;
+      font-weight: 700;
+    }
+
     .script-val.num-destaque-txt {
-      font-size: 1.2rem;
+      font-size: 1.22rem;
       font-weight: 700;
       letter-spacing: 0.03em;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -455,8 +466,8 @@
     }
 
     .archive-summary {
-      font-size: 0.88rem;
-      line-height: 1.45;
+      font-size: 0.96rem;
+      line-height: 1.5;
       color: #e2e8f0;
     }
 
@@ -465,7 +476,7 @@
     }
 
     .archive-num {
-      font-size: 1.08rem;
+      font-size: 1.12rem;
       font-weight: 700;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       color: var(--ok);
@@ -508,7 +519,7 @@
       <div class="panel-title">1. Campos para colar da área de transferência (ao clicar)</div>
       <div class="panel-subtitle">
         Copie o dado desejado e clique no campo correspondente para colar o conteúdo da área de transferência automaticamente.
-        <strong>O.S</strong> e <strong>Contrato</strong> exibem no formato <code>xxx.xxx.xxx</code> com fonte ampliada.
+        <strong>O.S</strong> formata como <code>xxx.xxx.xxxx</code> e <strong>Contrato</strong> como <code>xxx.xxx.xxx</code>, com fonte ampliada em <strong>Nome</strong>, <strong>Endereço</strong>, <strong>O.S</strong> e <strong>Contrato</strong>.
       </div>
 
       <div class="grid">
@@ -520,6 +531,7 @@
           <input
             type="text"
             id="nomeCliente"
+            class="campo-destaque"
             placeholder="Clique para colar o nome do cliente da área de transferência..."
             autocomplete="off"
           />
@@ -536,6 +548,7 @@
           <input
             type="text"
             id="enderecoCliente"
+            class="campo-destaque"
             placeholder="Clique para colar o endereço da área de transferência..."
             autocomplete="off"
           />
@@ -547,7 +560,7 @@
         <div class="grid two-col">
           <div class="field-group">
             <div class="field-header">
-              <label for="woNumero">O.S (xxx.xxx.xxx)</label>
+              <label for="woNumero">O.S (xxx.xxx.xxxx)</label>
               <span class="paste-tag">Clique = Colar</span>
             </div>
             <input
@@ -555,7 +568,7 @@
               id="woNumero"
               class="num-destaque"
               inputmode="numeric"
-              placeholder="xxx.xxx.xxx"
+              placeholder="xxx.xxx.xxxx"
               autocomplete="off"
             />
             <div class="field-footer">
@@ -628,11 +641,11 @@
   </div>
 
   <footer>
-    Criado por Fernando Sato - Versão 1.8 - 21.11.26 - 02:18
+    Criado por Fernando Sato - Versão 1.9 - 21.11.26 - 02:26
   </footer>
 
   <script>
-    const STORAGE_KEY = "tivit_coop_chamadas_arquivadas_v1_8";
+    const STORAGE_KEY = "tivit_coop_chamadas_arquivadas_v1_9";
 
     const DADOS_FIXOS = {
       opcaoServico: "239",
@@ -686,9 +699,18 @@
         .replace(/"/g, "&quot;");
     }
 
-    // Formatação xxx.xxx.xxx (até 9 dígitos) para O.S e Contrato
+    // Formatação xxx.xxx.xxx (até 9 dígitos) para Contrato
     function formatarBlocoTres(valor) {
       const digitos = String(valor || "").replace(/\D/g, "").slice(0, 9);
+      if (!digitos) return "";
+      if (digitos.length <= 3) return digitos;
+      if (digitos.length <= 6) return `${digitos.slice(0, 3)}.${digitos.slice(3)}`;
+      return `${digitos.slice(0, 3)}.${digitos.slice(3, 6)}.${digitos.slice(6)}`;
+    }
+
+    // Formatação xxx.xxx.xxxx (até 10 dígitos) para O.S
+    function formatarOsDez(valor) {
+      const digitos = String(valor || "").replace(/\D/g, "").slice(0, 10);
       if (!digitos) return "";
       if (digitos.length <= 3) return digitos;
       if (digitos.length <= 6) return `${digitos.slice(0, 3)}.${digitos.slice(3)}`;
@@ -698,24 +720,24 @@
     function obterLinhasOrdenadas(overrideData = null) {
       const nome = (overrideData ? overrideData.nomeCliente : inputs.nomeCliente.value).trim();
       const endereco = (overrideData ? overrideData.enderecoCliente : inputs.enderecoCliente.value).trim();
-      const os = formatarBlocoTres(overrideData ? overrideData.woNumero : inputs.woNumero.value);
+      const os = formatarOsDez(overrideData ? overrideData.woNumero : inputs.woNumero.value);
       const contrato = formatarBlocoTres(overrideData ? overrideData.contratoNumero : inputs.contratoNumero.value);
 
       return [
-        { label: "Opção do serviço", valor: DADOS_FIXOS.opcaoServico, display: DADOS_FIXOS.opcaoServico, destaque: false },
-        { label: "Cidade", valor: DADOS_FIXOS.cidade, display: DADOS_FIXOS.cidade, destaque: false },
-        { label: "Código da empresa", valor: DADOS_FIXOS.codigoEmpresa, display: DADOS_FIXOS.codigoEmpresa, destaque: false },
-        { label: "Nome do Funcionário", valor: DADOS_FIXOS.nomeFuncionario, display: DADOS_FIXOS.nomeFuncionario, destaque: false },
-        { label: "Código Funcionário", valor: DADOS_FIXOS.codigoFuncionario, display: DADOS_FIXOS.codigoFuncionario, destaque: false },
-        { label: "Nome da Conveniada", valor: DADOS_FIXOS.nomeConveniada, display: DADOS_FIXOS.nomeConveniada, destaque: false },
-        { label: "PDA", valor: DADOS_FIXOS.pda, display: DADOS_FIXOS.pda, destaque: false },
-        { label: "Código da Baixa", valor: DADOS_FIXOS.codigoBaixa, display: DADOS_FIXOS.codigoBaixa, destaque: false },
-        { label: "Tipo de wo", valor: DADOS_FIXOS.tipoWo, display: "Instalação/ Mudança de Pacote", destaque: false },
-        { label: "Hora de Início", valor: DADOS_FIXOS.horaInicio, display: DADOS_FIXOS.horaInicio, destaque: false },
-        { label: "Nome do cliente", valor: nome || "-", display: nome || "[Colar nome]", destaque: false },
-        { label: "Endereço", valor: endereco || "-", display: endereco || "[Colar endereço]", destaque: false },
-        { label: "O.S", valor: os || "-", display: os || "[Colar O.S]", destaque: true },
-        { label: "Contrato", valor: contrato || "-", display: contrato || "[Colar Contrato]", destaque: true }
+        { label: "Opção do serviço", valor: DADOS_FIXOS.opcaoServico, display: DADOS_FIXOS.opcaoServico, destaqueTipo: null },
+        { label: "Cidade", valor: DADOS_FIXOS.cidade, display: DADOS_FIXOS.cidade, destaqueTipo: null },
+        { label: "Código da empresa", valor: DADOS_FIXOS.codigoEmpresa, display: DADOS_FIXOS.codigoEmpresa, destaqueTipo: null },
+        { label: "Nome do Funcionário", valor: DADOS_FIXOS.nomeFuncionario, display: DADOS_FIXOS.nomeFuncionario, destaqueTipo: null },
+        { label: "Código Funcionário", valor: DADOS_FIXOS.codigoFuncionario, display: DADOS_FIXOS.codigoFuncionario, destaqueTipo: null },
+        { label: "Nome da Conveniada", valor: DADOS_FIXOS.nomeConveniada, display: DADOS_FIXOS.nomeConveniada, destaqueTipo: null },
+        { label: "PDA", valor: DADOS_FIXOS.pda, display: DADOS_FIXOS.pda, destaqueTipo: null },
+        { label: "Código da Baixa", valor: DADOS_FIXOS.codigoBaixa, display: DADOS_FIXOS.codigoBaixa, destaqueTipo: null },
+        { label: "Tipo de wo", valor: DADOS_FIXOS.tipoWo, display: "Instalação/ Mudança de Pacote", destaqueTipo: null },
+        { label: "Hora de Início", valor: DADOS_FIXOS.horaInicio, display: DADOS_FIXOS.horaInicio, destaqueTipo: null },
+        { label: "Nome do cliente", valor: nome || "-", display: nome || "[Colar nome]", destaqueTipo: "campo" },
+        { label: "Endereço", valor: endereco || "-", display: endereco || "[Colar endereço]", destaqueTipo: "campo" },
+        { label: "O.S", valor: os || "-", display: os || "[Colar O.S]", destaqueTipo: "num" },
+        { label: "Contrato", valor: contrato || "-", display: contrato || "[Colar Contrato]", destaqueTipo: "num" }
       ];
     }
 
@@ -723,14 +745,21 @@
       const itens = obterLinhasOrdenadas();
       roteiroLigacao.innerHTML = itens
         .map((item) => {
-          const valClass = item.destaque ? "script-val num-destaque-txt" : "script-val";
+          let valClass = "script-val";
+          if (item.destaqueTipo === "num") {
+            valClass = "script-val num-destaque-txt";
+          } else if (item.destaqueTipo === "campo") {
+            valClass = "script-val campo-destaque-txt";
+          }
           return `<div class="script-row"><span class="script-label">${escapeHtml(item.label)}:</span><span class="${valClass}">${escapeHtml(item.display)}</span></div>`;
         })
         .join("");
     }
 
     function aplicarFormatacaoCampo(key) {
-      if (key === "woNumero" || key === "contratoNumero") {
+      if (key === "woNumero") {
+        inputs[key].value = formatarOsDez(inputs[key].value);
+      } else if (key === "contratoNumero") {
         inputs[key].value = formatarBlocoTres(inputs[key].value);
       }
     }
@@ -827,7 +856,7 @@
     function arquivarDadosChamada() {
       const nome = inputs.nomeCliente.value.trim();
       const endereco = inputs.enderecoCliente.value.trim();
-      const os = formatarBlocoTres(inputs.woNumero.value);
+      const os = formatarOsDez(inputs.woNumero.value);
       const contrato = formatarBlocoTres(inputs.contratoNumero.value);
 
       if (!nome && !endereco && !os && !contrato) {
@@ -864,7 +893,7 @@
 
       inputs.nomeCliente.value = item.nomeCliente || "";
       inputs.enderecoCliente.value = item.enderecoCliente || "";
-      inputs.woNumero.value = formatarBlocoTres(item.woNumero || "");
+      inputs.woNumero.value = formatarOsDez(item.woNumero || "");
       inputs.contratoNumero.value = formatarBlocoTres(item.contratoNumero || "");
       msgPreview.value = item.mensagemFormatada || formatarTextoChamada();
       atualizarRoteiro();
