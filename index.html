@@ -7,24 +7,27 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     :root {
-      --bg: #f1f5f9;
-      --surface: #ffffff;
-      --surface-alt: #f8fafc;
-      --border: #cbd5e1;
-      --border-focus: #0284c7;
-      --text: #0f172a;
-      --text-muted: #475569;
+      --bg: #0b1120;
+      --surface: #111827;
+      --surface-alt: #1e293b;
+      --surface-paste: #0f2438;
+      --border: #334155;
+      --border-focus: #38bdf8;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
       --primary: #0284c7;
       --primary-hover: #0369a1;
       --call-bg: #15803d;
       --call-hover: #166534;
       --whatsapp-bg: #16a34a;
       --whatsapp-hover: #15803d;
-      --danger: #dc2626;
-      --danger-hover: #b91c1c;
-      --accent-soft: #e0f2fe;
+      --danger: #ef4444;
+      --danger-bg: rgba(239, 68, 68, 0.12);
+      --danger-border: rgba(239, 68, 68, 0.45);
+      --accent-soft: rgba(56, 189, 248, 0.16);
+      --accent-text: #7dd3fc;
       --radius: 10px;
-      --shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
+      --shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
     }
 
     * {
@@ -77,14 +80,14 @@
       align-items: center;
       gap: 8px;
       background: var(--call-bg);
-      color: #fff;
+      color: #ffffff;
       text-decoration: none;
       font-weight: 700;
       font-size: 0.95rem;
       padding: 10px 18px;
       border-radius: 8px;
       transition: background 0.15s ease, transform 0.1s ease;
-      box-shadow: 0 2px 6px rgba(21, 128, 61, 0.25);
+      box-shadow: 0 3px 12px rgba(21, 128, 61, 0.35);
     }
 
     .btn-call:hover {
@@ -110,7 +113,7 @@
       gap: 8px;
       margin-bottom: 14px;
       padding-bottom: 10px;
-      border-bottom: 1px solid #e2e8f0;
+      border-bottom: 1px solid var(--border);
     }
 
     .card-title {
@@ -153,10 +156,11 @@
     .badge-paste {
       font-size: 0.72rem;
       background: var(--accent-soft);
-      color: var(--primary-hover);
-      padding: 2px 7px;
+      color: var(--accent-text);
+      padding: 2px 8px;
       border-radius: 999px;
       font-weight: 600;
+      border: 1px solid rgba(56, 189, 248, 0.25);
     }
 
     input[type="text"],
@@ -167,20 +171,29 @@
       padding: 9px 11px;
       font-size: 0.92rem;
       color: var(--text);
-      background: var(--surface);
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      background: var(--surface-alt);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
     }
 
     input.click-paste {
       cursor: pointer;
-      background: #f8fcff;
+      background: var(--surface-paste);
+    }
+
+    input.click-paste:hover {
+      border-color: #64748b;
+    }
+
+    input[type="text"]::placeholder,
+    textarea::placeholder {
+      color: #64748b;
     }
 
     input[type="text"]:focus,
     textarea:focus {
       outline: none;
       border-color: var(--border-focus);
-      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.14);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
     }
 
     .below-option-actions {
@@ -192,7 +205,8 @@
     }
 
     /* Buttons */
-    button {
+    button,
+    label.btn-secondary {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -203,12 +217,12 @@
       font-size: 0.86rem;
       font-weight: 600;
       cursor: pointer;
-      transition: background 0.15s ease, opacity 0.15s ease;
+      transition: background 0.15s ease, opacity 0.15s ease, border-color 0.15s ease;
     }
 
     .btn-primary {
       background: var(--primary);
-      color: #fff;
+      color: #ffffff;
     }
 
     .btn-primary:hover {
@@ -217,7 +231,7 @@
 
     .btn-whatsapp {
       background: var(--whatsapp-bg);
-      color: #fff;
+      color: #ffffff;
     }
 
     .btn-whatsapp:hover {
@@ -231,17 +245,18 @@
     }
 
     .btn-secondary:hover {
-      background: #e2e8f0;
+      background: #283548;
+      border-color: #475569;
     }
 
     .btn-danger-outline {
-      background: #fff;
-      color: var(--danger);
-      border-color: #fca5a5;
+      background: var(--danger-bg);
+      color: #fca5a5;
+      border-color: var(--danger-border);
     }
 
     .btn-danger-outline:hover {
-      background: #fef2f2;
+      background: rgba(239, 68, 68, 0.22);
     }
 
     .btn-sm {
@@ -255,7 +270,7 @@
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 8px 16px;
       background: var(--surface-alt);
-      border: 1px solid #e2e8f0;
+      border: 1px solid var(--border);
       border-radius: 8px;
       padding: 12px 14px;
     }
@@ -267,7 +282,7 @@
       gap: 8px;
       font-size: 0.86rem;
       padding: 4px 0;
-      border-bottom: 1px dashed #e2e8f0;
+      border-bottom: 1px dashed #334155;
     }
 
     .script-item .k {
@@ -288,6 +303,7 @@
       font-size: 0.86rem;
       line-height: 1.55;
       background: var(--surface-alt);
+      color: #e2e8f0;
       resize: vertical;
     }
 
@@ -313,7 +329,7 @@
     th, td {
       text-align: left;
       padding: 8px 10px;
-      border-bottom: 1px solid #e2e8f0;
+      border-bottom: 1px solid var(--border);
       white-space: nowrap;
     }
 
@@ -335,13 +351,14 @@
       position: fixed;
       bottom: 20px;
       right: 20px;
-      background: #0f172a;
-      color: #fff;
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid #38bdf8;
       padding: 10px 16px;
       border-radius: 8px;
       font-size: 0.86rem;
       font-weight: 500;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
       opacity: 0;
       transform: translateY(8px);
       pointer-events: none;
@@ -368,8 +385,8 @@
     <!-- Topo com botão para ligar para Tivit -->
     <header class="top-bar">
       <div class="brand">
-        <h1>Roteiro de Chamada — Tivit / Coop</h1>
-        <p>Preenchimento rápido com colagem por clique, formatação automática e arquivo de chamadas</p>
+        <h1>Roteiro de Chamada — Sistema Tivit / Coop</h1>
+        <p>Tema escuro • Colagem ao clicar • Formatação automática e arquivo de chamadas</p>
       </div>
       <a class="btn-call" href="tel:+558007690800" title="Ligar para Tivit">
         <span>Ligar para Tivit: +55 800 769 0800</span>
@@ -380,7 +397,7 @@
     <section class="card">
       <div class="card-header">
         <span class="card-title">1. Dados da Chamada (Clique em Nome, Endereço, WO/O.S. ou Contrato para colar)</span>
-        <span class="hint">Permissão de área de transferência pode ser solicitada pelo navegador</span>
+        <span class="hint">Se o navegador bloquear leitura automática, use Ctrl+V ou toque em Colar</span>
       </div>
 
       <div class="grid-2">
@@ -507,7 +524,7 @@
     </section>
 
     <footer>
-      Criado por Fernando Sato - Versão 1.0 - 21.11.26 - 03:43
+      Criado por Fernando Sato - Versão 1.1 - 21.11.26 - 03:51
     </footer>
   </div>
 
@@ -550,7 +567,7 @@
       clearTimeout(showToast._timer);
       showToast._timer = setTimeout(() => {
         els.toast.classList.remove("show");
-      }, 2400);
+      }, 2600);
     }
 
     // Máscara Contrato: xxx.xxx.xxx (até 9 dígitos)
@@ -604,8 +621,7 @@
       if (d.opcao) {
         lines.push(`Opção / Obs.: ${d.opcao}`);
       }
-      return lines.join("
-");
+      return lines.join("\n");
     }
 
     function buildWhatsAppScript(d) {
@@ -629,8 +645,7 @@
       if (d.opcao) {
         lines.push(`• *Opção / Obs.:* ${d.opcao}`);
       }
-      return lines.join("
-");
+      return lines.join("\n");
     }
 
     function refreshOutput() {
@@ -638,33 +653,82 @@
       els.roteiroOutput.value = whatsappMode ? buildWhatsAppScript(d) : buildStandardScript(d);
     }
 
-    // Colar conteúdo da área de transferência ao clicar nos campos especificados
-    async function pasteFromClipboardOnClick(inputEl, formatterFn) {
-      inputEl.addEventListener("click", async () => {
-        if (!navigator.clipboard || !navigator.clipboard.readText) {
-          showToast("Área de transferência indisponível neste navegador. Use Ctrl+V.");
-          return;
+    // Solicita permissão de leitura da área de transferência quando possível e tenta colar no clique/foco
+    async function tryReadClipboardText() {
+      if (!navigator.clipboard || typeof navigator.clipboard.readText !== "function") {
+        return { ok: false, reason: "unsupported" };
+      }
+      try {
+        if (navigator.permissions && typeof navigator.permissions.query === "function") {
+          try {
+            const perm = await navigator.permissions.query({ name: "clipboard-read" });
+            if (perm.state === "denied") {
+              return { ok: false, reason: "denied" };
+            }
+          } catch (_) {
+            // Alguns navegadores não suportam permissions.query para clipboard-read; tenta readText direto
+          }
         }
-        try {
-          const text = await navigator.clipboard.readText();
-          if (text && text.trim().length > 0) {
-            const clean = text.trim();
-            inputEl.value = formatterFn ? formatterFn(clean) : clean;
-            refreshOutput();
+        const text = await navigator.clipboard.readText();
+        return { ok: true, text: text || "" };
+      } catch (err) {
+        return { ok: false, reason: err && err.name ? err.name : "blocked" };
+      }
+    }
+
+    function applyPastedValue(inputEl, rawText, formatterFn) {
+      const clean = String(rawText || "").replace(/?
+/g, " ").trim();
+      if (!clean) return false;
+      inputEl.value = formatterFn ? formatterFn(clean) : clean;
+      refreshOutput();
+      return true;
+    }
+
+    function attachAutoPaste(inputEl, formatterFn) {
+      let lastTrigger = 0;
+
+      const handleClickPaste = async (ev) => {
+        const now = Date.now();
+        if (now - lastTrigger < 250) return;
+        lastTrigger = now;
+
+        inputEl.focus();
+        const res = await tryReadClipboardText();
+        if (res.ok) {
+          if (applyPastedValue(inputEl, res.text, formatterFn)) {
             showToast("Conteúdo colado da área de transferência.");
           } else {
             showToast("Área de transferência vazia.");
           }
-        } catch (err) {
-          showToast("Permita o acesso à área de transferência ou use Ctrl+V.");
+        } else {
+          // Em arquivos abertos via file:// ou contextos sem permissão de clipboard-read,
+          // o navegador bloqueia readText() por segurança; permite colagem nativa via Ctrl+V ou menu Colar
+          showToast("Clique com botão direito > Colar ou use Ctrl+V.");
+        }
+      };
+
+      // Usa pointerdown para responder imediatamente no clique/toque
+      inputEl.addEventListener("pointerdown", handleClickPaste);
+
+      // Se o usuário colar via Ctrl+V ou menu nativo, formata imediatamente também
+      inputEl.addEventListener("paste", (e) => {
+        const cd = e.clipboardData || window.clipboardData;
+        if (cd && typeof cd.getData === "function") {
+          const pasted = cd.getData("text");
+          if (pasted) {
+            e.preventDefault();
+            applyPastedValue(inputEl, pasted, formatterFn);
+            showToast("Conteúdo colado e formatado.");
+          }
         }
       });
     }
 
-    pasteFromClipboardOnClick(els.nome, null);
-    pasteFromClipboardOnClick(els.endereco, null);
-    pasteFromClipboardOnClick(els.wo, formatOs);
-    pasteFromClipboardOnClick(els.contrato, formatContrato);
+    attachAutoPaste(els.nome, null);
+    attachAutoPaste(els.endereco, null);
+    attachAutoPaste(els.wo, formatOs);
+    attachAutoPaste(els.contrato, formatContrato);
 
     els.wo.addEventListener("input", () => {
       els.wo.value = formatOs(els.wo.value);
@@ -880,8 +944,7 @@
         ...rows.map((r) => headers.map((h) => csvEscape(r[h])).join(";"))
       ];
       downloadFile(
-        "﻿" + csvLines.join("
-"),
+        "\uFEFF" + csvLines.join("\n"),
         `chamadas-tivit-coop-${timestampSlug()}.csv`,
         "text/csv;charset=utf-8;"
       );
@@ -923,9 +986,8 @@
       const reader = new FileReader();
       reader.onload = () => {
         try {
-          const text = reader.result.replace(/^﻿/, "");
-          const lines = text.split(/?
-/).filter((l) => l.trim().length > 0);
+          const text = reader.result.replace(/^\uFEFF/, "");
+          const lines = text.split(/\r?\n/).filter((l) => l.trim().length > 0);
           if (lines.length < 2) {
             showToast("CSV sem dados para importar.");
             return;
@@ -983,7 +1045,7 @@
       const footerY = 285;
       doc.setFont("helvetica", "normal");
       doc.setFontSize(8.5);
-      doc.text("Criado por Fernando Sato - Versão 1.0 - 21.11.26 - 03:43", 14, footerY);
+      doc.text("Criado por Fernando Sato - Versão 1.1 - 21.11.26 - 03:51", 14, footerY);
 
       doc.save(`roteiro-tivit-coop-${timestampSlug()}.pdf`);
       showToast("PDF gerado para download.");

@@ -4,8 +4,9 @@ Aplicação web local (`index.html`) desenvolvida para agilizar o atendimento e 
 
 ## Funcionalidades
 
+- **Tema Escuro:** Interface otimizada para ambientes com pouca luz ou uso contínuo em campo.
 - **Botão de Ligação Rápida no Topo:** Discagem direta para `+558007690800` via link `tel:+558007690800`.
-- **Colagem Automática ao Clicar:** Clicar nos campos **Nome do Cliente**, **Endereço**, **WO / O.S.** ou **Contrato** lê o conteúdo da área de transferência e preenche o campo automaticamente (com suporte a digitação e `Ctrl+V` caso o navegador exija permissão).
+- **Colagem ao Clicar / Colar Nativo:** Clicar nos campos **Nome do Cliente**, **Endereço**, **WO / O.S.** ou **Contrato** tenta ler a área de transferência automaticamente via `navigator.clipboard.readText()` (com verificação de permissão e formatação automática no evento `paste` / `Ctrl+V` caso o navegador bloqueie leitura direta em páginas locais `file://`).
 - **Máscaras de Formatação:**
   - **Contrato:** `xxx.xxx.xxx`
   - **WO / O.S.:** `xxx.xxx.xxx.xxxx`
@@ -27,14 +28,9 @@ Aplicação web local (`index.html`) desenvolvida para agilizar o atendimento e 
   - Exporta e importa dados em **JSON** e **CSV**.
   - Gera download em **PDF**.
 
-## Como Usar
-
-1. Extraia o arquivo `.zip`.
-2. Abra o arquivo `index.html` em qualquer navegador moderno (Chrome, Edge, Firefox ou navegador mobile).
-3. Clique nos campos desejados para colar os dados, revise o texto gerado e utilize os botões de copiar, WhatsApp, arquivar, exportar/importar ou baixar PDF.
-
 ## Histórico de Versões
 
+- **Versão 1.1 - 21.11.26 - 03:51** — Adicionado tema escuro completo, ajuste no disparador de leitura da área de transferência no clique (`pointerdown` + verificação de permissão) e tratamento imediato de colagem (`paste` / `Ctrl+V`) com formatação automática.
 - **Versão 1.0 - 21.11.26 - 03:43** — Versão inicial com colagem por clique, máscaras de Contrato e O.S., botão de limpeza de opção, formatação WhatsApp, arquivo local, importação/exportação JSON e CSV, exportação PDF e atalho de chamada para Tivit.
 
-Criado por Fernando Sato - Versão 1.0 - 21.11.26 - 03:43
+Criado por Fernando Sato - Versão 1.1 - 21.11.26 - 03:51
