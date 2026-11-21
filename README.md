@@ -15,7 +15,7 @@ Ferramenta web em arquivo único (`index.html`) voltada para técnicos de teleco
    - Abaixo de cada um dos 4 campos (`Nome do cliente`, `Endereço`, `WO`, `Contrato`), há um botão pequeno **Limpar campo** para apagar rapidamente caso alguma informação incorreta seja colada.
 
 3. **Formatação e destaque visual de WO e Contrato**
-   - **WO:** formatado como `xxx.xxx.xxx` com fonte ampliada.
+   - **WO:** formatado como `O.S xxx.xxx.xxxx` com fonte ampliada.
    - **Contrato:** formatado como `xxx.xxx.xxx` com fonte ampliada.
 
 4. **Formatação e envio para WhatsApp**
@@ -40,6 +40,7 @@ Ferramenta web em arquivo único (`index.html`) voltada para técnicos de teleco
 
 ## Histórico de versões
 
+- **Versão 1.7 - 21.11.26 - 02:14:** Formatação do campo WO no padrão `O.S xxx.xxx.xxxx` (mantendo fonte ampliada), ajuste no roteiro, mensagem do WhatsApp e chamadas arquivadas, e atualização do `README.md`.
 - **Versão 1.6 - 21.11.26 - 02:06:** Inclusão de botão pequeno **Limpar campo** abaixo de cada um dos 4 campos (`Nome do cliente`, `Endereço`, `WO` e `Contrato`) e atualização do `README.md`.
 - **Versão 1.5 - 21.11.26 - 02:01:** Formatação do campo WO no padrão `xxx.xxx.xxx`, aumento do tamanho da fonte dos números de WO e de Contrato (campos, roteiro e chamadas arquivadas) e atualização do `README.md`.
 - **Versão 1.4 - 21.11.26 - 01:55:** Adição do botão no topo para ligar para Tivit (`+558007690800`), máscaras de exibição para Contrato (`xxx.xxx.xxx`) e WO (`xxx. xxx.xxx.xxxx`), remoção do bloco `4. Dados fixos` na interface e atualização do `README.md`.
@@ -50,4 +51,4 @@ Ferramenta web em arquivo único (`index.html`) voltada para técnicos de teleco
 
 ---
 
-Criado por Fernando Sato - Versão 1.6 - 21.11.26 - 02:06
+Criado por Fernando Sato - Versão 1.7 - 21.11.26 - 02:14
