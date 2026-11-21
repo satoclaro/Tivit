@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Automação de Ligação e WhatsApp — Tivit / Coop</title>
+  <title>Automação de Ligação e WhatsApp — Sistema Tivit / Coop</title>
   <style>
     :root {
       --bg: #0f172a;
@@ -16,6 +16,8 @@
       --accent-hover: #0ea5e9;
       --whatsapp: #22c55e;
       --whatsapp-hover: #16a34a;
+      --archive: #f59e0b;
+      --archive-hover: #d97706;
       --danger: #f87171;
       --ok: #34d399;
     }
@@ -38,7 +40,7 @@
 
     .container {
       width: 100%;
-      max-width: 720px;
+      max-width: 800px;
       margin: 0 auto;
       flex: 1;
     }
@@ -88,15 +90,16 @@
     }
 
     .panel-title {
-      font-size: 0.95rem;
-      font-weight: 600;
+      font-size: 0.98rem;
+      font-weight: 700;
       margin-bottom: 4px;
     }
 
     .panel-subtitle {
-      font-size: 0.82rem;
+      font-size: 0.83rem;
       color: var(--muted);
       margin-bottom: 16px;
+      line-height: 1.45;
     }
 
     .grid {
@@ -125,9 +128,18 @@
     }
 
     label {
-      font-size: 0.84rem;
+      font-size: 0.85rem;
       font-weight: 600;
       color: #e2e8f0;
+    }
+
+    .paste-tag {
+      font-size: 0.73rem;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      padding: 2px 8px;
+      border-radius: 999px;
     }
 
     input[type="text"],
@@ -149,9 +161,80 @@
       box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18);
     }
 
-    input[type="text"].prefilled-flash {
+    input[type="text"].pasted-flash {
       border-color: var(--ok);
-      box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.22);
+      box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.24);
+    }
+
+    .fixed-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      font-size: 0.86rem;
+    }
+
+    .fixed-table tr {
+      border-bottom: 1px solid rgba(51, 65, 85, 0.65);
+    }
+
+    .fixed-table tr:last-child {
+      border-bottom: none;
+    }
+
+    .fixed-table td {
+      padding: 9px 12px;
+      vertical-align: top;
+    }
+
+    .fixed-table td.k {
+      color: var(--muted);
+      font-weight: 600;
+      width: 42%;
+    }
+
+    .fixed-table td.v {
+      color: var(--text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      word-break: break-word;
+    }
+
+    .script-list {
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+
+    .script-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px dashed rgba(148, 163, 184, 0.15);
+      padding-bottom: 5px;
+    }
+
+    .script-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .script-label {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .script-val {
+      color: var(--accent);
+      font-weight: 600;
+      text-align: right;
     }
 
     .actions {
@@ -182,7 +265,7 @@
     .btn-primary {
       background: var(--accent);
       color: #061322;
-      flex: 1 1 210px;
+      flex: 1 1 180px;
     }
 
     .btn-primary:hover {
@@ -192,11 +275,21 @@
     .btn-whatsapp {
       background: var(--whatsapp);
       color: #052010;
-      flex: 1 1 210px;
+      flex: 1 1 180px;
     }
 
     .btn-whatsapp:hover {
       background: var(--whatsapp-hover);
+    }
+
+    .btn-archive {
+      background: var(--archive);
+      color: #1f1300;
+      flex: 1 1 180px;
+    }
+
+    .btn-archive:hover {
+      background: var(--archive-hover);
     }
 
     .btn-secondary {
@@ -222,6 +315,16 @@
       background: rgba(56, 189, 248, 0.22);
     }
 
+    .btn-mini.danger {
+      background: rgba(248, 113, 113, 0.12);
+      color: var(--danger);
+      border-color: rgba(248, 113, 113, 0.3);
+    }
+
+    .btn-mini.danger:hover {
+      background: rgba(248, 113, 113, 0.22);
+    }
+
     .preview-box {
       margin-top: 16px;
       background: var(--card-2);
@@ -240,19 +343,20 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 8px;
     }
 
     textarea#msgPreview {
-      min-height: 175px;
+      min-height: 290px;
       resize: vertical;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 0.86rem;
+      font-size: 0.85rem;
       line-height: 1.5;
     }
 
     .status-msg {
       margin-top: 10px;
-      font-size: 0.83rem;
+      font-size: 0.84rem;
       min-height: 20px;
       color: var(--ok);
     }
@@ -261,23 +365,82 @@
       color: var(--danger);
     }
 
-    .script-card {
+    .archive-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .archive-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .archive-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .archive-empty {
       background: var(--card-2);
       border: 1px dashed var(--border);
       border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .archive-card {
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
       padding: 13px 15px;
-      font-size: 0.9rem;
-      line-height: 1.55;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .archive-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.7);
+      padding-bottom: 7px;
+    }
+
+    .archive-meta {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    .archive-summary {
+      font-size: 0.88rem;
+      line-height: 1.45;
       color: #e2e8f0;
     }
 
-    .script-card strong {
+    .archive-summary strong {
       color: var(--accent);
+    }
+
+    .archive-item-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
     }
 
     footer {
       width: 100%;
-      max-width: 720px;
+      max-width: 800px;
       margin: 12px auto 0;
       text-align: center;
       font-size: 0.8rem;
@@ -291,28 +454,29 @@
   <div class="container">
     <header>
       <div>
-        <h1>Automação de Ligação e WhatsApp — Tivit / Coop</h1>
-        <p>Clique nos campos vazios para preencher os dados rapidamente, conferir na ligação e formatar para WhatsApp.</p>
+        <h1>Automação de Ligação e WhatsApp — Sistema Tivit / Coop</h1>
+        <p>Clique em Nome, Endereço, WO ou Contrato para colar automaticamente o conteúdo da área de transferência.</p>
       </div>
-      <span class="badge">Fluxo Tivit / Coop</span>
+      <span class="badge">Telecom • Tivit / Coop</span>
     </header>
 
-    <section class="panel" aria-label="Campos da Ordem de Serviço">
-      <div class="panel-title">Dados da Ordem de Serviço</div>
+    <section class="panel" aria-label="Campos variáveis com cola automática da área de transferência">
+      <div class="panel-title">1. Campos para colar da área de transferência (ao clicar)</div>
       <div class="panel-subtitle">
-        Os campos iniciam vazios. Clique em qualquer campo (ou use "Preencher todos") para inserir os dados disponíveis da OS.
+        Copie o dado desejado e clique no campo correspondente para colar o conteúdo da área de transferência automaticamente.
+        Caso o navegador peça permissão ou bloqueie leitura direta, o campo foca e você pode usar <kbd>Ctrl+V</kbd> / colar normalmente.
       </div>
 
       <div class="grid">
         <div class="field-group">
           <div class="field-header">
             <label for="nomeCliente">Nome do cliente</label>
-            <button type="button" class="btn-mini" data-fill="nomeCliente">Preencher nome</button>
+            <span class="paste-tag">Clique = Colar área de transferência</span>
           </div>
           <input
             type="text"
             id="nomeCliente"
-            placeholder="Clique para preencher o nome do cliente..."
+            placeholder="Clique para colar o nome do cliente da área de transferência..."
             autocomplete="off"
           />
         </div>
@@ -320,12 +484,12 @@
         <div class="field-group">
           <div class="field-header">
             <label for="enderecoCliente">Endereço</label>
-            <button type="button" class="btn-mini" data-fill="enderecoCliente">Preencher endereço</button>
+            <span class="paste-tag">Clique = Colar área de transferência</span>
           </div>
           <input
             type="text"
             id="enderecoCliente"
-            placeholder="Clique para preencher o endereço..."
+            placeholder="Clique para colar o endereço da área de transferência..."
             autocomplete="off"
           />
         </div>
@@ -334,13 +498,13 @@
           <div class="field-group">
             <div class="field-header">
               <label for="woNumero">WO</label>
-              <button type="button" class="btn-mini" data-fill="woNumero">Preencher WO</button>
+              <span class="paste-tag">Clique = Colar</span>
             </div>
             <input
               type="text"
               id="woNumero"
               inputmode="numeric"
-              placeholder="Clique para preencher o WO..."
+              placeholder="Clique para colar o WO..."
               autocomplete="off"
             />
           </div>
@@ -348,13 +512,13 @@
           <div class="field-group">
             <div class="field-header">
               <label for="contratoNumero">Contrato</label>
-              <button type="button" class="btn-mini" data-fill="contratoNumero">Preencher contrato</button>
+              <span class="paste-tag">Clique = Colar</span>
             </div>
             <input
               type="text"
               id="contratoNumero"
               inputmode="numeric"
-              placeholder="Clique para preencher o contrato..."
+              placeholder="Clique para colar o Contrato..."
               autocomplete="off"
             />
           </div>
@@ -362,47 +526,86 @@
       </div>
 
       <div class="actions">
-        <button type="button" class="btn-secondary" id="btnPreencherTodos">Preencher todos os campos</button>
         <button type="button" class="btn-primary" id="btnFormatarWpp">Formatar para WhatsApp</button>
         <button type="button" class="btn-whatsapp" id="btnAbrirWpp">Formatar e abrir WhatsApp</button>
-        <button type="button" class="btn-secondary" id="btnLimpar">Limpar</button>
+        <button type="button" class="btn-archive" id="btnArquivarChamada">Arquivar dados da chamada</button>
+        <button type="button" class="btn-secondary" id="btnLimpar">Limpar campos</button>
       </div>
 
       <div id="statusMsg" class="status-msg" role="status" aria-live="polite"></div>
 
       <div class="preview-box">
         <div class="preview-label">
-          <span>Mensagem formatada para WhatsApp</span>
+          <span>Mensagem formatada para WhatsApp (na ordem do sistema Tivit / Coop)</span>
           <button type="button" class="btn-mini" id="btnCopiar">Copiar mensagem</button>
         </div>
         <textarea
           id="msgPreview"
-          placeholder="Clique em 'Formatar para WhatsApp' para gerar a mensagem formatada..."
+          placeholder="Clique em 'Formatar para WhatsApp' para montar a mensagem na ordem exata solicitada..."
         ></textarea>
       </div>
     </section>
 
-    <section class="panel" aria-label="Roteiro rápido para ligação Tivit / Coop">
-      <div class="panel-title">Roteiro rápido para ligação (Tivit / Coop)</div>
-      <div class="panel-subtitle">Referência atualizada automaticamente conforme os campos preenchidos acima.</div>
-      <div class="script-card" id="roteiroLigacao">
-        "Olá, contato da <strong>Tivit / Coop</strong>. Estou passando os dados do atendimento: cliente
-        <strong>[Nome do cliente]</strong>, endereço <strong>[Endereço]</strong>, WO
-        <strong>[WO]</strong> e contrato <strong>[Contrato]</strong>."
+    <section class="panel" aria-label="Chamadas arquivadas">
+      <div class="archive-header">
+        <div>
+          <div class="panel-title">2. Chamadas arquivadas</div>
+          <div class="panel-subtitle" style="margin-bottom: 0;">
+            Histórico salvo localmente no navegador para consulta, recarregamento ou exportação.
+          </div>
+        </div>
+        <div class="archive-actions">
+          <button type="button" class="btn-mini" id="btnExportarArquivo">Baixar arquivo (.txt)</button>
+          <button type="button" class="btn-mini danger" id="btnLimparArquivo">Limpar arquivo</button>
+        </div>
       </div>
+      <div class="archive-list" id="listaArquivadas"></div>
+    </section>
+
+    <section class="panel" aria-label="Roteiro de fala na ordem solicitada">
+      <div class="panel-title">3. Roteiro para falar com a atendente (ordem do sistema)</div>
+      <div class="panel-subtitle">Atualiza em tempo real conforme você cola Nome, Endereço, WO e Contrato.</div>
+      <div class="script-list" id="roteiroLigacao"></div>
+    </section>
+
+    <section class="panel" aria-label="Dados fixos configurados">
+      <div class="panel-title">4. Dados fixos mantidos na formatação</div>
+      <div class="panel-subtitle">Incluídos automaticamente na ordem solicitada para o atendimento Tivit / Coop.</div>
+      <table class="fixed-table">
+        <tbody>
+          <tr><td class="k">Opção do serviço</td><td class="v">239</td></tr>
+          <tr><td class="k">Cidade</td><td class="v">003</td></tr>
+          <tr><td class="k">Código da empresa</td><td class="v">68804663#</td></tr>
+          <tr><td class="k">Nome do Funcionário</td><td class="v">Fernando Sato</td></tr>
+          <tr><td class="k">Código Funcionário</td><td class="v">Z688632</td></tr>
+          <tr><td class="k">Nome da Conveniada</td><td class="v">CSR Engenharia Ltda</td></tr>
+          <tr><td class="k">PDA</td><td class="v">91520-6585</td></tr>
+          <tr><td class="k">Código da Baixa</td><td class="v">409</td></tr>
+          <tr><td class="k">Tipo de wo</td><td class="v">Instalação/ Mudança de Pacote</td></tr>
+          <tr><td class="k">Hora de Início</td><td class="v">12:00</td></tr>
+        </tbody>
+      </table>
     </section>
   </div>
 
   <footer>
-    Criado por Fernando Sato - Versão 1.1 - 21.11.26 - 01:17
+    Criado por Fernando Sato - Versão 1.3 - 21.11.26 - 01:34
   </footer>
 
   <script>
-    const DADOS_OS = {
-      nomeCliente: "MAGDA SCARPONI",
-      enderecoCliente: "AV RAMIZ GALVAO, 78 - JD BRASIL (ZONA NORTE)",
-      woNumero: "2610719712",
-      contratoNumero: "379895777"
+    const STORAGE_KEY = "tivit_coop_chamadas_arquivadas_v1_3";
+
+    const DADOS_FIXOS = {
+      opcaoServico: "239",
+      cidade: "003",
+      codigoEmpresa: "68804663#",
+      nomeFuncionario: "Fernando Sato",
+      codigoFuncionario: "Z688632",
+      nomeConveniada: "CSR Engenharia Ltda",
+      pda: "91520-6585",
+      codigoBaixa: "409",
+      tipoWo: "Instalação/\tMudança de Pacote",
+      horaInicio: "12:00"
     };
 
     const inputs = {
@@ -415,6 +618,7 @@
     const msgPreview = document.getElementById("msgPreview");
     const statusMsg = document.getElementById("statusMsg");
     const roteiroLigacao = document.getElementById("roteiroLigacao");
+    const listaArquivadas = document.getElementById("listaArquivadas");
 
     function setStatus(texto, isWarn = false) {
       statusMsg.textContent = texto;
@@ -422,93 +626,266 @@
     }
 
     function flashInput(el) {
-      el.classList.remove("prefilled-flash");
+      el.classList.remove("pasted-flash");
       void el.offsetWidth;
-      el.classList.add("prefilled-flash");
-      setTimeout(() => el.classList.remove("prefilled-flash"), 900);
-    }
-
-    function atualizarRoteiro() {
-      const nome = inputs.nomeCliente.value.trim() || "[Nome do cliente]";
-      const end = inputs.enderecoCliente.value.trim() || "[Endereço]";
-      const wo = inputs.woNumero.value.trim() || "[WO]";
-      const contrato = inputs.contratoNumero.value.trim() || "[Contrato]";
-
-      roteiroLigacao.innerHTML =
-        `"Olá, contato da <strong>Tivit / Coop</strong>. Estou passando os dados do atendimento: cliente ` +
-        `<strong>${escapeHtml(nome)}</strong>, endereço <strong>${escapeHtml(end)}</strong>, WO ` +
-        `<strong>${escapeHtml(wo)}</strong> e contrato <strong>${escapeHtml(contrato)}</strong>."`;
+      el.classList.add("pasted-flash");
+      setTimeout(() => el.classList.remove("pasted-flash"), 900);
     }
 
     function escapeHtml(str) {
-      return str
+      return String(str)
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;");
     }
 
-    function preencherCampo(key) {
+    function obterLinhasOrdenadas(overrideData = null) {
+      const nome = (overrideData ? overrideData.nomeCliente : inputs.nomeCliente.value).trim();
+      const endereco = (overrideData ? overrideData.enderecoCliente : inputs.enderecoCliente.value).trim();
+      const wo = (overrideData ? overrideData.woNumero : inputs.woNumero.value).trim();
+      const contrato = (overrideData ? overrideData.contratoNumero : inputs.contratoNumero.value).trim();
+
+      return [
+        { label: "Opção do serviço", valor: DADOS_FIXOS.opcaoServico, display: DADOS_FIXOS.opcaoServico },
+        { label: "Cidade", valor: DADOS_FIXOS.cidade, display: DADOS_FIXOS.cidade },
+        { label: "Código da empresa", valor: DADOS_FIXOS.codigoEmpresa, display: DADOS_FIXOS.codigoEmpresa },
+        { label: "Nome do Funcionário", valor: DADOS_FIXOS.nomeFuncionario, display: DADOS_FIXOS.nomeFuncionario },
+        { label: "Código Funcionário", valor: DADOS_FIXOS.codigoFuncionario, display: DADOS_FIXOS.codigoFuncionario },
+        { label: "Nome da Conveniada", valor: DADOS_FIXOS.nomeConveniada, display: DADOS_FIXOS.nomeConveniada },
+        { label: "PDA", valor: DADOS_FIXOS.pda, display: DADOS_FIXOS.pda },
+        { label: "Código da Baixa", valor: DADOS_FIXOS.codigoBaixa, display: DADOS_FIXOS.codigoBaixa },
+        { label: "Tipo de wo", valor: DADOS_FIXOS.tipoWo, display: "Instalação/ Mudança de Pacote" },
+        { label: "Hora de Início", valor: DADOS_FIXOS.horaInicio, display: DADOS_FIXOS.horaInicio },
+        { label: "Nome do cliente", valor: nome || "-", display: nome || "[Colar nome]" },
+        { label: "Endereço", valor: endereco || "-", display: endereco || "[Colar endereço]" },
+        { label: "WO", valor: wo || "-", display: wo || "[Colar WO]" },
+        { label: "Contrato", valor: contrato || "-", display: contrato || "[Colar Contrato]" }
+      ];
+    }
+
+    function atualizarRoteiro() {
+      const itens = obterLinhasOrdenadas();
+      roteiroLigacao.innerHTML = itens
+        .map(
+          (item) =>
+            `<div class="script-row"><span class="script-label">${escapeHtml(item.label)}:</span><span class="script-val">${escapeHtml(item.display)}</span></div>`
+        )
+        .join("");
+    }
+
+    async function colarDaAreaTransferencia(key) {
       const el = inputs[key];
       if (!el) return;
-      if (!el.value.trim()) {
-        el.value = DADOS_OS[key];
-        flashInput(el);
-        atualizarRoteiro();
-        setStatus("Campo preenchido automaticamente.");
+      el.focus();
+
+      if (navigator.clipboard && typeof navigator.clipboard.readText === "function") {
+        try {
+          const textoClipboard = await navigator.clipboard.readText();
+          if (textoClipboard && textoClipboard.trim() !== "") {
+            el.value = textoClipboard.trim();
+            flashInput(el);
+            atualizarRoteiro();
+            setStatus(`Conteúdo colado em "${el.labels?.[0]?.textContent || key}".`);
+            return;
+          } else {
+            setStatus("A área de transferência está vazia.", true);
+            return;
+          }
+        } catch (err) {
+          setStatus("Permissão de leitura da área de transferência bloqueada pelo navegador. Use Ctrl+V ou toque em Colar.", true);
+          return;
+        }
       }
+
+      setStatus("Seu navegador não suporta leitura automática ao clicar. Use Ctrl+V ou toque em Colar.", true);
     }
 
     Object.keys(inputs).forEach((key) => {
       const el = inputs[key];
-      el.addEventListener("click", () => preencherCampo(key));
+      el.addEventListener("click", () => colarDaAreaTransferencia(key));
       el.addEventListener("input", atualizarRoteiro);
     });
 
-    document.querySelectorAll("[data-fill]").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const key = btn.getAttribute("data-fill");
-        inputs[key].value = DADOS_OS[key];
-        flashInput(inputs[key]);
-        atualizarRoteiro();
-        setStatus("Campo preenchido.");
-      });
-    });
-
-    document.getElementById("btnPreencherTodos").addEventListener("click", () => {
-      Object.keys(inputs).forEach((key) => {
-        inputs[key].value = DADOS_OS[key];
-        flashInput(inputs[key]);
-      });
-      atualizarRoteiro();
-      setStatus("Todos os campos foram preenchidos.");
-    });
+    function formatarTextoChamada(overrideData = null) {
+      const itens = obterLinhasOrdenadas(overrideData);
+      return itens.map((item) => `*${item.label}:* ${item.valor}`).join("\n");
+    }
 
     function montarMensagemWhatsApp() {
+      const texto = formatarTextoChamada();
+      msgPreview.value = texto;
+      setStatus("Mensagem formatada para WhatsApp na ordem do sistema Tivit / Coop.");
+      return texto;
+    }
+
+    function lerArquivo() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function salvarArquivo(registros) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(registros));
+      } catch {
+        setStatus("Não foi possível salvar no armazenamento local do navegador.", true);
+      }
+    }
+
+    function formatarDataHoraAgora() {
+      const agora = new Date();
+      const pad = (n) => String(n).padStart(2, "0");
+      const dia = pad(agora.getDate());
+      const mes = pad(agora.getMonth() + 1);
+      const ano = String(agora.getFullYear()).slice(-2);
+      const hora = pad(agora.getHours());
+      const min = pad(agora.getMinutes());
+      return `${dia}.${mes}.${ano} - ${hora}:${min}`;
+    }
+
+    function arquivarDadosChamada() {
       const nome = inputs.nomeCliente.value.trim();
-      const end = inputs.enderecoCliente.value.trim();
+      const endereco = inputs.enderecoCliente.value.trim();
       const wo = inputs.woNumero.value.trim();
       const contrato = inputs.contratoNumero.value.trim();
 
-      if (!nome && !end && !wo && !contrato) {
-        setStatus("Preencha ou clique nos campos antes de formatar para WhatsApp.", true);
-        return null;
+      if (!nome && !endereco && !wo && !contrato) {
+        setStatus("Preencha ou cole ao menos um campo da chamada antes de arquivar.", true);
+        return;
       }
 
-      const linhas = [
-        "*ATENDIMENTO TIVIT / COOP*",
-        `*Cliente:* ${nome || "-"}`,
-        `*Endereço:* ${end || "-"}`,
-        `*WO:* ${wo || "-"}`,
-        `*Contrato:* ${contrato || "-"}`
-      ];
+      const registro = {
+        id: String(Date.now()) + "-" + Math.random().toString(36).slice(2, 6),
+        arquivadoEm: formatarDataHoraAgora(),
+        nomeCliente: nome,
+        enderecoCliente: endereco,
+        woNumero: wo,
+        contratoNumero: contrato,
+        mensagemFormatada: formatarTextoChamada({
+          nomeCliente: nome,
+          enderecoCliente: endereco,
+          woNumero: wo,
+          contratoNumero: contrato
+        })
+      };
 
-      const texto = linhas.join("\n");
-      msgPreview.value = texto;
-      setStatus("Mensagem formatada para WhatsApp.");
-      return texto;
+      const registros = lerArquivo();
+      registros.unshift(registro);
+      salvarArquivo(registros);
+      renderizarArquivo();
+      setStatus(`Chamada arquivada em ${registro.arquivadoEm}.`);
     }
+
+    function carregarRegistro(id) {
+      const registros = lerArquivo();
+      const item = registros.find((r) => r.id === id);
+      if (!item) return;
+
+      inputs.nomeCliente.value = item.nomeCliente || "";
+      inputs.enderecoCliente.value = item.enderecoCliente || "";
+      inputs.woNumero.value = item.woNumero || "";
+      inputs.contratoNumero.value = item.contratoNumero || "";
+      msgPreview.value = item.mensagemFormatada || formatarTextoChamada();
+      atualizarRoteiro();
+      setStatus(`Dados da chamada de ${item.arquivadoEm} carregados nos campos.`);
+    }
+
+    function excluirRegistro(id) {
+      const registros = lerArquivo().filter((r) => r.id !== id);
+      salvarArquivo(registros);
+      renderizarArquivo();
+      setStatus("Registro removido do arquivo.");
+    }
+
+    function renderizarArquivo() {
+      const registros = lerArquivo();
+      if (!registros.length) {
+        listaArquivadas.innerHTML = `<div class="archive-empty">Nenhuma chamada arquivada ainda. Clique em "Arquivar dados da chamada" para salvar o atendimento.</div>`;
+        return;
+      }
+
+      listaArquivadas.innerHTML = registros
+        .map(
+          (r) => `
+          <div class="archive-card">
+            <div class="archive-top">
+              <span class="archive-meta">Arquivado em: ${escapeHtml(r.arquivadoEm)}</span>
+              <div class="archive-item-btns">
+                <button type="button" class="btn-mini" data-load="${escapeHtml(r.id)}">Carregar</button>
+                <button type="button" class="btn-mini" data-copy-id="${escapeHtml(r.id)}">Copiar Wpp</button>
+                <button type="button" class="btn-mini danger" data-del="${escapeHtml(r.id)}">Excluir</button>
+              </div>
+            </div>
+            <div class="archive-summary">
+              <strong>Cliente:</strong> ${escapeHtml(r.nomeCliente || "-")} |
+              <strong>WO:</strong> ${escapeHtml(r.woNumero || "-")} |
+              <strong>Contrato:</strong> ${escapeHtml(r.contratoNumero || "-")}<br />
+              <strong>Endereço:</strong> ${escapeHtml(r.enderecoCliente || "-")}
+            </div>
+          </div>
+        `
+        )
+        .join("");
+
+      listaArquivadas.querySelectorAll("[data-load]").forEach((btn) => {
+        btn.addEventListener("click", () => carregarRegistro(btn.getAttribute("data-load")));
+      });
+
+      listaArquivadas.querySelectorAll("[data-del]").forEach((btn) => {
+        btn.addEventListener("click", () => excluirRegistro(btn.getAttribute("data-del")));
+      });
+
+      listaArquivadas.querySelectorAll("[data-copy-id]").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          const item = lerArquivo().find((r) => r.id === btn.getAttribute("data-copy-id"));
+          if (!item) return;
+          const texto = item.mensagemFormatada || formatarTextoChamada(item);
+          try {
+            await navigator.clipboard.writeText(texto);
+            setStatus("Mensagem arquivada copiada para a área de transferência.");
+          } catch {
+            msgPreview.value = texto;
+            msgPreview.select();
+            document.execCommand("copy");
+            setStatus("Mensagem arquivada copiada.");
+          }
+        });
+      });
+    }
+
+    document.getElementById("btnArquivarChamada").addEventListener("click", arquivarDadosChamada);
+
+    document.getElementById("btnExportarArquivo").addEventListener("click", () => {
+      const registros = lerArquivo();
+      if (!registros.length) {
+        setStatus("Não há chamadas arquivadas para baixar.", true);
+        return;
+      }
+      const conteudo = registros
+        .map((r, idx) => `=== CHAMADA #${registros.length - idx} (${r.arquivadoEm}) ===\n${r.mensagemFormatada}`)
+        .join("\n\n");
+      const blob = new Blob([conteudo], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "chamadas-arquivadas-tivit-coop.txt";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      setStatus("Arquivo de chamadas arquivadas baixado (.txt).");
+    });
+
+    document.getElementById("btnLimparArquivo").addEventListener("click", () => {
+      salvarArquivo([]);
+      renderizarArquivo();
+      setStatus("Histórico de chamadas arquivadas limpo.");
+    });
 
     document.getElementById("btnFormatarWpp").addEventListener("click", () => {
       montarMensagemWhatsApp();
@@ -526,7 +903,7 @@
       if (!texto) return;
       try {
         await navigator.clipboard.writeText(texto);
-        setStatus("Mensagem copiada para a área de transferência.");
+        setStatus("Mensagem formatada copiada para a área de transferência.");
       } catch {
         msgPreview.select();
         document.execCommand("copy");
@@ -540,8 +917,11 @@
       });
       msgPreview.value = "";
       atualizarRoteiro();
-      setStatus("Campos limpos.");
+      setStatus("Campos variáveis limpos. Dados fixos mantidos.");
     });
+
+    atualizarRoteiro();
+    renderizarArquivo();
   </script>
 </body>
 </html>
